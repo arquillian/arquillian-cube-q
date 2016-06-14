@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
+        http://jboss.org/schema/arquillian
+        http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+  <extension qualifier="docker">
+    <property name="machineName">dev</property>
+    <property name="dockerContainers">
+        server1:
+              buildImage:
+                dockerfileLocation: src/test/resources/server1
+                noCache: false
+                remove: true
+              portBindings: [8085/tcp]
+              links:
+                - server2:server2
+        server2:
+              buildImage:
+                dockerfileLocation: src/test/resources/server2
+                noCache: false
+                remove: true
+              exposedPorts: [80/tcp]
+    </property>
+  </extension>
+
+</arquillian>
