@@ -1,7 +1,5 @@
 package org.arquillian.cube.q.toxic.client;
 
-import org.arquillian.cube.q.toxic.client.ToxiProxyClient.ToxicType;
-
 public interface ToxiProxy {
 
     void register(String name, String listen, String upstream);
@@ -11,11 +9,7 @@ public interface ToxiProxy {
     public interface Scenario {
 
         Scenario given(String name);
-
-        Scenario downstream(ToxicType type);
-
-        Scenario upstream(ToxicType type);
-
+        Scenario using(ToxiProxyClient.BaseToxic toxic);
         void then(Callable callable) throws Exception;
     }
     

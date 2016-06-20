@@ -4,6 +4,7 @@ import org.arquillian.cube.q.spi.Proxy;
 import org.arquillian.cube.q.spi.ProxyManager;
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.cube.spi.CubeRegistry;
+import org.arquillian.cube.spi.event.lifecycle.AfterAutoStart;
 import org.arquillian.cube.spi.event.lifecycle.AfterStart;
 import org.arquillian.cube.spi.event.lifecycle.AfterStop;
 import org.arquillian.cube.spi.event.lifecycle.BeforeStart;
@@ -19,8 +20,21 @@ public class RegisterProxy {
     
     @Inject
     private Instance<ServiceLoader> serviceLoaderInst;
-    
-    public void registerProxy(@Observes AfterStart event, CubeRegistry registry) {
+
+    public void registerToxiProxyProxies(@Observes AfterAutoStart event, CubeRegistry registry) {
+        Proxy proxy = proxyInst.get();
+        Cube<?> cube = registry.getCube(proxy.getName());
+
+        final ProxyManager proxyManager = serviceLoaderInst.get().onlyOne(ProxyManager.class);
+        if (cube != null) {
+            proxyManager.proxyStarted(cube);
+        }
+
+        proxyManager.populateProxies();
+
+    }
+
+    /**public void registerProxy(AfterStart event, CubeRegistry registry) {
         
         Proxy proxy = proxyInst.get();
         Cube<?> cube = registry.getCube(event.getCubeId());
@@ -29,7 +43,7 @@ public class RegisterProxy {
         }
     }
 
-    public void createProxyClient(@Observes AfterStart event, CubeRegistry registry) {
+    public void createProxyClient(AfterStart event, CubeRegistry registry) {
         
         Proxy proxy = proxyInst.get();
         
@@ -38,7 +52,7 @@ public class RegisterProxy {
             serviceLoaderInst.get().onlyOne(ProxyManager.class).proxyStarted(cube);
         }
         
-    }
+    }**/
 
     public void unregisterProxy(@Observes AfterStop event, CubeRegistry registry) {
         Proxy proxy = proxyInst.get();

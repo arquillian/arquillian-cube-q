@@ -1,10 +1,9 @@
 package org.arquillian.cube.q.toxic.client;
 
+import eu.rekawek.toxiproxy.model.Proxy;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.arquillian.cube.q.toxic.client.ToxiProxyClient.Proxy;
-import org.arquillian.cube.q.toxic.client.ToxiProxyClient.ToxicType;
 
 public class ToxiProxyScenario implements ToxiProxy{
 
@@ -18,13 +17,14 @@ public class ToxiProxyScenario implements ToxiProxy{
     }
     
     public void register(String name, String listen, String upstream) {
-        proxies.put(name, client.createProxy(new Proxy(name, listen, upstream)));
+        proxies.put(name, client.createProxy(name, listen, upstream));
     }
-    
-    public void reset() {
+
+    // TODO
+    /**public void reset() {
         client.reset();
         proxies = client.getProxies();
-    }
+    }**/
 
 
     public Scenario given(String name) {
@@ -37,6 +37,7 @@ public class ToxiProxyScenario implements ToxiProxy{
     public class ToxicScenario implements Scenario {
         
         private Proxy proxy;
+        private ToxiProxyClient.BaseToxic toxic;
 
         public ToxicScenario(Proxy proxy) {
             this.proxy = proxy;
@@ -45,22 +46,14 @@ public class ToxiProxyScenario implements ToxiProxy{
         public Scenario given(String name) {
             return ToxiProxyScenario.this.given(name);
         }
-        
-        public Scenario downstream(ToxicType type) {
-            proxy.addDownstreamToxic(type);
-            return this;
-        }
-        
-        public Scenario upstream(ToxicType type) {
-            proxy.addUpstreamToxic(type);
+        public Scenario using(ToxiProxyClient.BaseToxic toxic) {
+            this.toxic = toxic;
             return this;
         }
 
         public void then(Callable callable) throws Exception {
             try {
-                for(Map.Entry<String, Proxy> entry : proxies.entrySet()) {
-                    client.updateProxy(entry.getKey(), entry.getValue());
-                }
+                client.createToxic(proxy, toxic);
                 callable.call();
             } finally {
                 //reset();

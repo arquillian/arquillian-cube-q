@@ -52,9 +52,8 @@
 
     <properties>
         <version.arquillian_core>1.1.11.Final</version.arquillian_core>
-        <version.arquillian_cube>1.0.0.Final-SNAPSHOT</version.arquillian_cube>
-        <version.feign>8.12.1</version.feign>
-        <version.gson>2.3.1</version.gson>
+        <version.arquillian_cube>1.0.0.Alpha12</version.arquillian_cube>
+        <version.toxiproxyjava>2.0</version.toxiproxyjava>
         <version.junit>4.11</version.junit>
         <version.mockito>1.10.19</version.mockito>
     </properties>
@@ -81,6 +80,11 @@
                 <groupId>org.arquillian.cube.q</groupId>
                 <artifactId>arquillian-cube-q-toxic</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.rekawek.toxiproxy</groupId>
+                <artifactId>toxiproxy-java</artifactId>
+                <version>2.0</version>
             </dependency>
         
             <dependency>

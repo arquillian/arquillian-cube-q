@@ -1,6 +1,7 @@
 package org.arquillian.cube.q.core;
 
 import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
+import org.arquillian.cube.docker.impl.client.config.CubeContainer;
 import org.arquillian.cube.docker.impl.client.config.DockerCompositions;
 import org.arquillian.cube.docker.impl.util.ConfigUtil;
 import org.arquillian.cube.q.spi.Proxy;
@@ -29,7 +30,8 @@ public class InstallProxy {
         Proxy proxy = installer.install(cubes);
         proxyInst.set(proxy);
 
-        cubes.add(proxy.getName(), proxy.getCube());
+        final CubeContainer cube = proxy.getCube();
+        cubes.add(proxy.getName(), cube);
 
         System.out.println("PROXY INSTALLED");
         System.out.println(ConfigUtil.dump(cubes));

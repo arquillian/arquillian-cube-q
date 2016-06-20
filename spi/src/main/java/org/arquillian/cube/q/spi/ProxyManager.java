@@ -8,6 +8,6 @@ public interface ProxyManager {
     Proxy install(DockerCompositions containers);
     
     void proxyStarted(Cube<?> cube);
-    void cubeStarted(Cube<?> cube);
+    void populateProxies();
     void cubeStopped(Cube<?> cube);
 }

@@ -36,13 +36,43 @@ public class ToxicProxyHandler implements ProxyManager {
     public Proxy install(DockerCompositions cubes) {
         Proxy.Builder builder = Proxy.create();
 
-        for(Map.Entry<String, CubeContainer> cube : cubes.getContainers().entrySet()) {
+        final Map<String, CubeContainer> containers = cubes.getContainers();
+        for(Map.Entry<String, CubeContainer> cube : containers.entrySet()) {
             String cubeName = cube.getKey();
             
             CubeContainer data = cube.getValue();
+
+            // Now we need to expose the same ports of the linked service
+            final Collection<Link> links = data.getLinks();
+
+            if (links != null) {
+                for (Link link : links) {
+                    if (containers.containsKey(link.getName())) {
+                        final CubeContainer linkedContainer = containers.get(link.getName());
+
+                        final Collection<PortBinding> portBindings = linkedContainer.getPortBindings();
+                        if (portBindings != null) {
+                            for (PortBinding portBinding : portBindings) {
+                                final ExposedPort exposedPort = portBinding.getExposedPort();
+                                if (exposedPort != null) {
+                                    builder.containerExpose(link.getName(), exposedPort.getExposed(), exposedPort.getType());
+                                }
+                            }
+                        }
+
+                        final Collection<ExposedPort> exposedPorts = linkedContainer.getExposedPorts();
+                        if (exposedPorts != null) {
+                            for (ExposedPort exposedPort : exposedPorts) {
+                                builder.containerExpose(link.getName(), exposedPort.getExposed(), exposedPort.getType());
+                            }
+                        }
+                    }
+                }
+            }
+            // redirect links to proxy and adds links to proxy to the old links
             data.setLinks(updateLinks(cubeName, builder, data.getLinks()));
-            
-            List<PortBinding> removedBoundPorts = new ArrayList<PortBinding>();
+
+            /**List<PortBinding> removedBoundPorts = new ArrayList<PortBinding>();
             if(data.getPortBindings() != null) {
                 Collection<PortBinding> ports = data.getPortBindings();
                 for(PortBinding binding : ports) {
@@ -66,7 +96,7 @@ public class ToxicProxyHandler implements ProxyManager {
                     ports.add(binding.getExposedPort());
                 }
                 data.setExposedPorts(ports);
-            }
+            }**/
         }
 
         return builder.build();        
@@ -78,11 +108,11 @@ public class ToxicProxyHandler implements ProxyManager {
         if(links != null) {
             updatedLinks = new ArrayList<Link>();
             for(Link link : links) {
-                proxy.containerLinks(cubeName, link.getName());
-                updatedLinks.add(new Link(proxy.getName(), link.getName()));
+                proxy.containerLinks(link.getName(), link.getName() + "_toxiproxy");
+                updatedLinks.add(new Link(proxy.getName(), link.getAlias()));
             }
+            updatedLinks.add(new Link(proxy.getName(), proxy.getName()));
         }
-        updatedLinks.add(new Link(proxy.getName(), proxy.getName()));
         return updatedLinks;
     }
 
@@ -97,26 +127,23 @@ public class ToxicProxyHandler implements ProxyManager {
         HasPortBindings bindings = cube.getMetadata(HasPortBindings.class);
         
         PortAddress communicationPort = bindings.getMappedAddress(proxy.getCommunicationPort().getExposed());
-        String proxyURL = "http://" + communicationPort.getIP() + ":" + communicationPort.getPort();
-        
-        scenarioInst.set(new ToxiProxyScenario(ToxiProxyClient.Builder.create(proxyURL)));
+
+        scenarioInst.set(new ToxiProxyScenario(ToxiProxyClient.Builder.create(communicationPort.getIP(), communicationPort.getPort())));
     }
 
 
     @Override
-    public void cubeStarted(Cube<?> cube) {
+    public void populateProxies() {
         Proxy proxy = proxyInst.get();
         ToxiProxyScenario scenario = scenarioInst.get();
         if(scenario == null) {
             throw new IllegalStateException("Scenario is not Initiated. Proxy not started before others.");
         }
 
-        HasPortBindings bindings = cube.getMetadata(HasPortBindings.class);
-
-        for(Relation rel : proxy.getRelations(cube.getId())) {
-            String relName = rel.getTo() + ":" + rel.getPort().getExposed();
+        for(Relation rel : proxy.getRelations()) {
+            String relName = rel.getFrom() + ":" + rel.getPort().getExposed();
             String localExp = "0.0.0.0:" + rel.getPort().getExposed();
-            String remoteExp = bindings.getInternalIP() + ":" + rel.getPort().getExposed(); 
+            String remoteExp = rel.getTo() + ":" + rel.getPort().getExposed();
             
             System.out.println("Registered proxy " + relName + " " + localExp + " -> " + remoteExp);
             scenario.register(

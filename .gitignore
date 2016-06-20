@@ -34,4 +34,6 @@ infinitest.filters
 # Libreoffice leftovers (XLS)
 .~lock*
 
+.DS_Store
+
 atlassian-ide-plugin.xml
