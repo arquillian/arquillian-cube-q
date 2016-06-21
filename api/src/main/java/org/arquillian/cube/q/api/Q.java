@@ -45,7 +45,7 @@ public interface Q {
 
         protected DurationRunCondition(long duration, TimeUnit unit) {
             final long durationInMillis = unit.toMillis(duration);
-            this.finishTime = System.currentTimeMillis() + duration;
+            this.finishTime = System.currentTimeMillis() + durationInMillis;
         }
 
         public static DurationRunCondition during(long duration, TimeUnit timeUnit) {
