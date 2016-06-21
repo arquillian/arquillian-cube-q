@@ -142,17 +142,21 @@ public class Proxy {
             await.setStrategy("polling");
             await.setPorts(Arrays.asList(DEFAULT_PORT));
             cube.setAwait(await);
+            cube.setRemoveVolumes(true);
             Collection<Relation> relations = buildRelations(); 
-//            Collection<Link> uniqeLinks = buildUniqueLins();
-//            cube.setLinks(uniqeLinks);
+            Collection<Link> uniqeLinks = buildUniqueLinks();
+            cube.setLinks(uniqeLinks);
 
             return new Proxy(getName(), ExposedPort.valueOf(DEFAULT_PORT + "/tcp"), cube, relations);
         }
         
-        private Collection<Link> buildUniqueLins() {
-            Set<Link> unique = new HashSet<Link>();
-            for(Relation rel : buildRelations()) {
-                unique.add(new Link(getName(), rel.getTo()));
+        private Collection<Link> buildUniqueLinks() {
+            List<Link> unique = new ArrayList<Link>();
+            for (Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
+                final List<String> linksValue = links.getValue();
+                for (String linkValue : linksValue) {
+                    unique.add(new Link(links.getKey(), linkValue));
+                }
             }
             return unique;
         }
@@ -161,7 +165,7 @@ public class Proxy {
             List<Relation> relations = new ArrayList<Relation>();
             for(Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
                 for(String linkedTo : links.getValue()) {
-                    List<String> exposed = containerExpose.get(linkedTo);
+                    List<String> exposed = containerExpose.get(links.getKey());
                     if(exposed == null) {
                         continue;
                     }

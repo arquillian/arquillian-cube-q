@@ -10,7 +10,7 @@ public class ToxiProxyContainer implements ToxiProxy {
     
     public ToxiProxyClient getClient() {
         if(this.client == null) {
-            this.client = ToxiProxyClient.Builder.create("http://" + hostIp + ":" + hostPort);
+            this.client = ToxiProxyClient.Builder.create(hostIp, hostPort);
         }
         return this.client;
     }

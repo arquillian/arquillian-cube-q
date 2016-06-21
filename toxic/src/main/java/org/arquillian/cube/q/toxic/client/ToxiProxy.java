@@ -1,6 +1,6 @@
 package org.arquillian.cube.q.toxic.client;
 
-import org.arquillian.cube.q.toxic.client.ToxiProxyClient.ToxicType;
+import java.util.List;
 
 public interface ToxiProxy {
 
@@ -11,12 +11,9 @@ public interface ToxiProxy {
     public interface Scenario {
 
         Scenario given(String name);
-
-        Scenario downstream(ToxicType type);
-
-        Scenario upstream(ToxicType type);
-
+        Scenario using(List<ToxiProxyClient.BaseToxic> toxic);
         void then(Callable callable) throws Exception;
+        void execute() throws Exception;
     }
     
     public interface Callable {

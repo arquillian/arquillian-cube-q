@@ -8,20 +8,16 @@
   <extension qualifier="docker">
     <property name="machineName">dev</property>
     <property name="dockerContainers">
-        server1:
-              buildImage:
-                dockerfileLocation: src/test/resources/server1
-                noCache: false
-                remove: true
-              portBindings: [8085/tcp]
-              links:
-                - server2:server2
-        server2:
-              buildImage:
-                dockerfileLocation: src/test/resources/server2
-                noCache: false
-                remove: true
-              exposedPorts: [80/tcp]
+        hw:
+          image: lordofthejars/helloworld
+          env: ["CATALINA_OPTS=-Djava.security.egd=file:/dev/./urandom"]
+          portBindings: [8081->8080/tcp]
+          links:
+            - pingpong:pingpong
+
+        pingpong:
+          image: jonmorehouse/ping-pong
+          exposedPorts: [8080/tcp]
     </property>
   </extension>
 

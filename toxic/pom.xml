@@ -30,24 +30,9 @@
             <groupId>org.arquillian.cube.q</groupId>
             <artifactId>arquillian-cube-q-core</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.netflix.feign</groupId>
-            <artifactId>feign-gson</artifactId>
-            <version>${version.feign}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.feign</groupId>
-            <artifactId>feign-core</artifactId>
-            <version>${version.feign}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${version.gson}</version>
-            <scope>compile</scope>
+            <groupId>eu.rekawek.toxiproxy</groupId>
+            <artifactId>toxiproxy-java</artifactId>
         </dependency>
 
         <dependency>

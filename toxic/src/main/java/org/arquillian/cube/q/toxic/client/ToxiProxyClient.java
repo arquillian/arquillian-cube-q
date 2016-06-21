@@ -1,243 +1,237 @@
 package org.arquillian.cube.q.toxic.client;
 
-import java.util.Map;
+import eu.rekawek.toxiproxy.ToxiproxyClient;
+import eu.rekawek.toxiproxy.model.Proxy;
+import eu.rekawek.toxiproxy.model.ToxicDirection;
 
-import feign.gson.GsonDecoder;
-import feign.gson.GsonEncoder;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface ToxiProxyClient {
 
-    @feign.RequestLine("GET /proxies")
     Map<String, Proxy> getProxies();
-    
-    @feign.RequestLine("POST /proxies")
-    Proxy createProxy(Proxy proxy);
 
-    @feign.RequestLine("GET /proxies/{proxy}")
-    Proxy getProxy(@feign.Param("proxy") String name);
+    Proxy createProxy(String name, String listen, String upstream);
 
-    @feign.RequestLine("POST /proxies/{proxy}")
-    Proxy updateProxy(@feign.Param("proxy") String name, Proxy proxy);
+    void createToxic(Proxy proxy, BaseToxic toxic);
 
-    @feign.RequestLine("DELETE /proxies/{proxy}")
-    Proxy removeProxy(@feign.Param("proxy") String name);
-
-    @feign.RequestLine("GET /proxies/{proxy}/upstream/toxics")
-    Toxic getUpstreamToxic(@feign.Param("proxy") String name);
-
-    @feign.RequestLine("POST /proxies/{proxy}/upstream/toxics/{toxic}")
-    void updateUpstreamToxic(@feign.Param("proxy") String name, @feign.Param("toxic") String toxic, ToxicType data);
-
-    @feign.RequestLine("GET /proxies/{proxy}/downstream/toxics")
-    Toxic getDownstreamToxic(@feign.Param("proxy") String name);
-
-    @feign.RequestLine("POST /proxies/{proxy}/downstream/toxics/{toxic}")
-    void updateDownstreamToxic(@feign.Param("proxy") String name, @feign.Param("toxic") String toxic, ToxicType data);
-
-    @feign.RequestLine("GET /reset")
     void reset();
-    
-    public class Proxy {
+
+    public static abstract class BaseToxic {
         private String name;
-        private String listen;
-        private String upstream;
-        private boolean enabled;
-    
-        private Toxic upstream_toxics;
-        private Toxic downstream_toxics;
-        
-        protected Proxy() {}
-        
-        public Proxy(String name, String listen, String upstream) {
+        private String stream;
+        private float toxcicity;
+
+        public BaseToxic(String name, String stream, float toxicity) {
             this.name = name;
-            this.listen = listen;
-            this.upstream = upstream;
-            this.enabled = true;
-        }
-        
-        public Proxy addUpstreamToxic(ToxicType type) {
-            if(upstream_toxics == null) {
-                upstream_toxics = new Toxic();
-            }
-            if(type instanceof Latency) {
-                upstream_toxics.latency = (Latency) type;
-            }
-            else if(type instanceof Bandwidth) {
-                upstream_toxics.bandwidth = (Bandwidth)type;
-            }
-            else if(type instanceof SlowClose) {
-                upstream_toxics.slow_close = (SlowClose) type;
-            }
-            else if(type instanceof Timeout) {
-                upstream_toxics.timeout = (Timeout) type;
-            }
-            else if(type instanceof Slicer) {
-                upstream_toxics.slicer = (Slicer)type;
-            }
-            else {
-                throw new IllegalArgumentException("Unknown ToxicType " + type.getClass());
-            }
-            
-            return this;
+            this.stream = stream;
+            this.toxcicity = toxicity;
         }
 
-        public Proxy addDownstreamToxic(ToxicType type) {
-            if(downstream_toxics == null) {
-                downstream_toxics = new Toxic();
-            }
-            if(type instanceof Latency) {
-                downstream_toxics.latency = (Latency) type;
-            }
-            else if(type instanceof Bandwidth) {
-                downstream_toxics.bandwidth = (Bandwidth)type;
-            }
-            else if(type instanceof SlowClose) {
-                downstream_toxics.slow_close = (SlowClose) type;
-            }
-            else if(type instanceof Timeout) {
-                downstream_toxics.timeout = (Timeout) type;
-            }
-            else if(type instanceof Slicer) {
-                downstream_toxics.slicer = (Slicer)type;
-            }
-            else {
-                throw new IllegalArgumentException("Unknown ToxicType " + type.getClass());
-            }
-            
-            return this;
+        public String getName() {
+            return name;
         }
 
-        @Override
-        public String toString() {
-            return "Proxy [name=" + name + ", listen=" + listen + ", upstream=" + upstream + ", enabled=" + enabled
-                    + ", upstream_toxics=" + upstream_toxics + ", downstream_toxics=" + downstream_toxics + "]";
+        public String getStream() {
+            return stream;
         }
 
-    }
-    
-    public static class Toxic {
-        private Latency latency;
-        private Bandwidth bandwidth;
-        private SlowClose slow_close;
-        private Timeout timeout;
-        private Slicer slicer;
-        @Override
-        public String toString() {
-            return "Toxic [latency=" + latency + ", bandwidth=" + bandwidth + ", slow_close=" + slow_close
-                    + ", timeout=" + timeout + ", slicer=" + slicer + "]";
+        public float getToxcicity() {
+            return toxcicity;
         }
     }
-    
-    public static class ToxicType {
-        private boolean enabled;
-        
-        public ToxicType(boolean enabled) {
-            this.enabled = enabled;
-        }
-        
-        public void disable() {
-            this.enabled = false;
-        }
-    }
-    
-    public static class Latency extends ToxicType {
-        private int latency;
-        private int jitter;
-        
-        public Latency(int latency, int jitter) {
-            super(true);
+
+    public static class Latency extends BaseToxic {
+        private long latency;
+        private long jitter;
+
+        public Latency(String name, String stream, float toxicity, long latency, long jitter) {
+            super(name, stream, toxicity);
             this.latency = latency;
             this.jitter = jitter;
         }
 
-        @Override
-        public String toString() {
-            return "Latency [latency=" + latency + ", jitter=" + jitter + "]";
+        public long getLatency() {
+            return latency;
         }
 
+        public long getJitter() {
+            return jitter;
+        }
     }
-    
-    public static class Bandwidth extends ToxicType {
-        private int rate;
-        
-        public Bandwidth(int rate) {
-            super(true);
+
+    public static class Bandwidth extends BaseToxic {
+        private long rate;
+
+        public Bandwidth(String name, String stream, float toxicity, long rate) {
+            super(name, stream, toxicity);
             this.rate = rate;
         }
 
-        @Override
-        public String toString() {
-            return "Bandwidth [rate=" + rate + "]";
+        public long getRate() {
+            return rate;
         }
     }
 
-    public static class SlowClose extends ToxicType {
-        private int delay;
+    public static class Down extends BaseToxic {
+        public Down(String name, String stream, float toxicity) {
+            super(name, stream, toxicity);
+        }
+    }
 
-        public SlowClose(int delay) {
-            super(true);
+    public static class SlowClose extends BaseToxic {
+
+        private long delay;
+
+        public SlowClose(String name, String stream, float toxicity, long delay) {
+            super(name, stream, toxicity);
             this.delay = delay;
         }
 
-        @Override
-        public String toString() {
-            return "SlowClose [delay=" + delay + "]";
+        public long getDelay() {
+            return delay;
         }
     }
-    
-    public static class Timeout extends ToxicType {
-        private int timeout;
-        
-        public Timeout(int timeout) {
-            super(true);
+
+    public static class Timeout extends BaseToxic {
+
+        private long timeout;
+
+        public Timeout(String name, String stream, float toxicity, long timeout) {
+            super(name, stream, toxicity);
             this.timeout = timeout;
         }
 
-        @Override
-        public String toString() {
-            return "Timeout [timeout=" + timeout + "]";
+        public long getTimeout() {
+            return timeout;
         }
     }
-    
-    public static class Slicer extends ToxicType {
-        private int average_size;
-        private int size_variation;
-        private int delay;
-        
-        public Slicer(int average_size, int size_variation, int delay) {
-            super(true);
-            this.average_size = average_size;
-            this.size_variation = size_variation;
+
+    public static class Slice extends BaseToxic {
+        private long averageSize;
+        private long sizeVariation;
+        private long delay;
+
+
+        public Slice(String name, String stream, float toxicity, long averageSize, long delay, long variableSize) {
+            super(name, stream, toxicity);
+            this.averageSize = averageSize;
+            this.sizeVariation = variableSize;
             this.delay = delay;
         }
 
-        @Override
-        public String toString() {
-            return "Slicer [average_size=" + average_size + ", size_variation=" + size_variation + ", delay=" + delay
-                    + "]";
+        public long getAverageSize() {
+            return averageSize;
+        }
+
+        public long getDelay() {
+            return delay;
+        }
+
+        public long getSizeVariation() {
+            return sizeVariation;
         }
     }
 
     public static class Builder {
 
-        public static ToxiProxyClient create(String url) {
-            return feign.Feign.builder()
-                        .logger(new feign.Logger.JavaLogger())
-                        .logLevel(feign.Logger.Level.FULL)
-                        .decoder(new GsonDecoder())
-                        .encoder(new GsonEncoder())
-                        .target(ToxiProxyClient.class, url);
-        }
-    }
-    
-    public static class ProxyExpander implements feign.Param.Expander {
+        public static ToxiProxyClient create(final String ip, final int port) {
+            return new ToxiProxyClient() {
 
-        public String expand(Object value) {
-            if(!Proxy.class.isInstance(value)) {
-                throw new IllegalArgumentException("Object of type " + value.getClass() + " is not of type " + Proxy.class);
-            }
-            return ((Proxy)value).name;
+                ToxiproxyClient toxiproxyClient = new ToxiproxyClient(ip, port);
+
+                @Override
+                public Map<String, Proxy> getProxies() {
+                    try {
+                        final List<Proxy> proxies = toxiproxyClient.getProxies();
+                        final Map<String, Proxy> proxyMap = new HashMap<>();
+
+                        for (Proxy proxy : proxies) {
+                            proxyMap.put(proxy.getName(), proxy);
+                        }
+
+                        return proxyMap;
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+
+                @Override
+                public Proxy createProxy(String name, String listen, String upstream) {
+                    try {
+                        return toxiproxyClient.createProxy(name, listen, upstream);
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+
+                @Override
+                public void createToxic(Proxy proxy, BaseToxic toxic) {
+                    try {
+                        if (toxic instanceof Latency) {
+                            Latency latency = (Latency) toxic;
+                            proxy.toxics().latency(latency.getName(),
+                                    ToxicDirection.valueOf(toxic.getStream()),
+                                    latency.getLatency())
+                                    .setJitter(latency.getJitter())
+                                    .setToxicity(latency.getToxcicity());
+                        } else {
+                            if (toxic instanceof Bandwidth) {
+                                Bandwidth bandwidth = (Bandwidth) toxic;
+                                proxy.toxics().bandwidth(bandwidth.getName(),
+                                        ToxicDirection.valueOf(toxic.getStream()),
+                                        bandwidth.getRate())
+                                        .setToxicity(bandwidth.getToxcicity());
+                            } else {
+                                if (toxic instanceof Down) {
+                                    // For ToxicProxy down is in the category of toxicity although is nt a toxicity per se
+                                    proxy.disable();
+                                } else {
+                                    if (toxic instanceof SlowClose) {
+                                        SlowClose slowClose = (SlowClose) toxic;
+                                        proxy.toxics().slowClose(slowClose.getName(),
+                                                ToxicDirection.valueOf(toxic.getStream()),
+                                                slowClose.getDelay())
+                                                .setToxicity(slowClose.getToxcicity());
+                                    } else {
+                                        if (toxic instanceof Timeout) {
+                                            Timeout timeout = (Timeout) toxic;
+                                            proxy.toxics().timeout(timeout.getName(),
+                                                    ToxicDirection.valueOf(toxic.getStream()),
+                                                    timeout.getTimeout())
+                                                    .setToxicity(timeout.getToxcicity());
+                                        } else {
+                                            if (toxic instanceof Slice) {
+                                                Slice slice = (Slice) toxic;
+                                                proxy.toxics().slicer(slice.getName(),
+                                                        ToxicDirection.valueOf(toxic.getStream()),
+                                                        slice.getAverageSize(),
+                                                        slice.getDelay())
+                                                        .setSizeVariation(slice.getSizeVariation())
+                                                        .setToxicity(slice.getToxcicity());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+
+                @Override
+                public void reset() {
+                    try {
+                        toxiproxyClient.reset();
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+            };
         }
-        
     }
+
 }

@@ -1,10 +1,10 @@
 package org.arquillian.cube.q.toxic.client;
 
-import java.util.HashMap;
-import java.util.Map;
+import eu.rekawek.toxiproxy.model.Proxy;
 
-import org.arquillian.cube.q.toxic.client.ToxiProxyClient.Proxy;
-import org.arquillian.cube.q.toxic.client.ToxiProxyClient.ToxicType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ToxiProxyScenario implements ToxiProxy{
 
@@ -14,13 +14,13 @@ public class ToxiProxyScenario implements ToxiProxy{
     
     public ToxiProxyScenario(ToxiProxyClient client) {
         this.client = client;
-        this.proxies = new HashMap<String, Proxy>();
+        this.proxies = new HashMap<>();
     }
     
     public void register(String name, String listen, String upstream) {
-        proxies.put(name, client.createProxy(new Proxy(name, listen, upstream)));
+        proxies.put(name, client.createProxy(name, listen, upstream));
     }
-    
+
     public void reset() {
         client.reset();
         proxies = client.getProxies();
@@ -37,33 +37,37 @@ public class ToxiProxyScenario implements ToxiProxy{
     public class ToxicScenario implements Scenario {
         
         private Proxy proxy;
+        private List<ToxiProxyClient.BaseToxic> toxics;
 
         public ToxicScenario(Proxy proxy) {
             this.proxy = proxy;
         }
-        
+
+        @Override
         public Scenario given(String name) {
             return ToxiProxyScenario.this.given(name);
         }
-        
-        public Scenario downstream(ToxicType type) {
-            proxy.addDownstreamToxic(type);
-            return this;
-        }
-        
-        public Scenario upstream(ToxicType type) {
-            proxy.addUpstreamToxic(type);
+
+        @Override
+        public Scenario using(final List<ToxiProxyClient.BaseToxic> toxics) {
+            this.toxics = toxics;
             return this;
         }
 
+        @Override
         public void then(Callable callable) throws Exception {
             try {
-                for(Map.Entry<String, Proxy> entry : proxies.entrySet()) {
-                    client.updateProxy(entry.getKey(), entry.getValue());
-                }
+                execute();
                 callable.call();
             } finally {
-                //reset();
+               //reset();
+            }
+        }
+
+        @Override
+        public void execute() throws Exception {
+            for (ToxiProxyClient.BaseToxic toxic : toxics) {
+                client.createToxic(proxy, toxic);
             }
         }
     }
