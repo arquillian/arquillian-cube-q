@@ -1,22 +1,29 @@
 package org.arquillian.cube.q.api;
 
+import java.util.concurrent.TimeUnit;
+
 public interface Q {
 
     Action on(String machine, int port);
     
     public interface Action {
-        
-        void down(Perform perform) throws Exception;
-        void timeout(TimeoutType timeType, Perform perform) throws Exception;
-        void timeout(TimeoutType timeType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream, Perform perform) throws Exception;
-        void latency(LatencyType latencyType, Perform perform) throws Exception;
-        void latency(LatencyType latencyType, JitterType jitterType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream, Perform perform) throws Exception;
-        void bandwidth(RateType rateType, Perform perform) throws Exception;
-        void bandwidth(RateType rateType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream, Perform perform) throws Exception;
-        void slowClose(DelayType delayType, Perform perform) throws Exception;
-        void slowClose(DelayType delayType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream, Perform perform) throws Exception;
-        void slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType, Perform perform) throws Exception;
-        void slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType, SliceSizeVariationType sliceSizeVariationType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream, Perform perform) throws Exception;
+
+        Action down();
+        Action timeout(TimeoutType timeType);
+        Action timeout(TimeoutType timeType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+        Action latency(LatencyType latencyType);
+        Action latency(LatencyType latencyType, JitterType jitterType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+        Action bandwidth(RateType rateType);
+        Action bandwidth(RateType rateType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+        Action slowClose(DelayType delayType);
+        Action slowClose(DelayType delayType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+        Action slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType);
+        Action slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType, SliceSizeVariationType sliceSizeVariationType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+
+        void exec() throws Exception;
+        void exec(Perform perform) throws Exception;
+        void exec(RunCondition runCondition, Perform perform) throws Exception;
+
     }
     
     public interface Perform {
@@ -24,13 +31,60 @@ public interface Q {
         void execute() throws Exception;
     }
 
+    public interface RunCondition {
+        boolean isExecutable();
+    }
+
     public static enum ToxicDirectionStream {
         DOWNSTREAM, UPSTREAM
     }
 
+    public static class DurationRunCondition implements RunCondition {
+
+        protected long finishTime;
+
+        protected DurationRunCondition(long duration, TimeUnit unit) {
+            final long durationInMillis = unit.toMillis(duration);
+            this.finishTime = System.currentTimeMillis() + duration;
+        }
+
+        public static DurationRunCondition during(long duration, TimeUnit timeUnit) {
+            return new DurationRunCondition(duration, timeUnit);
+        }
+
+        @Override
+        public boolean isExecutable() {
+            return System.currentTimeMillis() < finishTime;
+        }
+    }
+
+    public static class IterationRunCondition implements RunCondition {
+        protected final long iterations;
+        protected long currentIteration = 0;
+
+        protected IterationRunCondition(long iterations) {
+            this.iterations = iterations;
+        }
+
+        public static IterationRunCondition times(long numberOfIterations) {
+            return new IterationRunCondition(numberOfIterations);
+        }
+
+        @Override
+        public boolean isExecutable() {
+
+            if (currentIteration < iterations) {
+                currentIteration++;
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     public static final class ToxicityType extends FloatType {
 
-        public ToxicityType(float value) {
+        protected ToxicityType(float value) {
             super(value);
         }
 
@@ -52,24 +106,24 @@ public interface Q {
         }
     }
 
-    public static final class SliceSizeVariationType extends IntegerType {
+    public static final class SliceSizeVariationType extends LongType {
 
-        protected SliceSizeVariationType(int value) {
+        protected SliceSizeVariationType(long value) {
             super(value);
         }
 
-        public static SliceSizeVariationType sliceSizeVariation(int sizeVariation) {
+        public static SliceSizeVariationType sliceSizeVariation(long sizeVariation) {
             return new SliceSizeVariationType(sizeVariation);
         }
     }
 
-    public static final class SliceAverageSizeType extends IntegerType {
+    public static final class SliceAverageSizeType extends LongType {
 
-        protected SliceAverageSizeType(int value) {
+        protected SliceAverageSizeType(long value) {
             super(value);
         }
 
-        public static SliceAverageSizeType sliceAverageSize(int average) {
+        public static SliceAverageSizeType sliceAverageSize(long average) {
             return new SliceAverageSizeType(average);
         }
     }

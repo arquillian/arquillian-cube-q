@@ -5,6 +5,8 @@ import eu.rekawek.toxiproxy.model.Proxy;
 import eu.rekawek.toxiproxy.model.ToxicDirection;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface ToxiProxyClient {
@@ -142,7 +144,18 @@ public interface ToxiProxyClient {
 
                 @Override
                 public Map<String, Proxy> getProxies() {
-                    return null;
+                    try {
+                        final List<Proxy> proxies = toxiproxyClient.getProxies();
+                        final Map<String, Proxy> proxyMap = new HashMap<>();
+
+                        for (Proxy proxy : proxies) {
+                            proxyMap.put(proxy.getName(), proxy);
+                        }
+
+                        return proxyMap;
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
 
                 @Override
@@ -211,7 +224,11 @@ public interface ToxiProxyClient {
 
                 @Override
                 public void reset() {
-
+                    try {
+                        toxiproxyClient.reset();
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
             };
         }
