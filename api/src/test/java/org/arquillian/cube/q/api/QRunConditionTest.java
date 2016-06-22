@@ -11,7 +11,7 @@ public class QRunConditionTest {
 
     @Test
     public void shouldIterate() {
-        final Q.IterationRunCondition iterate = Q.IterationRunCondition.iterate(2);
+        final Q.IterationRunCondition iterate = Q.IterationRunCondition.times(2);
 
         assertThat(iterate.isExecutable(), is(true));
         assertThat(iterate.isExecutable(), is(true));
