@@ -1,7 +1,7 @@
 package org.arquillian.cube.q.toxic.client;
 
 import eu.rekawek.toxiproxy.ToxiproxyClient;
-import eu.rekawek.toxiproxy.model.Proxy;
+import eu.rekawek.toxiproxy.Proxy;
 import eu.rekawek.toxiproxy.model.ToxicDirection;
 
 import java.io.IOException;

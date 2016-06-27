@@ -1,6 +1,6 @@
 package org.arquillian.cube.q.toxic.client;
 
-import eu.rekawek.toxiproxy.model.Proxy;
+import eu.rekawek.toxiproxy.Proxy;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ToxiProxyScenario implements ToxiProxy{
                 execute();
                 callable.call();
             } finally {
-               //reset();
+               reset();
             }
         }
 

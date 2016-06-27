@@ -1,7 +1,7 @@
 package org.arquillian.cube.q.toxic;
 
 import eu.rekawek.toxiproxy.ToxiproxyClient;
-import eu.rekawek.toxiproxy.model.Proxy;
+import eu.rekawek.toxiproxy.Proxy;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.q.api.Q;
@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.net.URL;
 
 import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
@@ -74,6 +75,17 @@ public class ToxicFuntionalTestCase {
             System.out.println(response);
             System.out.println("Time:" + (System.currentTimeMillis() - l));
 
+        });
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldAddDownToxic() throws Exception {
+        Q.on("pingpong", 8080).down().exec(() -> {
+            URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
+            final long l = System.currentTimeMillis();
+            String response = IOUtil.asString(url.openStream());
+            System.out.println(response);
+            System.out.println("Time:" + (System.currentTimeMillis() - l));
         });
     }
 }
