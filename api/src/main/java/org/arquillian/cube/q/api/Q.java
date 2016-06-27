@@ -137,6 +137,10 @@ public interface Q {
         public static DelayType delay(long delay) {
             return new DelayType(delay);
         }
+
+        public static DelayType delay(long delay, TimeUnit timeUnit) {
+            return new DelayType(timeUnit.toMillis(delay));
+        }
     }
 
     public static final class RateType extends LongType {
@@ -169,6 +173,10 @@ public interface Q {
         public static LatencyType latency(long time) {
             return new LatencyType(time);
         }
+
+        public static LatencyType latency(long time, TimeUnit timeUnit) {
+            return new LatencyType(timeUnit.toMillis(time));
+        }
     }
 
     public static final class TimeoutType extends LongType {
@@ -178,6 +186,10 @@ public interface Q {
 
         public static TimeoutType timeout(long time) {
             return new TimeoutType(time);
+        }
+
+        public static TimeoutType timeout(long time, TimeUnit timeUnit) {
+            return new TimeoutType(timeUnit.toMillis(time));
         }
     }
 
