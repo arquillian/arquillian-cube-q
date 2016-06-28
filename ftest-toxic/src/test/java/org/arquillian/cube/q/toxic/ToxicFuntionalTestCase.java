@@ -4,6 +4,7 @@ import eu.rekawek.toxiproxy.ToxiproxyClient;
 import eu.rekawek.toxiproxy.Proxy;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.impl.util.IOUtil;
+import org.arquillian.cube.q.api.NetworkChaos;
 import org.arquillian.cube.q.api.Q;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
@@ -15,14 +16,14 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.net.URL;
 
+import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latency;
 import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
-import static org.arquillian.cube.q.api.Q.LatencyType.latency;
 
 @RunWith(Arquillian.class) //@Ignore
 public class ToxicFuntionalTestCase {
 
     @ArquillianResource
-    private Q Q;
+    private NetworkChaos networkChaos;
 
     @HostIp
     private String ip;
@@ -39,7 +40,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLatency() throws Exception {
-        Q.on("pingpong", 8080).latency(latency(4000)).exec(() -> {
+        networkChaos.on("pingpong", 8080).latency(latency(4000)).exec(() -> {
 
             URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
             final long l = System.currentTimeMillis();
@@ -52,7 +53,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLatencyWithExec() throws Exception {
-        Q.on("pingpong", 8080).latency(latency(4000)).exec();
+        networkChaos.on("pingpong", 8080).latency(latency(4000)).exec();
 
         URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
         final long l = System.currentTimeMillis();
@@ -67,7 +68,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLatencyWithIterations() throws Exception {
-        Q.on("pingpong", 8080).latency(latency(4000)).exec(times(2), () -> {
+        networkChaos.on("pingpong", 8080).latency(latency(4000)).exec(times(2), () -> {
 
             URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
             final long l = System.currentTimeMillis();
@@ -80,7 +81,7 @@ public class ToxicFuntionalTestCase {
 
     @Test(expected = IOException.class)
     public void shouldAddDownToxic() throws Exception {
-        Q.on("pingpong", 8080).down().exec(() -> {
+        networkChaos.on("pingpong", 8080).down().exec(() -> {
             URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
             final long l = System.currentTimeMillis();
             String response = IOUtil.asString(url.openStream());
