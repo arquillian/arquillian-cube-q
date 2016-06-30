@@ -23,14 +23,16 @@ public class RegisterProxy {
 
     public void registerToxiProxyProxies(@Observes AfterAutoStart event, CubeRegistry registry) {
         Proxy proxy = proxyInst.get();
-        Cube<?> cube = registry.getCube(proxy.getName());
+        if (proxy != null) {
+            Cube<?> cube = registry.getCube(proxy.getName());
 
-        final ProxyManager proxyManager = serviceLoaderInst.get().onlyOne(ProxyManager.class);
-        if (cube != null) {
-            proxyManager.proxyStarted(cube);
+            final ProxyManager proxyManager = serviceLoaderInst.get().onlyOne(ProxyManager.class);
+            if (cube != null) {
+                proxyManager.proxyStarted(cube);
+            }
+
+            proxyManager.populateProxies();
         }
-
-        proxyManager.populateProxies();
 
     }
 
@@ -56,9 +58,11 @@ public class RegisterProxy {
 
     public void unregisterProxy(@Observes AfterStop event, CubeRegistry registry) {
         Proxy proxy = proxyInst.get();
-        Cube<?> cube = registry.getCube(event.getCubeId());
-        if(cube != null && isNotProxyCube(cube, proxy)) {
-            serviceLoaderInst.get().onlyOne(ProxyManager.class).cubeStopped(cube);
+        if (proxy != null) {
+            Cube<?> cube = registry.getCube(event.getCubeId());
+            if (cube != null && isNotProxyCube(cube, proxy)) {
+                serviceLoaderInst.get().onlyOne(ProxyManager.class).cubeStopped(cube);
+            }
         }
     }
     

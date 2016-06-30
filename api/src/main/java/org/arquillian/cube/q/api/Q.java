@@ -94,4 +94,16 @@ public interface Q {
             return value;
         }
     }
+
+    public static abstract class StringType {
+        private String value;
+
+        protected StringType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 }

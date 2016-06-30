@@ -1,0 +1,53 @@
+package org.arquillian.cube.q.pumba;
+
+import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
+import org.arquillian.cube.q.spi.StandaloneContainer;
+import org.assertj.core.api.Assertions;
+import org.jboss.arquillian.core.api.Instance;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
+public class PumbaStandaloneContainerHandlerTest {
+
+    @Mock
+    CubeDockerConfiguration cubeDockerConfiguration;
+
+    @Test
+    public void shouldAddUnixVolume() {
+
+        Mockito.when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("unix:///var");
+        PumbaStandaloneContainerHandler pumbaStandaloneContainerHandler = new PumbaStandaloneContainerHandler();
+        pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = new Instance<CubeDockerConfiguration>() {
+            @Override
+            public CubeDockerConfiguration get() {
+                return cubeDockerConfiguration;
+            }
+        };
+
+        final StandaloneContainer install = pumbaStandaloneContainerHandler.install(null);
+        Assertions.assertThat(install.getCube().getVolumes()).contains("/var/run/docker.sock:/var/run/docker.sock");
+
+    }
+
+    @Test
+    public void shouldAddCertsVolume() {
+
+        Mockito.when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("https://192.168.0.1");
+        Mockito.when(cubeDockerConfiguration.getCertPath()).thenReturn("/home/user/.machine/ssl");
+        PumbaStandaloneContainerHandler pumbaStandaloneContainerHandler = new PumbaStandaloneContainerHandler();
+        pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = new Instance<CubeDockerConfiguration>() {
+            @Override
+            public CubeDockerConfiguration get() {
+                return cubeDockerConfiguration;
+            }
+        };
+
+        final StandaloneContainer install = pumbaStandaloneContainerHandler.install(null);
+        Assertions.assertThat(install.getCube().getVolumes()).contains("/home/user/.machine/ssl:/etc/ssl/docker");
+
+    }
+}
