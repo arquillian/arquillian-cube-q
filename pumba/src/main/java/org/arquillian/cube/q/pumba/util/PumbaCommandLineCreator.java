@@ -5,7 +5,7 @@ import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CommandLineUtil {
+public class PumbaCommandLineCreator {
 
     private final static int PUMBA_INDEX = 0;
     private final static int HOST_INDEX = 1;
@@ -16,11 +16,11 @@ public class CommandLineUtil {
     private final static int CHAOS_INDEX = 6;
     private final static int CHAOS_COMMAND_INDEX = 7;
 
-    private CommandLineUtil() {
+    private PumbaCommandLineCreator() {
         super();
     }
 
-    public static final Collection<String> pumbaCli(String chaosCommand, boolean random, CubeDockerConfiguration cubeDockerConfiguration) {
+    public static final Collection<String> run(String chaosCommand, boolean random, CubeDockerConfiguration cubeDockerConfiguration) {
 
         String[] runningCommand = new String[8];
         runningCommand[PUMBA_INDEX] = "pumba";

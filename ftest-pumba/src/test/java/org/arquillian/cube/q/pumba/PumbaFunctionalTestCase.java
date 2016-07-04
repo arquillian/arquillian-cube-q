@@ -5,6 +5,7 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Container;
 import org.arquillian.cube.q.api.ContainerChaos;
 import org.arquillian.cube.q.spi.StandaloneContainer;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -14,6 +15,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(Arquillian.class)
@@ -31,7 +34,7 @@ public class PumbaFunctionalTestCase {
                 .onCubeDockerHost()
                     .killRandomly(
                             ContainerChaos.ContainersType.regularExpression("^pingpong"),
-                            ContainerChaos.IntervalType.interval(4),
+                            ContainerChaos.IntervalType.intervalWithSeconds(4),
                             ContainerChaos.KillSignal.SIGTERM
                     )
                 .exec();
@@ -41,8 +44,7 @@ public class PumbaFunctionalTestCase {
 
         final List<Container> containers = dockerClient.listContainersCmd().exec();
         //Pumba container is not killed by itself
-        Assert.assertThat(containers.size(), CoreMatchers.is(1));
-
+        assertThat(containers).hasSize(1);
 
     }
 

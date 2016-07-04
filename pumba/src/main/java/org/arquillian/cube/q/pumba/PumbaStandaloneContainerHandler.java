@@ -15,7 +15,7 @@ public class PumbaStandaloneContainerHandler implements StandaloneManager {
     Instance<CubeDockerConfiguration> cubeDockerConfigurationInstance;
 
     @Override
-    public StandaloneContainer install(DockerCompositions dockerCompositions) {
+    public StandaloneContainer install() {
         StandaloneContainer.Builder builder = StandaloneContainer.create();
 
         if(isNativeDocker()) {

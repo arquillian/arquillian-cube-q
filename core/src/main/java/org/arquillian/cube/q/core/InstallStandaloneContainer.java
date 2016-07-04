@@ -29,7 +29,7 @@ public class InstallStandaloneContainer {
         if (installer != null) {
             DockerCompositions cubes = configuration.getDockerContainersContent();
 
-            final StandaloneContainer install = installer.install(cubes);
+            final StandaloneContainer install = installer.install();
             final CubeContainer cube = install.getCube();
             cubes.add(install.getName(), cube);
 

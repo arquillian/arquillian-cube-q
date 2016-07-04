@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PumbaStandaloneContainerHandlerTest {
 
@@ -19,7 +22,7 @@ public class PumbaStandaloneContainerHandlerTest {
     @Test
     public void shouldAddUnixVolume() {
 
-        Mockito.when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("unix:///var");
+        when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("unix:///var");
         PumbaStandaloneContainerHandler pumbaStandaloneContainerHandler = new PumbaStandaloneContainerHandler();
         pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = new Instance<CubeDockerConfiguration>() {
             @Override
@@ -28,16 +31,16 @@ public class PumbaStandaloneContainerHandlerTest {
             }
         };
 
-        final StandaloneContainer install = pumbaStandaloneContainerHandler.install(null);
-        Assertions.assertThat(install.getCube().getVolumes()).contains("/var/run/docker.sock:/var/run/docker.sock");
+        final StandaloneContainer install = pumbaStandaloneContainerHandler.install();
+        assertThat(install.getCube().getBinds()).contains("/var/run/docker.sock:/var/run/docker.sock");
 
     }
 
     @Test
     public void shouldAddCertsVolume() {
 
-        Mockito.when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("https://192.168.0.1");
-        Mockito.when(cubeDockerConfiguration.getCertPath()).thenReturn("/home/user/.machine/ssl");
+        when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("https://192.168.0.1");
+        when(cubeDockerConfiguration.getCertPath()).thenReturn("/home/user/.machine/ssl");
         PumbaStandaloneContainerHandler pumbaStandaloneContainerHandler = new PumbaStandaloneContainerHandler();
         pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = new Instance<CubeDockerConfiguration>() {
             @Override
@@ -46,8 +49,8 @@ public class PumbaStandaloneContainerHandlerTest {
             }
         };
 
-        final StandaloneContainer install = pumbaStandaloneContainerHandler.install(null);
-        Assertions.assertThat(install.getCube().getVolumes()).contains("/home/user/.machine/ssl:/etc/ssl/docker");
+        final StandaloneContainer install = pumbaStandaloneContainerHandler.install();
+        assertThat(install.getCube().getBinds()).contains("/home/user/.machine/ssl:/etc/ssl/docker");
 
     }
 }
