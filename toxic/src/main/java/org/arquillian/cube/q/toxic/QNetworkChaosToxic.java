@@ -1,6 +1,6 @@
 package org.arquillian.cube.q.toxic;
 
-import org.arquillian.cube.q.api.Q;
+import org.arquillian.cube.q.api.NetworkChaos;
 import org.arquillian.cube.q.toxic.client.ToxiProxy;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
@@ -8,11 +8,11 @@ import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QToxic implements Q {
+public class QNetworkChaosToxic implements NetworkChaos {
 
     private ToxiProxyScenario scenario;
     
-    public QToxic(ToxiProxyScenario scenario) {
+    public QNetworkChaosToxic(ToxiProxyScenario scenario) {
         this.scenario = scenario;
     }
 

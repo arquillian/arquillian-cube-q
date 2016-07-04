@@ -52,10 +52,11 @@
 
     <properties>
         <version.arquillian_core>1.1.11.Final</version.arquillian_core>
-        <version.arquillian_cube>1.0.0.Alpha12</version.arquillian_cube>
+        <version.arquillian_cube>1.0.0.Final-SNAPSHOT</version.arquillian_cube>
         <version.toxiproxyjava>2.1</version.toxiproxyjava>
         <version.junit>4.11</version.junit>
         <version.mockito>1.10.19</version.mockito>
+        <version.assertj>2.4.1</version.assertj>
     </properties>
 
     <dependencyManagement>
@@ -86,7 +87,11 @@
                 <artifactId>toxiproxy-java</artifactId>
                 <version>${version.toxiproxyjava}</version>
             </dependency>
-        
+            <dependency>
+                <groupId>org.arquillian.cube.q</groupId>
+                <artifactId>arquillian-cube-q-pumba</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.arquillian.cube</groupId>
                 <artifactId>arquillian-cube-api</artifactId>
@@ -133,6 +138,12 @@
                 <version>${version.junit}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${version.assertj}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -143,6 +154,8 @@
 
         <module>toxic</module>
         <module>ftest-toxic</module>
+        <module>pumba</module>
+        <module>ftest-pumba</module>
     </modules>
     <build>
         <plugins>

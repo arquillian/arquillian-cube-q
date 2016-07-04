@@ -4,8 +4,8 @@ import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
 import org.arquillian.cube.docker.impl.client.config.CubeContainer;
 import org.arquillian.cube.docker.impl.client.config.DockerCompositions;
 import org.arquillian.cube.docker.impl.util.ConfigUtil;
-import org.arquillian.cube.q.spi.Proxy;
-import org.arquillian.cube.q.spi.ProxyManager;
+import org.arquillian.cube.q.spi.StandaloneContainer;
+import org.arquillian.cube.q.spi.StandaloneManager;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
@@ -13,30 +13,33 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.core.spi.ServiceLoader;
 
+public class InstallStandaloneContainer {
 
-public class InstallProxy {
-    
     @Inject
     private Instance<ServiceLoader> serviceLoaderInst;
-    
-    @Inject @ApplicationScoped
-    private InstanceProducer<Proxy> proxyInst;
-    
+
+    @Inject
+    @ApplicationScoped
+    private InstanceProducer<StandaloneContainer> standaloneContainerInst;
+
     public void install(@Observes(precedence = 100) CubeDockerConfiguration configuration) {
-        
-        DockerCompositions cubes = configuration.getDockerContainersContent();
-        ProxyManager installer = serviceLoaderInst.get().onlyOne(ProxyManager.class);
+
+        StandaloneManager installer = serviceLoaderInst.get().onlyOne(StandaloneManager.class);
 
         if (installer != null) {
-            Proxy proxy = installer.install(cubes);
-            proxyInst.set(proxy);
+            DockerCompositions cubes = configuration.getDockerContainersContent();
 
-            final CubeContainer cube = proxy.getCube();
-            cubes.add(proxy.getName(), cube);
+            final StandaloneContainer install = installer.install();
+            final CubeContainer cube = install.getCube();
+            cubes.add(install.getName(), cube);
 
-            System.out.println("PROXY INSTALLED");
+
+            standaloneContainerInst.set(install);
+
+            System.out.println("STANDALONE CONTAINER INSTALLED");
             System.out.println(ConfigUtil.dump(cubes));
         }
-        
     }
+
+
 }

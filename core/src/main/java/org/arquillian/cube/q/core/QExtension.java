@@ -9,7 +9,7 @@ public class QExtension implements LoadableExtension {
     public void register(ExtensionBuilder builder) {
         builder.observer(InstallProxy.class)
                .observer(RegisterProxy.class)
-               .service(ResourceProvider.class, QResourceProvider.class);
+               .observer(InstallStandaloneContainer.class);
     }
 
 }
