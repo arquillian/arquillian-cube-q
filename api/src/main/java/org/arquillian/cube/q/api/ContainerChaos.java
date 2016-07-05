@@ -52,7 +52,7 @@ public interface ContainerChaos {
             super(value);
         }
 
-        public static IntervalType intervalWithSeconds(long interval) {
+        public static IntervalType intervalInSeconds(long interval) {
             return new IntervalType(interval);
         }
 

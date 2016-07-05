@@ -34,7 +34,7 @@ public class PumbaFunctionalTestCase {
                 .onCubeDockerHost()
                     .killRandomly(
                             ContainerChaos.ContainersType.regularExpression("^pingpong"),
-                            ContainerChaos.IntervalType.intervalWithSeconds(4),
+                            ContainerChaos.IntervalType.intervalInSeconds(4),
                             ContainerChaos.KillSignal.SIGTERM
                     )
                 .exec();

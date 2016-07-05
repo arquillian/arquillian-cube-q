@@ -76,7 +76,7 @@ public interface NetworkChaos {
             super(value);
         }
 
-        public static DelayType delay(long delay) {
+        public static DelayType delayInMillis(long delay) {
             return new DelayType(delay);
         }
 
@@ -112,7 +112,7 @@ public interface NetworkChaos {
             super(value);
         }
 
-        public static LatencyType latency(long time) {
+        public static LatencyType latencyInMillis(long time) {
             return new LatencyType(time);
         }
 
@@ -126,7 +126,7 @@ public interface NetworkChaos {
             super(value);
         }
 
-        public static TimeoutType timeout(long time) {
+        public static TimeoutType timeoutInMillis(long time) {
             return new TimeoutType(time);
         }
 

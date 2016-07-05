@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.arquillian.cube.q.api.ContainerChaos.ContainersType.containers;
 import static org.arquillian.cube.q.api.ContainerChaos.ContainersType.regularExpression;
-import static org.arquillian.cube.q.api.ContainerChaos.IntervalType.intervalWithSeconds;
+import static org.arquillian.cube.q.api.ContainerChaos.IntervalType.intervalInSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PumbaChaosCommandBuilderTest {
@@ -15,7 +15,7 @@ public class PumbaChaosCommandBuilderTest {
     public void shouldCreateStopCommand() {
         final String stopCommand = QPumbaAction.PumbaChaosCommandBuilder.create()
                 .containers(containers("a", "b"))
-                .interval(intervalWithSeconds(4))
+                .interval(intervalInSeconds(4))
                 .chaosOperation(ChaosOperation.STOP)
                 .build();
 
@@ -26,7 +26,7 @@ public class PumbaChaosCommandBuilderTest {
     public void shouldCreateRemoveCommand() {
         final String removeCommand = QPumbaAction.PumbaChaosCommandBuilder.create()
                 .containers(regularExpression("^pingpong"))
-                .interval(intervalWithSeconds(4))
+                .interval(intervalInSeconds(4))
                 .chaosOperation(ChaosOperation.RM)
                 .build();
 
@@ -37,7 +37,7 @@ public class PumbaChaosCommandBuilderTest {
     public void shouldCreateKillCommand() {
         final String killCommand = QPumbaAction.PumbaChaosCommandBuilder.create()
                 .containers(containers("a"))
-                .interval(intervalWithSeconds(4))
+                .interval(intervalInSeconds(4))
                 .chaosOperation(ChaosOperation.KILL)
                 .killSignal(ContainerChaos.KillSignal.SIGTERM)
                 .build();

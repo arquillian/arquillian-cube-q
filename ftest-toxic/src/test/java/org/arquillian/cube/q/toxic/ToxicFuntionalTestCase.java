@@ -5,7 +5,6 @@ import eu.rekawek.toxiproxy.Proxy;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.arquillian.cube.q.api.Q;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latency;
+import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis;
 import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
 
 @RunWith(Arquillian.class) //@Ignore
@@ -40,7 +40,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLatency() throws Exception {
-        networkChaos.on("pingpong", 8080).latency(latency(4000)).exec(() -> {
+        networkChaos.on("pingpong", 8080).latency(latencyInMillis(4000)).exec(() -> {
 
             URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
             final long l = System.currentTimeMillis();
@@ -53,7 +53,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLatencyWithExec() throws Exception {
-        networkChaos.on("pingpong", 8080).latency(latency(4000)).exec();
+        networkChaos.on("pingpong", 8080).latency(latencyInMillis(4000)).exec();
 
         URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
         final long l = System.currentTimeMillis();
@@ -68,7 +68,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLatencyWithIterations() throws Exception {
-        networkChaos.on("pingpong", 8080).latency(latency(4000)).exec(times(2), () -> {
+        networkChaos.on("pingpong", 8080).latency(latencyInMillis(4000)).exec(times(2), () -> {
 
             URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
             final long l = System.currentTimeMillis();
