@@ -215,6 +215,7 @@ Arquillian Q Pumba is only a jar file deployed in Maven central.
       <artifactId>junit</artifactId>
   </dependency>
 </dependencies>
+----
 
 IMPORTANT: Notice that instead of registering `arquillian-junit-container` as you usually do in Arquillian test, you are using `arquillian-junit-standalone`. This is because it has no sense to use in these kind of tests microdeployments feature (method annotated with `@Deployment`).
 
