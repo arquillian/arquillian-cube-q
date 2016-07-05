@@ -1,0 +1,296 @@
+= Introduction
+
+Usually when we talk about writing tests, the first thing that comes to your mind is some kind of static test where you send an input and you expect an output.
+For example you send a wrong parameter to a REST service, and you expect that it returns an error message/status code.
+
+But usually applications runs more time than the amount of time it takes to execute all tests. Probably days or months until you update it.
+And during this time, things happen, for example network starts to go slow, a unknown process eats all CPU or if you are using Docker, a container dies.
+So you can see that when you run your application for a long time some kind of *chaos* might appear.
+
+The question is, are you sure your application deals correctly with these situations?
+You can test it manually, but if you want to apply CI/CD approach then you need some automatic way to execute them.
+
+And this is where Arquillian Cube Q helps you.
+Arquillian Cube Q is an extension of Arquillian Cube (https://github.com/arquillian/arquillian-cube) that allows you to write chaos tests.
+Since Arquillian Cube Q is an extension of Cube, it relies on Docker to execute them.
+
+== Chaos
+
+image::http://www.starshipnivan.com/blog/wp-content/uploads/2010/10/De-Lancie-crop.jpg[]
+
+There are several level of chaos that you might test, from network chaos (latency, bandwidth limitation, ...) to operative system chaos (cpu burn, io burn, dill disk, ...).
+
+Arquillian Q as all the Arquillian project, it reuses existing chaos frameworks by integrating them into Arquillian philosophy.
+Let's see what is supported:
+
+=== Network Chaos
+
+To do *network chaos* Arquillian Q integrates with Toxiproxy project (https://github.com/Shopify/toxiproxy).
+Toxiproxy is a framework for simulating network conditions.
+It is a TCP proxy that intercepts communication between two endpoints and adds some chaos before reaching the real endpoint.
+
+Toxiproxy supports next toxics:
+
+latency:: Add a delay to all data going through the proxy. The delay is equal to latency +/- jitter.
+down:: Bringing a service down
+bandwidth:: Limit a connection to a maximum number of kilobytes per second.
+slow close:: Delay the TCP socket from closing until delay has elapsed.
+timeout:: Stops all data from getting through, and closes the connection after timeout. If timeout is 0, the connection won't close, and data will be delayed until the toxic is removed.
+slicer:: Slices TCP data up into small bits, optionally adding a delay between each sliced "packet".
+
+Arquillian Q supports Toxiproxy by registering as docker container toxiproxy and then inspecting the cube definitions (in _cube_ format or _docker-compose_ format) and automatically redirect links to toxiproxy.
+
+As an example:
+
+ContainerA -link-> ContainerB
+
+is converted to:
+
+ContainerA -link-> ToxiproxyContainer -link-> ContainerB
+
+After this you are able to program some toxics to Toxiproxy and execute the test.
+
+==== Adding Dependency
+
+Arquillian Q Toxiproxy is only a jar deployed to Maven central:
+
+[source, xml]
+.pom.xml
+----
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.arquillian</groupId>
+      <artifactId>arquillian-bom</artifactId>
+      <version>${version.arquillian_core}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<dependencies>
+  <dependency>
+    <groupId>org.arquillian.cube.q</groupId>
+    <artifactId>arquillian-cube-q-toxic</artifactId>
+    <scope>test</scope>
+    <version>${version.arquillian_q}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.jboss.arquillian.junit</groupId>
+    <artifactId>arquillian-junit-standalone</artifactId>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+  </dependency>
+</dependencies>
+----
+
+IMPORTANT: Notice that instead of registering `arquillian-junit-container` as you usually do in Arquillian test, you are using `arquillian-junit-standalone`. This is because it has no sense to use in these kind of tests microdeployments feature (method annotated with `@Deployment`).
+
+==== Configuration
+
+You don't need to configure anything else from the point of view of Q apart from Cube configuration file.
+
+[source, xml]
+.arquillian.xml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
+        http://jboss.org/schema/arquillian
+        http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+  <extension qualifier="docker">
+    <property name="machineName">dev</property>
+    <property name="dockerContainers">
+        hw:
+          image: lordofthejars/helloworld
+          env: ["CATALINA_OPTS=-Djava.security.egd=file:/dev/./urandom"]
+          portBindings: [8081->8080/tcp]
+          links:
+            - pingpong:pingpong
+
+        pingpong:
+          image: jonmorehouse/ping-pong
+          exposedPorts: [8080/tcp]
+    </property>
+  </extension>
+
+</arquillian>
+----
+
+In this case container `helloworld` is connecting to `pingpong` container.
+
+==== Test
+
+Then the test looks like:
+
+[source, java]
+----
+@RunWith(Arquillian.class)
+public class ToxicFuntionalTestCase {
+
+  @ArquillianResource
+  private NetworkChaos networkChaos; // <1>
+
+  @HostIp
+  private String ip;
+
+  @Test
+  public void shouldAddLatency() throws Exception {
+    networkChaos.on("pingpong", 8080).latency(latencyInMillis(4000)) // <2>
+      .exec(() -> { // <3>
+
+        URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
+        final long l = System.currentTimeMillis();
+        String response = IOUtil.asString(url.openStream());
+        System.out.println(response);
+        System.out.println("Time:" + (System.currentTimeMillis() - l));
+        // assertions
+
+    }); // <4>
+  }
+}
+----
+<1> Enrich the test with `NetworkChaos` instance to communicate with _Toxiproxy_.
+<2> Adds a latency of 4 seconds when communication is done to `pingpong` container through port _8080_.
+<3> Executes test logic. Notice that the execution time will be greater than 4 seconds.
+<4> After callback executions, toxics are reseted.
+
+TIP: `exec` method also supports you pass how many times do you want to execute the test: `networkChaos.on("pingpong", 8080).latency(latencyInMillis(4000)).exec(times(2), () -> {}` or for example the amount of time you want to keep executing the test `Q.on("pingpong", 8080).exec(during(15, TimeUnit.SECONDS), () -> {}`.
+
+You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-toxic
+
+=== Container Chaos
+
+To do *container chaos* Arquillian Q integrates with Pumba project (https://github.com/Shopify/toxiproxy).
+Pumba is an application that you run it on every Docker host, in your cluster and it, once in a while, will "randomly" stop running containers, matching specified name/s or name patterns.
+You can even specify the signal, that will be sent to “kill” the container.
+
+It supports:
+
+* Stop a container.
+* Remove a container.
+* Kill a container process with signal.
+
+Arquillian Q will register a Pumba container inside the configured docker host you set in Arquillian Q.
+
+==== Adding Dependency
+
+Arquillian Q Pumba is only a jar file deployed in Maven central.
+
+[source, xml]
+.pom.xml
+----
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.arquillian</groupId>
+      <artifactId>arquillian-bom</artifactId>
+      <version>${version.arquillian_core}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<dependencies>
+  <dependency>
+    <groupId>org.arquillian.cube.q</groupId>
+    <artifactId>arquillian-cube-q-pumba</artifactId>
+    <scope>test</scope>
+    <version>${version.arquillian_q}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.jboss.arquillian.junit</groupId>
+    <artifactId>arquillian-junit-standalone</artifactId>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+  </dependency>
+</dependencies>
+
+IMPORTANT: Notice that instead of registering `arquillian-junit-container` as you usually do in Arquillian test, you are using `arquillian-junit-standalone`. This is because it has no sense to use in these kind of tests microdeployments feature (method annotated with `@Deployment`).
+
+==== Configuration
+
+You don't need to configure anything else from the point of view of Q apart from Cube configuration file.
+
+[source, xml]
+.arquillian.xml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
+        http://jboss.org/schema/arquillian
+        http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+  <extension qualifier="docker">
+    <property name="machineName">dev</property>
+    <property name="dockerContainers">
+      pingpong:
+        image: jonmorehouse/ping-pong
+        exposedPorts: [8080/tcp]
+
+      pingpong2:
+        image: jonmorehouse/ping-pong
+        exposedPorts: [8080/tcp]
+    </property>
+  </extension>
+
+</arquillian>
+----
+
+In this case we are defining two instances of same image.
+
+==== Test
+
+Then the test looks like:
+
+[source, java]
+----
+@RunWith(Arquillian.class)
+public class PumbaFunctionalTestCase {
+
+  @ArquillianResource // <1>
+  ContainerChaos containerChaos;
+
+  @ArquillianResource
+  DockerClient dockerClient; // <2>
+
+  @Test
+  public void shouldKillContainers() throws Exception {
+    containerChaos
+            .onCubeDockerHost()
+                .killRandomly( // <3>
+                        ContainerChaos.ContainersType.regularExpression("^pingpong"), // <4>
+                        ContainerChaos.IntervalType.intervalInSeconds(4), // <5>
+                        ContainerChaos.KillSignal.SIGTERM
+                )
+            .exec(); // <6>
+
+        final List<Container> containers = dockerClient.listContainersCmd().exec();
+        //Pumba container is not killed by itself
+        assertThat(containers).hasSize(1);
+
+    }
+
+}
+----
+<1> Enrich test with container chaos
+<2> Enrich test with `DockerClient` class to communicate with DockerHost in test
+<3> Kills randomly one by one containers
+<4> Kills only containers with name starting with _pingpong_
+<5> Time to wait between kill another container
+<6> Starts Pumba. In this case no callback used.
+
+As happens in *Network Chaos* you can also specify test as callback and specify times to execute the test or the duration.
+
+You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-pumba
