@@ -93,6 +93,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.arquillian.cube.q</groupId>
+                <artifactId>arquillian-cube-q-simianarmy</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.arquillian.cube</groupId>
                 <artifactId>arquillian-cube-api</artifactId>
                 <version>${version.arquillian_cube}</version>
@@ -156,6 +161,8 @@
         <module>ftest-toxic</module>
         <module>pumba</module>
         <module>ftest-pumba</module>
+        <module>simianarmy</module>
+        <module>ftest-simianarmy</module>
     </modules>
     <build>
         <plugins>

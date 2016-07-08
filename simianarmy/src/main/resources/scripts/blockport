@@ -1,0 +1,2 @@
+iptables -A INPUT -p tcp -m tcp --dport ${port} -j DROP
+iptables -A INPUT -p udp -m udp --dport ${port} -j DROP
