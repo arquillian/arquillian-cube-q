@@ -106,4 +106,17 @@ public interface Q {
             return value;
         }
     }
+
+    public static abstract class ArrayType<T> {
+
+        private T[] value;
+
+        protected ArrayType(T[] value) {
+            this.value = value;
+        }
+
+        public T[] getValue() {
+            return value;
+        }
+    }
 }

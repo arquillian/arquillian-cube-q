@@ -295,3 +295,100 @@ public class PumbaFunctionalTestCase {
 As happens in *Network Chaos* you can also specify test as callback and specify times to execute the test or the duration.
 
 You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-pumba
+
+== Operative System Chaos
+
+
+To do *operative system chaos* Arquillian Q uses some modified version scripts of Netflix Simian Army project ().
+Some scripts have been modified to have sense into Docker world instead of AWS world.
+
+
+It supports:
+
+* Block a port using `iptables` command.
+* Burn CPU using `dd` command. That is putting CPU to 100%.
+* Burn IO using `dd` comomand.
+* Fill disk with `dd` command.
+* Kill process using `pkill` command.
+* Null Route using `ip` command.
+
+IMPORTANT: Scripts are executed inside the container. This means that the command used in the script must be installed inside the container. Some images might contain them, others not.
+
+TIP: Making chaos with scripts means a whole new kind of possibilities since the only barrier is the commands you need to execute them. Please feel free to contribute with your own scripts.
+
+==== Adding Dependency
+
+Arquillian Q Pumba is only a jar file deployed in Maven central.
+
+[source, xml]
+.pom.xml
+----
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.arquillian</groupId>
+      <artifactId>arquillian-bom</artifactId>
+      <version>${version.arquillian_core}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
+<dependencies>
+  <dependency>
+    <groupId>org.arquillian.cube.q</groupId>
+    <artifactId>arquillian-cube-q-simianarmy</artifactId>
+    <scope>test</scope>
+    <version>${version.arquillian_q}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.jboss.arquillian.junit</groupId>
+    <artifactId>arquillian-junit-standalone</artifactId>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+  </dependency>
+</dependencies>
+----
+
+IMPORTANT: Notice that instead of registering `arquillian-junit-container` as you usually do in Arquillian test, you are using `arquillian-junit-standalone`. This is because it has no sense to use in these kind of tests microdeployments feature (method annotated with `@Deployment`).
+
+==== Test
+
+Then the test looks like:
+
+[source, java]
+----
+@RunWith(Arquillian.class)
+public class SimianArmyFunctionalTestCase {
+
+    @ArquillianResource // <1>
+    OperativeSystemChaos operativeSystemChaos;
+
+    @HostIp
+    String dockerHost;
+
+    @HostPort(containerName = "pingpong ", value = 8080)
+    int port;
+
+    @Test(expected = Exception.class) @Ignore //Running this test in same machine makes everything screwed
+    public void shouldExecuteBurnCpuChaos() throws Exception {
+        operativeSystemChaos.on("pingpong") // <2>
+            .burnCpu(singleCpu()) // <3>
+            .exec(); // <4>
+
+        //.....
+
+    }
+----
+<1> Enrich test with operative system chaos
+<2> Sets the container to set the chaos
+<3> Sets burn cpu chaos as if the system had only one cpu
+<4> Starts the burn cpu script. In this case no callback used
+
+As happens in *Network Chaos* you can also specify test as callback and specify times to execute the test or the duration.
+
+You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-simianarmy
