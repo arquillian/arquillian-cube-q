@@ -165,6 +165,36 @@ TIP: `exec` method also supports you pass how many times do you want to execute 
 
 You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-toxic
 
+==== Binding Ports Chaos
+
+Sometimes you don't want to add chaos between containers but in binding ports.
+That is adding chaos to the communication between host and containers.
+This is really useful in cases when you want to test what's happening to your frontend application (javascript) when there is some chaos.
+
+Assuming that A has a port binding, something like:
+
+A -> B
+
+is converted to:
+
+Proxy -> A -> B
+
+Where A has no port binding anymore but only exposed ports and it is the Proxy who has the port binding.
+
+To use this just configure next parameter in `arquillian.xml` file:
+
+[source, xml]
+.arquillian.xml
+----
+<extension qualifier="networkChaos">
+    <property name="toxifyPortBinding">true</property>
+</extension>
+----
+
+IMPORTANT: By defult this flag is false, if you set to true then no chaos can be done between containers, only between host and containers.
+
+You can see an example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-toxic-frontend
+
 === Container Chaos
 
 To do *container chaos* Arquillian Q integrates with Pumba project (https://github.com/Shopify/toxiproxy).
