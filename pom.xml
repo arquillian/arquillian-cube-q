@@ -124,6 +124,11 @@
                 <version>${version.arquillian_core}</version>
             </dependency>
             <dependency>
+                <groupId>org.jboss.arquillian.config</groupId>
+                <artifactId>arquillian-config-api</artifactId>
+                <version>${version.arquillian_core}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.arquillian.core</groupId>
                 <artifactId>arquillian-core-impl-base</artifactId>
                 <version>${version.arquillian_core}</version>
@@ -159,6 +164,7 @@
 
         <module>toxic</module>
         <module>ftest-toxic</module>
+	<module>ftest-toxic-frontend</module>
         <module>pumba</module>
         <module>ftest-pumba</module>
         <module>simianarmy</module>

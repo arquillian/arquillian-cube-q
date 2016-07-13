@@ -94,8 +94,8 @@ public class Proxy {
         private final int DEFAULT_PORT = 8474;
 
         private String image = "shopify/toxiproxy";
-        private List<String> expose = new ArrayList<String>();
-        private List<String> bind = new ArrayList<String>();
+        private Set<String> expose = new HashSet<>();
+        private Set<String> bind = new HashSet<>();
 
         private Map<String, List<String>> containerExpose = new HashMap<String, List<String>>(); 
         private Map<String, List<String>> containerLinks = new HashMap<String, List<String>>();
@@ -112,7 +112,7 @@ public class Proxy {
         public Builder containerBinds(String containerName, int bound, int exposed, String protocol) {
             bindPort(bound, exposed, protocol);
             getValue(containerName, containerExpose).add(exposed + "/" + protocol);
-            containerLinks("localhost", containerName);
+            containerLinks(containerName, containerName + "_toxiproxy");
             return this;
         }
         
