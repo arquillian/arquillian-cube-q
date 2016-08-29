@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.arquillian.cube.q</groupId>
         <artifactId>arquillian-cube-q</artifactId>
-        <version>1.0.0.Final-SNAPSHOT</version>
+        <version>1.0.0.Alpha1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
