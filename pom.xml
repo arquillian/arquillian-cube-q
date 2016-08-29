@@ -52,7 +52,7 @@
 
     <properties>
         <version.arquillian_core>1.1.11.Final</version.arquillian_core>
-        <version.arquillian_cube>1.0.0.Final-SNAPSHOT</version.arquillian_cube>
+        <version.arquillian_cube>1.0.0.Alpha14</version.arquillian_cube>
         <version.toxiproxyjava>2.1</version.toxiproxyjava>
         <version.junit>4.11</version.junit>
         <version.mockito>1.10.19</version.mockito>
