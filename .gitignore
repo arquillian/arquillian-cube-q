@@ -30,7 +30,7 @@ infinitest.filters
 # Logs
 *.log
 *.log~
-
+*.html
 # Libreoffice leftovers (XLS)
 .~lock*
 

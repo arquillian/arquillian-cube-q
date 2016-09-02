@@ -346,7 +346,7 @@ IMPORTANT: Scripts are executed inside the container. This means that the comman
 
 TIP: Making chaos with scripts means a whole new kind of possibilities since the only barrier is the commands you need to execute them. Please feel free to contribute with your own scripts.
 
-==== Adding Dependency
+=== Adding Dependency
 
 Arquillian Q Pumba is only a jar file deployed in Maven central.
 
@@ -386,7 +386,7 @@ Arquillian Q Pumba is only a jar file deployed in Maven central.
 
 IMPORTANT: Notice that instead of registering `arquillian-junit-container` as you usually do in Arquillian test, you are using `arquillian-junit-standalone`. This is because it has no sense to use in these kind of tests microdeployments feature (method annotated with `@Deployment`).
 
-==== Test
+=== Test
 
 Then the test looks like:
 
