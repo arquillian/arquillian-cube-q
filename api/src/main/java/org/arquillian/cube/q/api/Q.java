@@ -59,10 +59,27 @@ public interface Q {
         }
     }
 
-    public static abstract class FloatType {
+    public static abstract class BaseType {
+        private boolean distributed = false;
+
+        protected BaseType(boolean distributed) {
+            this.distributed = distributed;
+        }
+
+        protected void setDistributed() {
+            this.distributed = true;
+        }
+
+        public boolean isDistributed() {
+            return this.distributed;
+        }
+    }
+
+    public static abstract class FloatType extends BaseType {
         private float value;
 
         public FloatType(float value) {
+            super(false);
             this.value = value;
         }
 
@@ -71,10 +88,11 @@ public interface Q {
         }
     }
 
-    public static abstract class LongType {
+    public static abstract class LongType extends BaseType {
         private long value;
 
         protected LongType(long value) {
+            super(false);
             this.value = value;
         }
 
@@ -83,10 +101,11 @@ public interface Q {
         }
     }
 
-    public static abstract class IntegerType {
+    public static abstract class IntegerType extends BaseType {
         private int value;
 
         protected IntegerType(int value) {
+            super(false);
             this.value = value;
         }
 
@@ -95,10 +114,11 @@ public interface Q {
         }
     }
 
-    public static abstract class StringType {
+    public static abstract class StringType extends BaseType {
         private String value;
 
         protected StringType(String value) {
+            super(false);
             this.value = value;
         }
 
@@ -107,11 +127,12 @@ public interface Q {
         }
     }
 
-    public static abstract class ArrayType<T> {
+    public static abstract class ArrayType<T> extends BaseType {
 
         private T[] value;
 
         protected ArrayType(T[] value) {
+            super(false);
             this.value = value;
         }
 

@@ -107,7 +107,7 @@ public interface NetworkChaos {
         }
     }
 
-    public static final class LatencyType extends Q.LongType {
+    public static class LatencyType extends Q.LongType {
         protected LatencyType(long value) {
             super(value);
         }
@@ -118,6 +118,42 @@ public interface NetworkChaos {
 
         public static LatencyType latency(long time, TimeUnit timeUnit) {
             return new LatencyType(timeUnit.toMillis(time));
+        }
+    }
+
+    public static class DistributedLatencyType extends LatencyType {
+
+        private DelayDistribution distribution;
+
+        protected DistributedLatencyType(DelayDistribution distribution, long value) {
+            super(value);
+            this.distribution = distribution;
+            setDistributed();
+        }
+
+        public static DistributedLatencyType logNormalLatencyInMIllis(long median, double sigma) {
+            return new DistributedLatencyType(new LogNormalDistribution(median, sigma), median);
+        }
+
+        public static DistributedLatencyType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
+            return new DistributedLatencyType(
+                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                            sigma), medianTimeUnit.toMillis(median));
+        }
+
+        public static DistributedLatencyType uniformLatencyInMIllis(long upper, long lower) {
+            return new DistributedLatencyType(new UniformDistribution(upper, lower), lower);
+        }
+
+        public static DistributedLatencyType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+            return new DistributedLatencyType(
+                    new UniformDistribution(upperTimeUnit.toMillis(upper),
+                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+        }
+
+        @Override
+        public long getValue() {
+            return distribution.calculate();
         }
     }
 

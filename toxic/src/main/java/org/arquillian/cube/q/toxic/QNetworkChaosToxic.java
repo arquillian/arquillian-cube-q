@@ -6,6 +6,7 @@ import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QNetworkChaosToxic implements NetworkChaos {
@@ -55,7 +56,7 @@ public class QNetworkChaosToxic implements NetworkChaos {
 
         @Override
         public Action latency(LatencyType latencyType) {
-            final ToxiProxyClient.Latency toxic = new ToxiProxyClient.Latency("latency_downstream", ToxicDirectionStream.DOWNSTREAM.name(), 1f, latencyType.getValue(), 0);
+            final ToxiProxyClient.Latency toxic = new ToxiProxyClient.Latency("latency_downstream", ToxicDirectionStream.DOWNSTREAM.name(), 1f, latencyType, 0);
             toxics.add(toxic);
 
             return this;
@@ -63,7 +64,7 @@ public class QNetworkChaosToxic implements NetworkChaos {
 
         @Override
         public Action latency(LatencyType latencyType, JitterType jitterType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream) {
-            final ToxiProxyClient.Latency toxic = new ToxiProxyClient.Latency("latency_" + toxicDirectionStream.name().toLowerCase(), toxicDirectionStream.name(), toxicityType.getValue(), latencyType.getValue(), jitterType.getValue());
+            final ToxiProxyClient.Latency toxic = new ToxiProxyClient.Latency("latency_" + toxicDirectionStream.name().toLowerCase(), toxicDirectionStream.name(), toxicityType.getValue(), latencyType, jitterType.getValue());
             toxics.add(toxic);
 
             return this;
@@ -139,6 +140,9 @@ public class QNetworkChaosToxic implements NetworkChaos {
         }
 
         private void run(final Perform perform, final RunCondition runCondition) throws Exception {
+
+            final List<ToxiProxyClient.BaseToxic> toxicsWithDistributedValues = filterToxicsContainingDistributedValues(toxics);
+
             scenario.given(name)
                     .using(toxics)
                     .then(new ToxiProxy.Callable() {
@@ -147,6 +151,11 @@ public class QNetworkChaosToxic implements NetworkChaos {
                         public void call() throws Exception {
                             while (runCondition.isExecutable()) {
                                 perform.execute();
+
+                                //update distributed values for next round
+                                scenario.given(name)
+                                        .using(toxicsWithDistributedValues)
+                                        .update();
                             }
                         }
                     });
@@ -163,5 +172,18 @@ public class QNetworkChaosToxic implements NetworkChaos {
                         }
                     });
         }
+
+        private List<ToxiProxyClient.BaseToxic> filterToxicsContainingDistributedValues(List<ToxiProxyClient.BaseToxic> toxics) {
+            final List<ToxiProxyClient.BaseToxic> toxicsWithDistributedValues = new ArrayList<>();
+
+            for (ToxiProxyClient.BaseToxic toxic : toxics) {
+                if (toxic.hasAnyDistributedField()) {
+                    toxicsWithDistributedValues.add(toxic);
+                }
+            }
+
+            return Collections.unmodifiableList(toxicsWithDistributedValues);
+        }
+
     } 
 }

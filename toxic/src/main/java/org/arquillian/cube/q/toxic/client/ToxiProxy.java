@@ -14,6 +14,7 @@ public interface ToxiProxy {
         Scenario using(List<ToxiProxyClient.BaseToxic> toxic);
         void then(Callable callable) throws Exception;
         void execute() throws Exception;
+        void update() throws Exception;
     }
     
     public interface Callable {
