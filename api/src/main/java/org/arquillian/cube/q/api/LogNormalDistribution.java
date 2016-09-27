@@ -2,7 +2,7 @@ package org.arquillian.cube.q.api;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class LogNormalDistribution implements DelayDistribution {
+public class LogNormalDistribution implements Distribution {
 
     private double sigma;
     private long median;

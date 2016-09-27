@@ -2,7 +2,7 @@ package org.arquillian.cube.q.api;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class UniformDistribution implements DelayDistribution {
+public class UniformDistribution implements Distribution {
 
     private long lower;
     private long upper;

@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.arquillian.cube.q.api.NetworkChaos.DistributedLatencyType.logNormalLatencyInMIllis;
+import static org.arquillian.cube.q.api.NetworkChaos.DistributedLatencyType.logNormalLatencyInMillis;
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latency;
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis;
 import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
@@ -69,7 +69,7 @@ public class ToxicFuntionalTestCase {
 
     @Test
     public void shouldAddLogNormalLatencyWithIterations() throws Exception {
-        networkChaos.on("pingpong", 8080).latency(logNormalLatencyInMIllis(2000, 0.3)).exec(times(2), () -> {
+        networkChaos.on("pingpong", 8080).latency(logNormalLatencyInMillis(2000, 0.3)).exec(times(2), () -> {
 
             URL url = new URL("http://" + ip + ":" + 8081 + "/hw/HelloWorld");
             final long l = System.currentTimeMillis();

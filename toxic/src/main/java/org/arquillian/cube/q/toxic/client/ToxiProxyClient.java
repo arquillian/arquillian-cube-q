@@ -62,12 +62,12 @@ public interface ToxiProxyClient {
 
     public static class Latency extends BaseToxic {
         private NetworkChaos.LatencyType latency;
-        private long jitter;
+        private NetworkChaos.JitterType jitter;
 
         // To avoid calls in update, pointer to remote toxic is saved
         private eu.rekawek.toxiproxy.model.toxic.Latency toxicLatency;
 
-        public Latency(String name, String stream, float toxicity, NetworkChaos.LatencyType latency, long jitter) {
+        public Latency(String name, String stream, float toxicity, NetworkChaos.LatencyType latency, NetworkChaos.JitterType jitter) {
             super(name, stream, toxicity);
             this.latency = latency;
             this.jitter = jitter;
@@ -75,7 +75,7 @@ public interface ToxiProxyClient {
 
         @Override
         public boolean hasAnyDistributedField() {
-            return latency.isDistributed();
+            return latency.isDistributed() || jitter.isDistributed();
         }
 
         @Override
@@ -104,23 +104,28 @@ public interface ToxiProxyClient {
         }
 
         public long getJitter() {
-            return jitter;
+            return jitter.getValue();
         }
     }
 
     public static class Bandwidth extends BaseToxic {
-        private long rate;
+        private NetworkChaos.RateType rate;
 
         // To avoid calls in update, pointer to remote toxic is saved
         eu.rekawek.toxiproxy.model.toxic.Bandwidth toxicBandwidth;
 
-        public Bandwidth(String name, String stream, float toxicity, long rate) {
+        public Bandwidth(String name, String stream, float toxicity, NetworkChaos.RateType rate) {
             super(name, stream, toxicity);
             this.rate = rate;
         }
 
         public long getRate() {
-            return rate;
+            return rate.getValue();
+        }
+
+        @Override
+        public boolean hasAnyDistributedField() {
+            return rate.isDistributed();
         }
 
         @Override
@@ -161,18 +166,18 @@ public interface ToxiProxyClient {
 
     public static class SlowClose extends BaseToxic {
 
-        private long delay;
+        private NetworkChaos.DelayType delay;
 
         // To avoid calls in update, pointer to remote toxic is saved
         private eu.rekawek.toxiproxy.model.toxic.SlowClose toxicSlowClose;
 
-        public SlowClose(String name, String stream, float toxicity, long delay) {
+        public SlowClose(String name, String stream, float toxicity, NetworkChaos.DelayType delay) {
             super(name, stream, toxicity);
             this.delay = delay;
         }
 
         public long getDelay() {
-            return delay;
+            return delay.getValue();
         }
 
         @Override
@@ -182,6 +187,11 @@ public interface ToxiProxyClient {
                     this.getDelay());
             toxicSlowClose
                     .setToxicity(this.getToxcicity());
+        }
+
+        @Override
+        public boolean hasAnyDistributedField() {
+            return delay.isDistributed();
         }
 
         @Override
@@ -197,18 +207,23 @@ public interface ToxiProxyClient {
 
     public static class Timeout extends BaseToxic {
 
-        private long timeout;
+        private NetworkChaos.TimeoutType timeout;
 
         // To avoid calls in update, pointer to remote toxic is saved
         private eu.rekawek.toxiproxy.model.toxic.Timeout toxicTimeout;
 
-        public Timeout(String name, String stream, float toxicity, long timeout) {
+        public Timeout(String name, String stream, float toxicity, NetworkChaos.TimeoutType timeout) {
             super(name, stream, toxicity);
             this.timeout = timeout;
         }
 
         public long getTimeout() {
-            return timeout;
+            return timeout.getValue();
+        }
+
+        @Override
+        public boolean hasAnyDistributedField() {
+            return timeout.isDistributed();
         }
 
         @Override
@@ -234,12 +249,12 @@ public interface ToxiProxyClient {
     public static class Slice extends BaseToxic {
         private long averageSize;
         private long sizeVariation;
-        private long delay;
+        private NetworkChaos.DelayType delay;
 
         // To avoid calls in update, pointer to remote toxic is saved
         private Slicer toxicSlicer;
 
-        public Slice(String name, String stream, float toxicity, long averageSize, long delay, long variableSize) {
+        public Slice(String name, String stream, float toxicity, long averageSize, NetworkChaos.DelayType delay, long variableSize) {
             super(name, stream, toxicity);
             this.averageSize = averageSize;
             this.sizeVariation = variableSize;
@@ -251,11 +266,16 @@ public interface ToxiProxyClient {
         }
 
         public long getDelay() {
-            return delay;
+            return delay.getValue();
         }
 
         public long getSizeVariation() {
             return sizeVariation;
+        }
+
+        @Override
+        public boolean hasAnyDistributedField() {
+            return delay.isDistributed();
         }
 
         @Override
