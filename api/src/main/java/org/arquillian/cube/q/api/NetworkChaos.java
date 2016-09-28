@@ -24,6 +24,10 @@ public interface NetworkChaos {
         DOWNSTREAM, UPSTREAM
     }
 
+    /**
+     * Toxicity type to set the level of toxicity to apply in a concrete toxic.
+     * 1f is always applies the toxic, 0f is never.
+     */
     public static final class ToxicityType extends Q.FloatType {
 
         protected ToxicityType(float value) {
@@ -39,7 +43,7 @@ public interface NetworkChaos {
         }
 
         /**
-         * Toxicity value. It is a percentage between 0 and 1.
+         * Toxicity value. It is a percentage between 0 to 1.
          * @param toxicity
          * @return
          */
@@ -48,6 +52,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Slice Size Variation type for slicing toxic.
+     */
     public static final class SliceSizeVariationType extends Q.LongType {
 
         protected SliceSizeVariationType(long value) {
@@ -59,6 +66,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Slice Average Size type for slicing toxic.
+     */
     public static final class SliceAverageSizeType extends Q.LongType {
 
         protected SliceAverageSizeType(long value) {
@@ -70,6 +80,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Delay type to set any delay on toxics that requires a delay configuration.
+     */
     public static class DelayType extends Q.LongType {
 
         protected DelayType(long value) {
@@ -85,6 +98,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Type for configuring random delays.
+     */
     public static class DistributedDelayType extends DelayType {
 
         private Distribution delayDistribution;
@@ -122,6 +138,9 @@ public interface NetworkChaos {
 
     }
 
+    /**
+     * Rate type to set in bandwidth toxic.
+     */
     public static class RateType extends Q.LongType {
 
         protected RateType(long value) {
@@ -133,6 +152,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Type for configuring random rates.
+     */
     public static class DistributedRateType extends RateType {
         private Distribution delayDistribution;
 
@@ -168,6 +190,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Jitter type to set in latency toxic.
+     */
     public static class JitterType extends Q.LongType {
 
         protected JitterType(long value) {
@@ -183,6 +208,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Type for configuring random jitter values.
+     */
     public static class DistributedJitterType extends JitterType {
         private Distribution delayDistribution;
 
@@ -218,6 +246,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Latency type to set in latency toxic.
+     */
     public static class LatencyType extends Q.LongType {
         protected LatencyType(long value) {
             super(value);
@@ -232,6 +263,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Type for configuring random latency times.
+     */
     public static class DistributedLatencyType extends LatencyType {
 
         private Distribution distribution;
@@ -268,6 +302,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Timeout type to set in timeout toxic.
+     */
     public static class TimeoutType extends Q.LongType {
         protected TimeoutType(long value) {
             super(value);
@@ -282,6 +319,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Type for configuring random timeouts.
+     */
     public static class DistributedTimeoutType extends TimeoutType {
         private Distribution distribution;
 

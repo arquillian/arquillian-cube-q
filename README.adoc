@@ -165,15 +165,16 @@ TIP: `exec` method also supports you pass how many times do you want to execute 
 
 You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-toxic
 
-==== Randomizing
+==== Adding some randomness
 
-Some of the discrete values set in some toxic like `slowClose`, `bandwidth`, `timeout` or `slice` can be randomized using mathematical distributions.
+Some of the discrete values set in toxics such as `slowClose`, `bandwidth`, `timeout` or `slice` can be randomized using mathematical distributions.
 At this time two distributions are supported:
 
-* Uniform Distribution: Distribution that returns values uniformally distributed across a range.
-* LogNormal Distribution: Returns log normally distributed values. You can use this website https://www.wolframalpha.com/input/?i=lognormaldistribution%28log%2890%29%2C+0.1%29 to play with values
+* Uniform Distribution: Distribution that returns values uniformally distributed across a range. You can read about this distribution at https://en.wikipedia.org/wiki/Discrete_uniform_distribution
+* LogNormal Distribution: Returns log normally distributed values. You can use this website https://www.wolframalpha.com/input/?i=lognormaldistribution%28log%2890%29%2C+0.1%29 to play with the values.
+You can read more about this distribution at https://en.wikipedia.org/wiki/Log-normal_distribution
 
-An as example of randomized latency:
+For example, this is how you can randomize the latency:
 
 [source, java]
 ----
@@ -190,8 +191,8 @@ networkChaos.on("pingpong", 8080)
 });
 ----
 
-In previous configuration latency times are distributed in using a log normal distribution with median of 2 seconds and 0.3 as sigma value.
-Then for each iteration of the test, a new value is calculated and sent to toxiproxy.
+In the configuration above, latency times are distributed in using a log normal distribution with median of 2 seconds and 0.3 as sigma value.
+Then for each iteration of the test, a new value is calculated and send to toxiproxy.
 
 ==== Binding Ports Chaos
 
