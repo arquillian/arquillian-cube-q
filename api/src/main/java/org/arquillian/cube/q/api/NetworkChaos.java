@@ -25,8 +25,12 @@ public interface NetworkChaos {
     }
 
     /**
-     * Toxicity type to set the level of toxicity to apply in a concrete toxic.
+     * Toxicity type to set the level of toxicity to apply.
+     * A toxicity represents a percentage of when apply a toxicity.
      * 1f is always applies the toxic, 0f is never.
+     *
+     * For example applying a toxicity of 0.5 to delay toxic, means that only half of the connections
+     * done will be affected by delay toxic.
      */
     public static final class ToxicityType extends Q.FloatType {
 
@@ -192,6 +196,9 @@ public interface NetworkChaos {
 
     /**
      * Jitter type to set in latency toxic.
+     *
+     * Jitter is the variation in latency as measured in the variability over time of the packet latency across a network.
+     * For example a network with constant latency has no variation (or jitter).
      */
     public static class JitterType extends Q.LongType {
 
