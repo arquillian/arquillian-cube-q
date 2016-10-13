@@ -4,11 +4,7 @@ import eu.rekawek.toxiproxy.Proxy;
 import eu.rekawek.toxiproxy.ToxiproxyClient;
 import eu.rekawek.toxiproxy.model.Toxic;
 import eu.rekawek.toxiproxy.model.ToxicDirection;
-import eu.rekawek.toxiproxy.model.ToxicList;
-import eu.rekawek.toxiproxy.model.toxic.Bandwidth;
-import eu.rekawek.toxiproxy.model.toxic.Latency;
 import eu.rekawek.toxiproxy.model.toxic.Slicer;
-import eu.rekawek.toxiproxy.model.toxic.Timeout;
 import org.arquillian.cube.q.api.NetworkChaos;
 
 import java.io.IOException;
