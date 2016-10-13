@@ -24,6 +24,14 @@ public interface NetworkChaos {
         DOWNSTREAM, UPSTREAM
     }
 
+    /**
+     * Toxicity type to set the level of toxicity to apply.
+     * A toxicity represents a percentage of when apply a toxicity.
+     * 1f is always applies the toxic, 0f is never.
+     *
+     * For example applying a toxicity of 0.5 to delay toxic, means that only half of the connections
+     * done will be affected by delay toxic.
+     */
     public static final class ToxicityType extends Q.FloatType {
 
         protected ToxicityType(float value) {
@@ -39,7 +47,7 @@ public interface NetworkChaos {
         }
 
         /**
-         * Toxicity value. It is a percentage between 0 and 1.
+         * Toxicity value. It is a percentage between 0 to 1.
          * @param toxicity
          * @return
          */
@@ -48,6 +56,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Slice Size Variation type for slicing toxic.
+     */
     public static final class SliceSizeVariationType extends Q.LongType {
 
         protected SliceSizeVariationType(long value) {
@@ -59,6 +70,9 @@ public interface NetworkChaos {
         }
     }
 
+    /**
+     * Slice Average Size type for slicing toxic.
+     */
     public static final class SliceAverageSizeType extends Q.LongType {
 
         protected SliceAverageSizeType(long value) {
@@ -70,7 +84,10 @@ public interface NetworkChaos {
         }
     }
 
-    public static final class DelayType extends Q.LongType {
+    /**
+     * Delay type to set any delay on toxics that requires a delay configuration.
+     */
+    public static class DelayType extends Q.LongType {
 
         protected DelayType(long value) {
             super(value);
@@ -85,7 +102,50 @@ public interface NetworkChaos {
         }
     }
 
-    public static final class RateType extends Q.LongType {
+    /**
+     * Type for configuring random delays.
+     */
+    public static class DistributedDelayType extends DelayType {
+
+        private Distribution delayDistribution;
+
+        protected DistributedDelayType(Distribution distribution, long delay) {
+            super(delay);
+            this.delayDistribution = distribution;
+            setDistributed();
+        }
+
+        public static DistributedDelayType logNormalLatencyInMillis(long median, double sigma) {
+            return new DistributedDelayType(new LogNormalDistribution(median, sigma), median);
+        }
+
+        public static DistributedDelayType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
+            return new DistributedDelayType(
+                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                            sigma), medianTimeUnit.toMillis(median));
+        }
+
+        public static DistributedDelayType uniformLatencyInMillis(long upper, long lower) {
+            return new DistributedDelayType(new UniformDistribution(upper, lower), lower);
+        }
+
+        public static DistributedDelayType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+            return new DistributedDelayType(
+                    new UniformDistribution(upperTimeUnit.toMillis(upper),
+                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+        }
+
+        @Override
+        public long getValue() {
+            return delayDistribution.calculate();
+        }
+
+    }
+
+    /**
+     * Rate type to set in bandwidth toxic.
+     */
+    public static class RateType extends Q.LongType {
 
         protected RateType(long value) {
             super(value);
@@ -96,18 +156,107 @@ public interface NetworkChaos {
         }
     }
 
-    public static final class JitterType extends Q.IntegerType {
+    /**
+     * Type for configuring random rates.
+     */
+    public static class DistributedRateType extends RateType {
+        private Distribution delayDistribution;
 
-        protected JitterType(int value) {
-            super(value);
+        protected DistributedRateType(Distribution distribution, long rate) {
+            super(rate);
+            this.delayDistribution = distribution;
+            setDistributed();
         }
 
-        public static JitterType jitter(int jitter) {
-            return new JitterType(jitter);
+        public static DistributedRateType logNormalLatencyInMillis(long median, double sigma) {
+            return new DistributedRateType(new LogNormalDistribution(median, sigma), median);
+        }
+
+        public static DistributedRateType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
+            return new DistributedRateType(
+                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                            sigma), medianTimeUnit.toMillis(median));
+        }
+
+        public static DistributedRateType uniformLatencyInMillis(long upper, long lower) {
+            return new DistributedRateType(new UniformDistribution(upper, lower), lower);
+        }
+
+        public static DistributedRateType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+            return new DistributedRateType(
+                    new UniformDistribution(upperTimeUnit.toMillis(upper),
+                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+        }
+
+        @Override
+        public long getValue() {
+            return delayDistribution.calculate();
         }
     }
 
-    public static final class LatencyType extends Q.LongType {
+    /**
+     * Jitter type to set in latency toxic.
+     *
+     * Jitter is the variation in latency as measured in the variability over time of the packet latency across a network.
+     * For example a network with constant latency has no variation (or jitter).
+     */
+    public static class JitterType extends Q.LongType {
+
+        protected JitterType(long value) {
+            super(value);
+        }
+
+        public static JitterType jitter(long jitter) {
+            return new JitterType(jitter);
+        }
+
+        public static JitterType noJitter() {
+            return new JitterType(0);
+        }
+    }
+
+    /**
+     * Type for configuring random jitter values.
+     */
+    public static class DistributedJitterType extends JitterType {
+        private Distribution delayDistribution;
+
+        protected DistributedJitterType(Distribution distribution, int jitter) {
+            super(jitter);
+            this.delayDistribution = distribution;
+            setDistributed();
+        }
+
+        public static DistributedRateType logNormalLatencyInMillis(long median, double sigma) {
+            return new DistributedRateType(new LogNormalDistribution(median, sigma), median);
+        }
+
+        public static DistributedRateType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
+            return new DistributedRateType(
+                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                            sigma), medianTimeUnit.toMillis(median));
+        }
+
+        public static DistributedRateType uniformLatencyInMillis(long upper, long lower) {
+            return new DistributedRateType(new UniformDistribution(upper, lower), lower);
+        }
+
+        public static DistributedRateType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+            return new DistributedRateType(
+                    new UniformDistribution(upperTimeUnit.toMillis(upper),
+                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+        }
+
+        @Override
+        public long getValue() {
+            return delayDistribution.calculate();
+        }
+    }
+
+    /**
+     * Latency type to set in latency toxic.
+     */
+    public static class LatencyType extends Q.LongType {
         protected LatencyType(long value) {
             super(value);
         }
@@ -121,7 +270,49 @@ public interface NetworkChaos {
         }
     }
 
-    public static final class TimeoutType extends Q.LongType {
+    /**
+     * Type for configuring random latency times.
+     */
+    public static class DistributedLatencyType extends LatencyType {
+
+        private Distribution distribution;
+
+        protected DistributedLatencyType(Distribution distribution, long value) {
+            super(value);
+            this.distribution = distribution;
+            setDistributed();
+        }
+
+        public static DistributedLatencyType logNormalLatencyInMillis(long median, double sigma) {
+            return new DistributedLatencyType(new LogNormalDistribution(median, sigma), median);
+        }
+
+        public static DistributedLatencyType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
+            return new DistributedLatencyType(
+                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                            sigma), medianTimeUnit.toMillis(median));
+        }
+
+        public static DistributedLatencyType uniformLatencyInMillis(long upper, long lower) {
+            return new DistributedLatencyType(new UniformDistribution(upper, lower), lower);
+        }
+
+        public static DistributedLatencyType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+            return new DistributedLatencyType(
+                    new UniformDistribution(upperTimeUnit.toMillis(upper),
+                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+        }
+
+        @Override
+        public long getValue() {
+            return distribution.calculate();
+        }
+    }
+
+    /**
+     * Timeout type to set in timeout toxic.
+     */
+    public static class TimeoutType extends Q.LongType {
         protected TimeoutType(long value) {
             super(value);
         }
@@ -132,6 +323,44 @@ public interface NetworkChaos {
 
         public static TimeoutType timeout(long time, TimeUnit timeUnit) {
             return new TimeoutType(timeUnit.toMillis(time));
+        }
+    }
+
+    /**
+     * Type for configuring random timeouts.
+     */
+    public static class DistributedTimeoutType extends TimeoutType {
+        private Distribution distribution;
+
+        protected DistributedTimeoutType(Distribution distribution, long value) {
+            super(value);
+            this.distribution = distribution;
+            setDistributed();
+        }
+
+        public static DistributedTimeoutType logNormalLatencyInMillis(long median, double sigma) {
+            return new DistributedTimeoutType(new LogNormalDistribution(median, sigma), median);
+        }
+
+        public static DistributedTimeoutType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
+            return new DistributedTimeoutType(
+                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                            sigma), medianTimeUnit.toMillis(median));
+        }
+
+        public static DistributedTimeoutType uniformLatencyInMillis(long upper, long lower) {
+            return new DistributedTimeoutType(new UniformDistribution(upper, lower), lower);
+        }
+
+        public static DistributedTimeoutType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+            return new DistributedTimeoutType(
+                    new UniformDistribution(upperTimeUnit.toMillis(upper),
+                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+        }
+
+        @Override
+        public long getValue() {
+            return distribution.calculate();
         }
     }
 

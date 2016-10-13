@@ -70,5 +70,12 @@ public class ToxiProxyScenario implements ToxiProxy{
                 client.createToxic(proxy, toxic);
             }
         }
+
+        @Override
+        public void update() throws Exception {
+            for (ToxiProxyClient.BaseToxic toxic : toxics) {
+                client.updateToxic(proxy, toxic);
+            }
+        }
     }
 }
