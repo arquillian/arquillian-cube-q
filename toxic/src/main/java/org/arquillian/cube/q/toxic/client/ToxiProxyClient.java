@@ -51,6 +51,15 @@ public interface ToxiProxyClient {
             return false;
         }
 
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("name='").append(name).append('\'');
+            sb.append(", stream='").append(stream).append('\'');
+            sb.append(", toxcicity=").append(toxcicity);
+            return sb.toString();
+        }
+
         public abstract void create(Proxy proxy) throws IOException;
         public abstract void update() throws IOException;
 
@@ -102,6 +111,17 @@ public interface ToxiProxyClient {
         public long getJitter() {
             return jitter.getValue();
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Latency{");
+            sb.append(super.toString());
+            sb.append(", latency=").append(latency);
+            sb.append(", jitter=").append(jitter);
+            sb.append(", toxicLatency=").append(toxicLatency);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     public static class Bandwidth extends BaseToxic {
@@ -142,6 +162,16 @@ public interface ToxiProxyClient {
                 throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Bandwidth{");
+            sb.append(super.toString());
+            sb.append(", rate=").append(rate);
+            sb.append(", toxicBandwidth=").append(toxicBandwidth);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     public static class Down extends BaseToxic {
@@ -157,6 +187,14 @@ public interface ToxiProxyClient {
 
         @Override
         public void update() throws IOException {
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Down{");
+            sb.append(super.toString());
+            sb.append('}');
+            return sb.toString();
         }
     }
 
@@ -199,6 +237,16 @@ public interface ToxiProxyClient {
                 throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("SlowClose{");
+            sb.append(super.toString());
+            sb.append(", delay=").append(delay);
+            sb.append(", toxicSlowClose=").append(toxicSlowClose);
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     public static class Timeout extends BaseToxic {
@@ -239,6 +287,16 @@ public interface ToxiProxyClient {
             } else {
                 throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
             }
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Timeout{");
+            sb.append(super.toString());
+            sb.append(", timeout=").append(timeout);
+            sb.append(", toxicTimeout=").append(toxicTimeout);
+            sb.append('}');
+            return sb.toString();
         }
     }
 
@@ -295,6 +353,18 @@ public interface ToxiProxyClient {
             } else {
                 throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
             }
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Slice{");
+            sb.append(super.toString());
+            sb.append(", averageSize=").append(averageSize);
+            sb.append(", sizeVariation=").append(sizeVariation);
+            sb.append(", delay=").append(delay);
+            sb.append(", toxicSlicer=").append(toxicSlicer);
+            sb.append('}');
+            return sb.toString();
         }
     }
 
