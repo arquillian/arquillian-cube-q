@@ -5,8 +5,12 @@ import eu.rekawek.toxiproxy.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ToxiProxyScenario implements ToxiProxy{
+
+    private static final Logger logger = Logger.getLogger(ToxiProxyScenario.class.getName());
 
     private ToxiProxyClient client;
     
@@ -67,6 +71,7 @@ public class ToxiProxyScenario implements ToxiProxy{
         @Override
         public void execute() throws Exception {
             for (ToxiProxyClient.BaseToxic toxic : toxics) {
+                logger.log(Level.FINER, String.format("Next toxic is created %s.", toxic.toString()));
                 client.createToxic(proxy, toxic);
             }
         }
@@ -74,6 +79,7 @@ public class ToxiProxyScenario implements ToxiProxy{
         @Override
         public void update() throws Exception {
             for (ToxiProxyClient.BaseToxic toxic : toxics) {
+                logger.log(Level.FINER, String.format("Next toxic is updated %s.", toxic.toString()));
                 client.updateToxic(proxy, toxic);
             }
         }
