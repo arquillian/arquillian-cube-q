@@ -1,3 +1,4 @@
+= Introduction
 :numbered:
 :sectlink:
 :sectanchors:
@@ -7,8 +8,7 @@
 :sectnums:
 :icons: font
 :toc: left
-
-= Introduction
+:toclevels: 3
 
 Usually when we talk about writing tests, the first thing that comes to your mind is some kind of static test where you send an input and you expect an output.
 For example you send a wrong parameter to a REST service, and you expect that it returns an error message/status code.
