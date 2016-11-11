@@ -1,3 +1,13 @@
+:numbered:
+:sectlink:
+:sectanchors:
+:sectid:
+:source-language: java
+:source-highlighter: coderay
+:sectnums:
+:icons: font
+:toc: left
+
 = Introduction
 
 Usually when we talk about writing tests, the first thing that comes to your mind is some kind of static test where you send an input and you expect an output.
@@ -355,7 +365,7 @@ As happens in *Network Chaos* you can also specify test as callback and specify 
 
 You can see full example at: https://github.com/arquillian/arquillian-cube-q/tree/master/ftest-pumba
 
-== Operative System Chaos
+=== Operative System Chaos
 
 
 To do *operative system chaos* Arquillian Q uses some modified version scripts of Netflix Simian Army project ().
@@ -375,7 +385,7 @@ IMPORTANT: Scripts are executed inside the container. This means that the comman
 
 TIP: Making chaos with scripts means a whole new kind of possibilities since the only barrier is the commands you need to execute them. Please feel free to contribute with your own scripts.
 
-=== Adding Dependency
+==== Adding Dependency
 
 Arquillian Q Pumba is only a jar file deployed in Maven central.
 
@@ -415,7 +425,7 @@ Arquillian Q Pumba is only a jar file deployed in Maven central.
 
 IMPORTANT: Notice that instead of registering `arquillian-junit-container` as you usually do in Arquillian test, you are using `arquillian-junit-standalone`. This is because it has no sense to use in these kind of tests microdeployments feature (method annotated with `@Deployment`).
 
-=== Test
+==== Test
 
 Then the test looks like:
 
