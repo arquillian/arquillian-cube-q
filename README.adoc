@@ -387,7 +387,7 @@ TIP: Making chaos with scripts means a whole new kind of possibilities since the
 
 ==== Adding Dependency
 
-Arquillian Q Pumba is only a jar file deployed in Maven central.
+Arquillian Simian Army is only a jar file deployed in Maven central.
 
 [source, xml]
 .pom.xml
