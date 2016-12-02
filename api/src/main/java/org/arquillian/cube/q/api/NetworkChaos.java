@@ -54,6 +54,7 @@ public interface NetworkChaos {
         public static ToxicityType toxicity(float toxicity) {
             return new ToxicityType(toxicity);
         }
+
     }
 
     /**
@@ -136,8 +137,8 @@ public interface NetworkChaos {
         }
 
         @Override
-        public long getValue() {
-            return delayDistribution.calculate();
+        public void calculateValue() {
+            value = this.delayDistribution.calculate();
         }
 
     }
@@ -189,8 +190,8 @@ public interface NetworkChaos {
         }
 
         @Override
-        public long getValue() {
-            return delayDistribution.calculate();
+        public void calculateValue() {
+            value = delayDistribution.calculate();
         }
     }
 
@@ -248,8 +249,8 @@ public interface NetworkChaos {
         }
 
         @Override
-        public long getValue() {
-            return delayDistribution.calculate();
+        public void calculateValue() {
+            value = delayDistribution.calculate();
         }
     }
 
@@ -304,8 +305,8 @@ public interface NetworkChaos {
         }
 
         @Override
-        public long getValue() {
-            return distribution.calculate();
+        public void calculateValue() {
+            value = distribution.calculate();
         }
     }
 
@@ -359,8 +360,8 @@ public interface NetworkChaos {
         }
 
         @Override
-        public long getValue() {
-            return distribution.calculate();
+        public void calculateValue() {
+            value = distribution.calculate();
         }
     }
 

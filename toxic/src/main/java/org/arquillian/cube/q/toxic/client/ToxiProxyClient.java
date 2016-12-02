@@ -105,10 +105,12 @@ public interface ToxiProxyClient {
         }
 
         public long getLatency() {
+            latency.calculateValue();
             return latency.getValue();
         }
 
         public long getJitter() {
+            jitter.calculateValue();
             return jitter.getValue();
         }
 
@@ -118,7 +120,6 @@ public interface ToxiProxyClient {
             sb.append(super.toString());
             sb.append(", latency=").append(latency);
             sb.append(", jitter=").append(jitter);
-            sb.append(", toxicLatency=").append(toxicLatency);
             sb.append('}');
             return sb.toString();
         }
@@ -136,6 +137,7 @@ public interface ToxiProxyClient {
         }
 
         public long getRate() {
+            rate.calculateValue();
             return rate.getValue();
         }
 
@@ -168,7 +170,6 @@ public interface ToxiProxyClient {
             final StringBuilder sb = new StringBuilder("Bandwidth{");
             sb.append(super.toString());
             sb.append(", rate=").append(rate);
-            sb.append(", toxicBandwidth=").append(toxicBandwidth);
             sb.append('}');
             return sb.toString();
         }
@@ -211,6 +212,7 @@ public interface ToxiProxyClient {
         }
 
         public long getDelay() {
+            delay.calculateValue();
             return delay.getValue();
         }
 
@@ -243,7 +245,6 @@ public interface ToxiProxyClient {
             final StringBuilder sb = new StringBuilder("SlowClose{");
             sb.append(super.toString());
             sb.append(", delay=").append(delay);
-            sb.append(", toxicSlowClose=").append(toxicSlowClose);
             sb.append('}');
             return sb.toString();
         }
@@ -262,6 +263,7 @@ public interface ToxiProxyClient {
         }
 
         public long getTimeout() {
+            timeout.calculateValue();
             return timeout.getValue();
         }
 
@@ -294,7 +296,6 @@ public interface ToxiProxyClient {
             final StringBuilder sb = new StringBuilder("Timeout{");
             sb.append(super.toString());
             sb.append(", timeout=").append(timeout);
-            sb.append(", toxicTimeout=").append(toxicTimeout);
             sb.append('}');
             return sb.toString();
         }
@@ -320,6 +321,7 @@ public interface ToxiProxyClient {
         }
 
         public long getDelay() {
+            delay.calculateValue();
             return delay.getValue();
         }
 
@@ -362,7 +364,6 @@ public interface ToxiProxyClient {
             sb.append(", averageSize=").append(averageSize);
             sb.append(", sizeVariation=").append(sizeVariation);
             sb.append(", delay=").append(delay);
-            sb.append(", toxicSlicer=").append(toxicSlicer);
             sb.append('}');
             return sb.toString();
         }

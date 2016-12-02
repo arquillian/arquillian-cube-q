@@ -1,5 +1,6 @@
 package org.arquillian.cube.q.api;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public interface Q {
@@ -59,11 +60,13 @@ public interface Q {
         }
     }
 
-    public static abstract class BaseType {
+    public static abstract class BaseType<T> {
         private boolean distributed = false;
+        protected T value;
 
-        protected BaseType(boolean distributed) {
+        protected BaseType(boolean distributed, T value) {
             this.distributed = distributed;
+            this.value = value;
         }
 
         protected void setDistributed() {
@@ -73,71 +76,73 @@ public interface Q {
         public boolean isDistributed() {
             return this.distributed;
         }
+
+        public void calculateValue() {
+        }
+
+        public T getValue() {
+            return value;
+        }
     }
 
-    public static abstract class FloatType extends BaseType {
-        private float value;
-
+    public static abstract class FloatType extends BaseType<Float> {
         public FloatType(float value) {
-            super(false);
+            super(false, value);
             this.value = value;
         }
 
-        public float getValue() {
-            return value;
+        @Override
+        public String toString() {
+            return Float.toString(value);
         }
     }
 
-    public static abstract class LongType extends BaseType {
-        private long value;
-
+    public static abstract class LongType extends BaseType<Long> {
         protected LongType(long value) {
-            super(false);
+            super(false, value);
             this.value = value;
         }
 
-        public long getValue() {
-            return value;
+        @Override
+        public String toString() {
+            return Long.toString(value);
         }
     }
 
-    public static abstract class IntegerType extends BaseType {
-        private int value;
-
+    public static abstract class IntegerType extends BaseType<Integer> {
         protected IntegerType(int value) {
-            super(false);
+            super(false, value);
             this.value = value;
         }
 
-        public int getValue() {
-            return value;
+        @Override
+        public String toString() {
+            return Integer.toString(value);
         }
     }
 
-    public static abstract class StringType extends BaseType {
-        private String value;
-
+    public static abstract class StringType extends BaseType<String> {
         protected StringType(String value) {
-            super(false);
+            super(false, value);
             this.value = value;
         }
 
-        public String getValue() {
+        @Override
+        public String toString() {
             return value;
         }
     }
 
-    public static abstract class ArrayType<T> extends BaseType {
-
-        private T[] value;
+    public static abstract class ArrayType<T> extends BaseType<T[]> {
 
         protected ArrayType(T[] value) {
-            super(false);
+            super(false, value);
             this.value = value;
         }
 
-        public T[] getValue() {
-            return value;
+        @Override
+        public String toString() {
+            return Arrays.toString(value);
         }
     }
 }
