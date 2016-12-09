@@ -3,6 +3,9 @@ package org.arquillian.cube.q.toxic;
 import org.arquillian.cube.q.api.NetworkChaos;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
+import org.jboss.arquillian.core.api.InstanceProducer;
+import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
+import org.jboss.arquillian.core.api.annotation.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,24 +14,34 @@ import java.util.List;
 public class QNetworkChaosToxic implements NetworkChaos {
 
     private ToxiProxyScenario scenario;
-    
+
+    @Inject
+    @ApplicationScoped
+    private InstanceProducer<ToxicAction> toxicActionInstanceProducer;
+
     public QNetworkChaosToxic(ToxiProxyScenario scenario) {
         this.scenario = scenario;
     }
 
     @Override
     public Action on(String machine, int port) {
-        return new ToxicAction(machine + ":" + port);
+        ToxicAction toxicAction = new ToxicAction(machine + ":" + port);
+        toxicActionInstanceProducer.set(toxicAction);
+        return toxicActionInstanceProducer.get();
     }
 
     public class ToxicAction implements Action {
 
         private List<ToxiProxyClient.BaseToxic> toxics = new ArrayList<>();
 
-        public String name;
-        
+        private String name;
+
         public ToxicAction(String name) {
             this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
 
         @Override
@@ -144,7 +157,7 @@ public class QNetworkChaosToxic implements NetworkChaos {
 
             scenario.given(name)
                     .using(toxics)
-                    .then(() -> {
+                    .then(runCondition, () -> {
                         while (runCondition.isExecutable()) {
                             perform.execute();
 
@@ -174,5 +187,5 @@ public class QNetworkChaosToxic implements NetworkChaos {
             return Collections.unmodifiableList(toxicsWithDistributedValues);
         }
 
-    } 
+    }
 }

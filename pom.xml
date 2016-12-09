@@ -16,6 +16,7 @@
     <groupId>org.arquillian.cube.q</groupId>
     <artifactId>arquillian-cube-q</artifactId>
     <version>1.0.0.Final-SNAPSHOT</version>
+
     <packaging>pom</packaging>
 
     <name>Arquillian Cube Q Extension</name>
@@ -57,6 +58,7 @@
         <version.junit>4.11</version.junit>
         <version.mockito>1.10.19</version.mockito>
         <version.assertj>2.4.1</version.assertj>
+        <version.arquillian.recorder>1.1.5.Final</version.arquillian.recorder>
     </properties>
 
     <dependencyManagement>
@@ -135,7 +137,12 @@
                 <classifier>tests</classifier>
                 <scope>test</scope>
             </dependency>
-            
+            <dependency>
+                <groupId>org.arquillian.cube.q</groupId>
+                <artifactId>arquillian-cube-q-recorder</artifactId>
+                <scope>test</scope>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -154,6 +161,12 @@
                 <version>${version.assertj}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.arquillian.extension</groupId>
+                <artifactId>arquillian-recorder-reporter-impl</artifactId>
+                <version>${version.arquillian.recorder}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -164,11 +177,13 @@
 
         <module>toxic</module>
         <module>ftest-toxic</module>
-	      <module>ftest-toxic-frontend</module>
+        <module>ftest-toxic-frontend</module>
         <module>pumba</module>
         <module>ftest-pumba</module>
         <module>simianarmy</module>
         <module>ftest-simianarmy</module>
+        <module>recorder</module>
+        <module>ftest-toxic-frontend-reporter</module>
     </modules>
     <build>
         <plugins>

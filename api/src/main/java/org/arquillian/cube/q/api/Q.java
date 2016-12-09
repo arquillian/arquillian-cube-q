@@ -19,11 +19,15 @@ public interface Q {
 
     class DurationRunCondition implements Q.RunCondition {
 
-        protected long finishTime;
+        private long finishTime;
 
         protected DurationRunCondition(long duration, TimeUnit unit) {
             final long durationInMillis = unit.toMillis(duration);
             this.finishTime = System.currentTimeMillis() + durationInMillis;
+        }
+
+        public long getFinishTime() {
+            return finishTime;
         }
 
         public static DurationRunCondition during(long duration, TimeUnit timeUnit) {
@@ -37,11 +41,15 @@ public interface Q {
     }
 
     class IterationRunCondition implements Q.RunCondition {
-        protected final long iterations;
+        private final long iterations;
         protected long currentIteration = 0;
 
         protected IterationRunCondition(long iterations) {
             this.iterations = iterations;
+        }
+
+        public long getIterations() {
+            return iterations;
         }
 
         public static IterationRunCondition times(long numberOfIterations) {

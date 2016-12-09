@@ -119,6 +119,7 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
         parameters.put("serverUri", "http://localhost:25123");
         parameters.put("definitionFormat", "CUBE");
         parameters.put("dockerContainers", content);
+        parameters.put("definitionFormat", "CUBE");
 
         return CubeDockerConfiguration.fromMap(parameters, null);
     }
