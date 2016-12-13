@@ -20,7 +20,7 @@ import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
 import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(Arquillian.class) //@Ignore
-public class ToxicFuntionalTestCase {
+public class ToxicFunctionalTestCase {
 
     @ArquillianResource
     private NetworkChaos networkChaos;

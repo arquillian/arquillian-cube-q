@@ -14,7 +14,7 @@ import java.net.URL;
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis;
 
 @RunWith(Arquillian.class) //@Ignore
-public class ToxicFuntionalTestCase {
+public class ToxicFunctionalTestCase {
 
     @ArquillianResource
     private NetworkChaos networkChaos;
