@@ -1,5 +1,12 @@
 package org.arquillian.cube.q.spi;
 
+import org.arquillian.cube.docker.impl.client.config.Await;
+import org.arquillian.cube.docker.impl.client.config.CubeContainer;
+import org.arquillian.cube.docker.impl.client.config.ExposedPort;
+import org.arquillian.cube.docker.impl.client.config.Image;
+import org.arquillian.cube.docker.impl.client.config.Link;
+import org.arquillian.cube.docker.impl.client.config.PortBinding;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,13 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.arquillian.cube.docker.impl.client.config.Await;
-import org.arquillian.cube.docker.impl.client.config.CubeContainer;
-import org.arquillian.cube.docker.impl.client.config.ExposedPort;
-import org.arquillian.cube.docker.impl.client.config.Image;
-import org.arquillian.cube.docker.impl.client.config.Link;
-import org.arquillian.cube.docker.impl.client.config.PortBinding;
 
 public class Proxy {
 
@@ -140,14 +140,14 @@ public class Proxy {
             cube.setPortBindings(PortBinding.valuesOf(bind));
             Await await = new Await();
             await.setStrategy("polling");
+            await.setType("ping");
             await.setPorts(Arrays.asList(DEFAULT_PORT));
+//            await.setType("ping");
             cube.setAwait(await);
             cube.setRemoveVolumes(true);
-            Collection<Relation> relations = buildRelations(); 
-            Collection<Link> uniqeLinks = buildUniqueLinks();
-            cube.setLinks(uniqeLinks);
+            cube.setLinks(buildUniqueLinks());
 
-            return new Proxy(getName(), ExposedPort.valueOf(DEFAULT_PORT + "/tcp"), cube, relations);
+            return new Proxy(getName(), ExposedPort.valueOf(DEFAULT_PORT + "/tcp"), cube, buildRelations());
         }
         
         private Collection<Link> buildUniqueLinks() {

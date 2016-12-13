@@ -1,11 +1,10 @@
 package org.arquillian.cube.q.toxic;
 
-import eu.rekawek.toxiproxy.ToxiproxyClient;
 import eu.rekawek.toxiproxy.Proxy;
+import eu.rekawek.toxiproxy.ToxiproxyClient;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Assert;
@@ -16,9 +15,9 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.arquillian.cube.q.api.NetworkChaos.DistributedLatencyType.logNormalLatencyInMillis;
-import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latency;
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis;
 import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
+import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(Arquillian.class) //@Ignore
 public class ToxicFuntionalTestCase {
@@ -64,7 +63,10 @@ public class ToxicFuntionalTestCase {
 
         ToxiproxyClient client = new ToxiproxyClient(ip, 8474);
         final Proxy proxy = client.getProxy("pingpong:8080");
-        Assert.assertThat(proxy.toxics().getAll().size(), CoreMatchers.is(1));
+        Assert.assertThat(proxy.toxics().getAll().size(), is(1));
+
+        // clean-up proxies
+        client.reset();
     }
 
     @Test

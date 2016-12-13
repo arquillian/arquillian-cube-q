@@ -164,7 +164,7 @@
 
         <module>toxic</module>
         <module>ftest-toxic</module>
-	<module>ftest-toxic-frontend</module>
+	      <module>ftest-toxic-frontend</module>
         <module>pumba</module>
         <module>ftest-pumba</module>
         <module>simianarmy</module>

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ToxiProxyScenario implements ToxiProxy{
+public class ToxiProxyScenario implements ToxiProxy {
 
     private static final Logger logger = Logger.getLogger(ToxiProxyScenario.class.getName());
 

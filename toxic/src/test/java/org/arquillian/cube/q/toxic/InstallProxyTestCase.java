@@ -1,12 +1,14 @@
 package org.arquillian.cube.q.toxic;
 
 import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
-import org.arquillian.cube.docker.impl.client.config.*;
+import org.arquillian.cube.docker.impl.client.config.CubeContainer;
+import org.arquillian.cube.docker.impl.client.config.DockerCompositions;
+import org.arquillian.cube.docker.impl.client.config.ExposedPort;
+import org.arquillian.cube.docker.impl.client.config.Link;
+import org.arquillian.cube.docker.impl.client.config.PortBinding;
 import org.arquillian.cube.q.core.InstallProxy;
-import org.arquillian.cube.q.core.RegisterProxy;
 import org.arquillian.cube.q.spi.NetworkChaosConfiguration;
 import org.arquillian.cube.q.spi.ProxyManager;
-import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
 import org.jboss.arquillian.core.spi.ServiceLoader;
 import org.jboss.arquillian.core.test.AbstractManagerTestBase;
@@ -54,12 +56,9 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
     @Before
     public void setup() {
         t = new ToxicProxyHandler();
-        t.networkChaosConfigurationInstance = new Instance<NetworkChaosConfiguration>() {
-            @Override
-            public NetworkChaosConfiguration get() {
-                Mockito.when(networkChaosConfiguration.isToxifyPortBinding()).thenReturn(false);
-                return networkChaosConfiguration;
-            }
+        t.networkChaosConfigurationInstance = () -> {
+            Mockito.when(networkChaosConfiguration.isToxifyPortBinding()).thenReturn(false);
+            return networkChaosConfiguration;
         };
         Mockito.when(loader.onlyOne(ProxyManager.class)).thenReturn(t);
         bind(ApplicationScoped.class, ServiceLoader.class, loader);
@@ -72,7 +71,6 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
         
         DockerCompositions cubes = config.getDockerContainersContent();
         assertThat(cubes.getContainerIds()).hasSize(3);
-        System.out.println(config.toString());
     }
 
     @Test
@@ -92,12 +90,9 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
     public void shouldRedirtPortBindingToToxicProxy() {
 
         t = new ToxicProxyHandler();
-        t.networkChaosConfigurationInstance = new Instance<NetworkChaosConfiguration>() {
-            @Override
-            public NetworkChaosConfiguration get() {
-                Mockito.when(networkChaosConfiguration.isToxifyPortBinding()).thenReturn(true);
-                return networkChaosConfiguration;
-            }
+        t.networkChaosConfigurationInstance = () -> {
+            Mockito.when(networkChaosConfiguration.isToxifyPortBinding()).thenReturn(true);
+            return networkChaosConfiguration;
         };
         Mockito.when(loader.onlyOne(ProxyManager.class)).thenReturn(t);
 
@@ -107,6 +102,7 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
 
         DockerCompositions cubes = config.getDockerContainersContent();
         CubeContainer a = cubes.get("a");
+        System.out.println(config.toString());
         assertThat(a.getPortBindings()).isNullOrEmpty();
         assertThat(a.getExposedPorts()).containsExactlyInAnyOrder(ExposedPort.valueOf("8089/tcp"));
 
@@ -121,6 +117,7 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
 
         parameters.put("serverVersion", "1.13");
         parameters.put("serverUri", "http://localhost:25123");
+        parameters.put("definitionFormat", "CUBE");
         parameters.put("dockerContainers", content);
 
         return CubeDockerConfiguration.fromMap(parameters, null);

@@ -126,6 +126,7 @@ public class QPumbaAction implements ContainerChaos.Action {
         final Cube<?> cube = cubeRegistry.getCube(StandaloneContainer.Builder.DEFAULT_NAME);
 
         DockerCube dockerCube = (DockerCube) cube;
+//        dockerCube.configuration().getAwait().setType("pollingasd");
         dockerCube.configuration().setCmd(PumbaCommandLineCreator.run(chaosCommand.build(), random, cubeDockerConfiguration));
     }
 

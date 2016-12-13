@@ -1,6 +1,5 @@
 package org.arquillian.cube.q.toxic;
 
-import org.arquillian.cube.q.spi.NetworkChaosConfiguration;
 import org.arquillian.cube.q.spi.ProxyManager;
 import org.arquillian.cube.q.toxic.client.NetworkChaosConfigurator;
 import org.jboss.arquillian.core.spi.LoadableExtension;
