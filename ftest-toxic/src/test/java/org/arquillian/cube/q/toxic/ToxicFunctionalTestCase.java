@@ -19,7 +19,7 @@ import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis
 import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
 import static org.hamcrest.CoreMatchers.is;
 
-@RunWith(Arquillian.class) //@Ignore
+@RunWith(Arquillian.class)
 public class ToxicFunctionalTestCase {
 
     @ArquillianResource
