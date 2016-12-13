@@ -9,15 +9,15 @@ public interface Q {
     void exec(Perform perform) throws Exception;
     void exec(RunCondition runCondition, Perform perform) throws Exception;
 
-    public interface Perform {
+    interface Perform {
         void execute() throws Exception;
     }
 
-    public interface RunCondition {
+    interface RunCondition {
         boolean isExecutable();
     }
 
-    public static class DurationRunCondition implements Q.RunCondition {
+    class DurationRunCondition implements Q.RunCondition {
 
         protected long finishTime;
 
@@ -36,7 +36,7 @@ public interface Q {
         }
     }
 
-    public static class IterationRunCondition implements Q.RunCondition {
+    class IterationRunCondition implements Q.RunCondition {
         protected final long iterations;
         protected long currentIteration = 0;
 
@@ -60,7 +60,7 @@ public interface Q {
         }
     }
 
-    public static abstract class BaseType<T> {
+    abstract class BaseType<T> {
         private boolean distributed = false;
         protected T value;
 
@@ -85,7 +85,7 @@ public interface Q {
         }
     }
 
-    public static abstract class FloatType extends BaseType<Float> {
+    abstract class FloatType extends BaseType<Float> {
         public FloatType(float value) {
             super(false, value);
             this.value = value;
@@ -97,7 +97,7 @@ public interface Q {
         }
     }
 
-    public static abstract class LongType extends BaseType<Long> {
+    abstract class LongType extends BaseType<Long> {
         protected LongType(long value) {
             super(false, value);
             this.value = value;
@@ -109,7 +109,7 @@ public interface Q {
         }
     }
 
-    public static abstract class IntegerType extends BaseType<Integer> {
+    abstract class IntegerType extends BaseType<Integer> {
         protected IntegerType(int value) {
             super(false, value);
             this.value = value;
@@ -121,7 +121,7 @@ public interface Q {
         }
     }
 
-    public static abstract class StringType extends BaseType<String> {
+    abstract class StringType extends BaseType<String> {
         protected StringType(String value) {
             super(false, value);
             this.value = value;
@@ -133,7 +133,7 @@ public interface Q {
         }
     }
 
-    public static abstract class ArrayType<T> extends BaseType<T[]> {
+    abstract class ArrayType<T> extends BaseType<T[]> {
 
         protected ArrayType(T[] value) {
             super(false, value);

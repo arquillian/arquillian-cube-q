@@ -1,7 +1,6 @@
 package org.arquillian.cube.q.toxic;
 
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.arquillian.cube.q.api.Q;
 import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.ApplicationScoped;

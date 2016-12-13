@@ -113,7 +113,7 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
     }
 
     private CubeDockerConfiguration createConfig(String content) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
 
         parameters.put("serverVersion", "1.13");
         parameters.put("serverUri", "http://localhost:25123");

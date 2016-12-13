@@ -159,7 +159,7 @@ public class QNetworkChaosToxic implements NetworkChaos {
         private void run(final Perform perform) throws Exception {
             scenario.given(name)
                 .using(toxics)
-                .then(() -> perform.execute());
+                .then(perform::execute);
         }
 
         private List<ToxiProxyClient.BaseToxic> filterToxicsContainingDistributedValues(List<ToxiProxyClient.BaseToxic> toxics) {

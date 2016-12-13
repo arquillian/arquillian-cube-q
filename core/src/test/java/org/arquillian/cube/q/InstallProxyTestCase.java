@@ -1,9 +1,5 @@
 package org.arquillian.cube.q;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
 import org.arquillian.cube.docker.impl.client.config.DockerCompositions;
 import org.arquillian.cube.q.core.InstallProxy;
@@ -20,6 +16,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstallProxyTestCase extends AbstractManagerTestBase {
@@ -73,7 +73,7 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
     }
 
     private CubeDockerConfiguration createConfig(String content) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
 
         parameters.put("serverVersion", "1.13");
         parameters.put("serverUri", "http://localhost:25123");

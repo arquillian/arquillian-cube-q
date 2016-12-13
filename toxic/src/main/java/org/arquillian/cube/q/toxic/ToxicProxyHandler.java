@@ -86,7 +86,7 @@ public class ToxicProxyHandler implements ProxyManager {
                 // all services that binds a port to host computer should not binds anymore (since they will be bound by toxiproxy)
                 // so we need to remove all of them
 
-                List<PortBinding> removedBoundPorts = new ArrayList<PortBinding>();
+                List<PortBinding> removedBoundPorts = new ArrayList<>();
                 if (data.getPortBindings() != null) {
                     Collection<PortBinding> ports = data.getPortBindings();
                     for (PortBinding binding : ports) {
@@ -106,7 +106,7 @@ public class ToxicProxyHandler implements ProxyManager {
 
                 // if
                 if (removedBoundPorts.size() > 0) {
-                    Collection<ExposedPort> ports = new ArrayList<ExposedPort>();
+                    Collection<ExposedPort> ports = new ArrayList<>();
                     if (data.getExposedPorts() != null) {
                         ports = data.getExposedPorts();
                     }

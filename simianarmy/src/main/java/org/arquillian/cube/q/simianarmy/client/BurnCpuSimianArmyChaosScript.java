@@ -1,6 +1,7 @@
 package org.arquillian.cube.q.simianarmy.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BurnCpuSimianArmyChaosScript extends SimianArmyScriptChaos {
@@ -17,12 +18,8 @@ public class BurnCpuSimianArmyChaosScript extends SimianArmyScriptChaos {
     public String[] postProcessScript(String[] chaosScriptsContent) {
         List<String> commands = new ArrayList<>();
 
-        for (int i=0; i < numberCpu; i++) {
-
-            for (String chaosScriptContent : chaosScriptsContent) {
-                commands.add(chaosScriptContent);
-            }
-
+        for (int i = 0; i < numberCpu; i++) {
+           Collections.addAll(commands, chaosScriptsContent);
         }
 
         return commands.toArray(new String[commands.size()]);
