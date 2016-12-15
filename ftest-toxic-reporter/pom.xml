@@ -6,18 +6,13 @@
     <artifactId>arquillian-cube-q</artifactId>
     <groupId>org.arquillian.cube.q</groupId>
     <version>1.0.0.Final-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>arquillian-cube-q-reporter-ftest-toxic</artifactId>
 
-
   <name>Arquillian Cube Q Toxic Reporter Functional Test</name>
-
-  <properties>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.source>1.8</maven.compiler.source>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -33,10 +28,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.arquillian.cube.q</groupId>
-      <artifactId>arquillian-cube-q-toxic</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-standalone</artifactId>
       <scope>test</scope>
@@ -47,7 +38,7 @@
     </dependency>
     <dependency>
       <groupId>org.arquillian.cube.q</groupId>
-      <artifactId>arquillian-cube-q-recorder</artifactId>
+      <artifactId>arquillian-cube-q-reporter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.arquillian.extension</groupId>

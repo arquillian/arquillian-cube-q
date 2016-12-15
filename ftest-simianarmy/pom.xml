@@ -4,6 +4,7 @@
         <artifactId>arquillian-cube-q</artifactId>
         <groupId>org.arquillian.cube.q</groupId>
         <version>1.0.0.Final-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
