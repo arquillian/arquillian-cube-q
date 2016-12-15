@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
@@ -41,6 +42,9 @@ public class ToxicFunctionalTest {
     @Rule
     public TestName name = new TestName();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private static List<String> executedMethods = new ArrayList<>();
 
     private static final String LOG_DIR = (System.getProperty("user.dir") + "/target/reports/chaos/");
@@ -53,8 +57,10 @@ public class ToxicFunctionalTest {
         }
     }
 
-    @Test(expected = SocketException.class)
+    @Test
     public void should_add_timeout() throws Exception {
+        thrown.expect(SocketException.class);
+        thrown.expectMessage("Unexpected end of file from server");
         networkChaos.on("hw", 8080).timeout(timeoutInMillis(1000)).exec(() -> {
             getResponse();
         });

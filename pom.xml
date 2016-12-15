@@ -59,7 +59,7 @@
         <version.mockito>1.10.19</version.mockito>
         <version.assertj>2.4.1</version.assertj>
         <version.arquillian.recorder>1.1.5.Final</version.arquillian.recorder>
-        <version.jsonassert>1.4.0</version.jsonassert>
+        <version.json.path.assert>2.2.0</version.json.path.assert>
     </properties>
 
     <dependencyManagement>
@@ -169,9 +169,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.skyscreamer</groupId>
-                <artifactId>jsonassert</artifactId>
-                <version>${version.jsonassert}</version>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path-assert</artifactId>
+                <version>${version.json.path.assert}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

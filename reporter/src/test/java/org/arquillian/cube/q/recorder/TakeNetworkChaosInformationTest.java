@@ -1,7 +1,5 @@
 package org.arquillian.cube.q.recorder;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.arquillian.cube.q.toxic.QNetworkChaosToxic;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.event.ToxicCreated;
@@ -11,9 +9,10 @@ import org.arquillian.recorder.reporter.ReporterConfiguration;
 import org.arquillian.recorder.reporter.event.PropertyReportEvent;
 import org.arquillian.recorder.reporter.model.entry.FileEntry;
 import org.arquillian.recorder.reporter.model.entry.GroupEntry;
+import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.core.api.Event;
 import org.jboss.arquillian.test.spi.event.suite.After;
-import org.json.JSONException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.jayway.jsonassert.impl.matcher.IsCollectionWithSize.hasSize;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.arquillian.cube.q.api.NetworkChaos.RateType.rate;
 import static org.arquillian.cube.q.api.NetworkChaos.TimeoutType.timeoutInMillis;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -100,7 +102,7 @@ public class TakeNetworkChaosInformationTest {
     }
 
     @Test
-    public void should_create_json_for_toxic_creation_and_write_it_to_file() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException, JSONException {
+    public void should_create_json_for_toxic_creation_and_write_it_to_file() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
         //given
         ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicCreated toxicCreated = new ToxicCreated(timeout);
@@ -118,13 +120,21 @@ public class TakeNetworkChaosInformationTest {
                 reporterConfiguration);
 
         //then
-        String actual = readJSONFileAsString(new File(path));
-        String expected = "{\"services\":[{\"actionon\":\"helloworld\",\"type\":\"Timeout\",\"phase\":\"create\",\"toxic\":{\"name\":\"timeout_downstream\",\"stream\":\"DOWNSTREAM\",\"toxcicity\":1.0,\"timeout\":1000}}]}";
-        JSONAssert.assertEquals(expected, actual, false);
+        File json = new File(path);
+        Assert.assertThat(json, isJson());
+        Assert.assertThat(json, isJson(CoreMatchers.allOf(
+                withJsonPath("$.services", hasSize(1)),
+                withJsonPath("$.services[0].actionon", equalTo("helloworld")),
+                withJsonPath("$.services[0].type", equalTo("Timeout")),
+                withJsonPath("$.services[0].phase", equalTo("create")),
+                withJsonPath("$.services[0].toxic.name", equalTo("timeout_downstream")),
+                withJsonPath("$.services[0].toxic.stream", equalTo("DOWNSTREAM")),
+                withJsonPath("$.services[0].toxic.toxcicity", equalTo(1.0)),
+                withJsonPath("$.services[0].toxic.timeout", equalTo(1000)))));
     }
 
     @Test
-    public void should_create_json_for_toxic_updation_and_write_to_file() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException, JSONException {
+    public void should_create_json_for_toxic_updation_and_write_to_file() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
         //given
         ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicUpdated toxicUpdated = new ToxicUpdated(timeout);
@@ -143,9 +153,17 @@ public class TakeNetworkChaosInformationTest {
                 reporterConfiguration);
 
         //then
-        String actual = readJSONFileAsString(new File(path));
-        String expected = "{\"services\":[{\"actionon\":\"helloworld\",\"type\":\"Timeout\",\"phase\":\"update\",\"toxic\":{\"name\":\"timeout_downstream\",\"stream\":\"DOWNSTREAM\",\"toxcicity\":1.0,\"timeout\":1000}}]}";
-        JSONAssert.assertEquals(expected, actual, false);
+        File json = new File(path);
+        Assert.assertThat(json, isJson());
+        Assert.assertThat(json, isJson(CoreMatchers.allOf(
+                withJsonPath("$.services", hasSize(1)),
+                withJsonPath("$.services[0].actionon", equalTo("helloworld")),
+                withJsonPath("$.services[0].type", equalTo("Timeout")),
+                withJsonPath("$.services[0].phase", equalTo("update")),
+                withJsonPath("$.services[0].toxic.name", equalTo("timeout_downstream")),
+                withJsonPath("$.services[0].toxic.stream", equalTo("DOWNSTREAM")),
+                withJsonPath("$.services[0].toxic.toxcicity", equalTo(1.0)),
+                withJsonPath("$.services[0].toxic.timeout", equalTo(1000)))));
     }
 
 
@@ -181,13 +199,6 @@ public class TakeNetworkChaosInformationTest {
         Field field = takeNetworkChaosInformation.getClass().getDeclaredField("toxics");
         field.setAccessible(true);
         return (ArrayList<Map<String, Object>>) field.get(takeNetworkChaosInformation);
-    }
-
-    private String readJSONFileAsString(File file) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(file);
-
-        return mapper.writeValueAsString(jsonNode);
     }
 
     private String getFilePath(ReporterConfiguration reporterConfiguration, String methodName) {
