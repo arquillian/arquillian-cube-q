@@ -64,9 +64,6 @@ public class ToxicFunctionalTestCase {
         ToxiproxyClient client = new ToxiproxyClient(ip, 8474);
         final Proxy proxy = client.getProxy("pingpong:8080");
         Assert.assertThat(proxy.toxics().getAll().size(), is(1));
-
-        // clean-up proxies
-        client.reset();
     }
 
     @Test
