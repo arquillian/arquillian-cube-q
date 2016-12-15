@@ -1,10 +1,5 @@
 package org.arquillian.cube.q.toxic;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.arquillian.cube.docker.impl.client.config.CubeContainer;
 import org.arquillian.cube.docker.impl.client.config.DockerCompositions;
 import org.arquillian.cube.docker.impl.client.config.ExposedPort;
@@ -23,6 +18,11 @@ import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
 import org.jboss.arquillian.core.api.annotation.Inject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class ToxicProxyHandler implements ProxyManager {
 
@@ -77,7 +77,7 @@ public class ToxicProxyHandler implements ProxyManager {
                     }
                 }
                 // redirect links to proxy and adds links to proxy to the old links
-                data.setLinks(updateLinks(cubeName, builder, data.getLinks()));
+                data.setLinks(updateLinks(builder, data.getLinks()));
 
             } else {
 
@@ -86,7 +86,7 @@ public class ToxicProxyHandler implements ProxyManager {
                 // all services that binds a port to host computer should not binds anymore (since they will be bound by toxiproxy)
                 // so we need to remove all of them
 
-                List<PortBinding> removedBoundPorts = new ArrayList<PortBinding>();
+                List<PortBinding> removedBoundPorts = new ArrayList<>();
                 if (data.getPortBindings() != null) {
                     Collection<PortBinding> ports = data.getPortBindings();
                     for (PortBinding binding : ports) {
@@ -106,7 +106,7 @@ public class ToxicProxyHandler implements ProxyManager {
 
                 // if
                 if (removedBoundPorts.size() > 0) {
-                    Collection<ExposedPort> ports = new ArrayList<ExposedPort>();
+                    Collection<ExposedPort> ports = new ArrayList<>();
                     if (data.getExposedPorts() != null) {
                         ports = data.getExposedPorts();
                     }
@@ -122,10 +122,9 @@ public class ToxicProxyHandler implements ProxyManager {
     }
 
 
-    private Collection<Link> updateLinks(String cubeName, Proxy.Builder proxy, Collection<Link> links) {
-        Collection<Link> updatedLinks = new ArrayList<Link>();
+    private Collection<Link> updateLinks(Proxy.Builder proxy, Collection<Link> links) {
+        final Collection<Link> updatedLinks = new ArrayList<>();
         if (links != null) {
-            updatedLinks = new ArrayList<Link>();
             for (Link link : links) {
                 proxy.containerLinks(link.getName(), link.getName() + "_toxiproxy");
                 updatedLinks.add(new Link(proxy.getName(), link.getAlias()));

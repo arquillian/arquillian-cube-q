@@ -1,7 +1,6 @@
 package org.arquillian.cube.q.toxic;
 
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.arquillian.cube.q.toxic.client.ToxiProxy;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
 
@@ -130,7 +129,7 @@ public class QNetworkChaosToxic implements NetworkChaos {
 
         @Override
         public void exec(RunCondition runCondition, Perform perform) throws Exception {
-            run(perform, runCondition);
+            run(runCondition, perform);
         }
 
         private void run() throws Exception {
@@ -139,24 +138,20 @@ public class QNetworkChaosToxic implements NetworkChaos {
                     .execute();
         }
 
-        private void run(final Perform perform, final RunCondition runCondition) throws Exception {
+        private void run(final RunCondition runCondition, final Perform perform) throws Exception {
 
             final List<ToxiProxyClient.BaseToxic> toxicsWithDistributedValues = filterToxicsContainingDistributedValues(toxics);
 
             scenario.given(name)
                     .using(toxics)
-                    .then(new ToxiProxy.Callable() {
+                    .then(() -> {
+                        while (runCondition.isExecutable()) {
+                            perform.execute();
 
-                        @Override
-                        public void call() throws Exception {
-                            while (runCondition.isExecutable()) {
-                                perform.execute();
-
-                                //update distributed values for next round
-                                scenario.given(name)
-                                        .using(toxicsWithDistributedValues)
-                                        .update();
-                            }
+                            //update distributed values for next round
+                            scenario.given(name)
+                                    .using(toxicsWithDistributedValues)
+                                    .update();
                         }
                     });
         }
@@ -164,13 +159,7 @@ public class QNetworkChaosToxic implements NetworkChaos {
         private void run(final Perform perform) throws Exception {
             scenario.given(name)
                 .using(toxics)
-                .then(new ToxiProxy.Callable() {
-                        
-                        @Override
-                        public void call() throws Exception {
-                            perform.execute();
-                        }
-                    });
+                .then(perform::execute);
         }
 
         private List<ToxiProxyClient.BaseToxic> filterToxicsContainingDistributedValues(List<ToxiProxyClient.BaseToxic> toxics) {

@@ -1,11 +1,9 @@
 package org.arquillian.cube.q.pumba.util;
 
 import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;

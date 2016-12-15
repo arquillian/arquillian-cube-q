@@ -3,7 +3,6 @@ package org.arquillian.cube.q.toxic;
 import java.lang.annotation.Annotation;
 
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.arquillian.cube.q.api.Q;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.api.ArquillianResource;

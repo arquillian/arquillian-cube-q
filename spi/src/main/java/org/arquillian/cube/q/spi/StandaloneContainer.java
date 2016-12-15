@@ -5,7 +5,6 @@ import org.arquillian.cube.docker.impl.client.config.CubeContainer;
 import org.arquillian.cube.docker.impl.client.config.Image;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class StandaloneContainer {
@@ -33,7 +32,7 @@ public class StandaloneContainer {
     public static class Builder {
 
         public static final String DEFAULT_NAME = "pumba";
-        private String image = "gaiaadm/pumba";
+        private String image = "gaiaadm/pumba:36-master";
 
         private List<String> volumes = new ArrayList<>();
 

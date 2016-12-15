@@ -1,26 +1,20 @@
 package org.arquillian.cube.q.toxic;
 
-import eu.rekawek.toxiproxy.ToxiproxyClient;
-import eu.rekawek.toxiproxy.Proxy;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
 import java.net.URL;
 
-import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latency;
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis;
-import static org.arquillian.cube.q.api.Q.IterationRunCondition.times;
 
-@RunWith(Arquillian.class) //@Ignore
-public class ToxicFuntionalTestCase {
+@RunWith(Arquillian.class)
+public class ToxicFunctionalTestCase {
 
     @ArquillianResource
     private NetworkChaos networkChaos;

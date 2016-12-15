@@ -1,6 +1,5 @@
 package org.arquillian.cube.q.toxic;
 
-import org.arquillian.cube.q.spi.NetworkChaosConfiguration;
 import org.arquillian.cube.q.spi.ProxyManager;
 import org.arquillian.cube.q.toxic.client.NetworkChaosConfigurator;
 import org.jboss.arquillian.core.spi.LoadableExtension;
@@ -12,6 +11,7 @@ public class QNetworkChaosToxicExtension implements LoadableExtension {
     public void register(ExtensionBuilder builder) {
         builder.observer(QNetworkChaosToxicCreator.class)
                .observer(NetworkChaosConfigurator.class)
+               .observer(ToxiProxyAfterTestCleaner.class)
                .service(ProxyManager.class, ToxicProxyHandler.class)
                .service(ResourceProvider.class, QNetworkChaosResourceProvider.class);
     }

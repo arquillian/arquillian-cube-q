@@ -24,7 +24,7 @@ public interface ToxiProxyClient {
 
     void reset();
 
-    public static abstract class BaseToxic {
+    abstract class BaseToxic {
         private String name;
         private String stream;
         private float toxcicity;
@@ -65,7 +65,7 @@ public interface ToxiProxyClient {
 
     }
 
-    public static class Latency extends BaseToxic {
+    class Latency extends BaseToxic {
         private NetworkChaos.LatencyType latency;
         private NetworkChaos.JitterType jitter;
 
@@ -125,7 +125,7 @@ public interface ToxiProxyClient {
         }
     }
 
-    public static class Bandwidth extends BaseToxic {
+    class Bandwidth extends BaseToxic {
         private NetworkChaos.RateType rate;
 
         // To avoid calls in update, pointer to remote toxic is saved
@@ -175,7 +175,7 @@ public interface ToxiProxyClient {
         }
     }
 
-    public static class Down extends BaseToxic {
+    class Down extends BaseToxic {
         public Down(String name, String stream, float toxicity) {
             super(name, stream, toxicity);
         }
@@ -199,7 +199,7 @@ public interface ToxiProxyClient {
         }
     }
 
-    public static class SlowClose extends BaseToxic {
+    class SlowClose extends BaseToxic {
 
         private NetworkChaos.DelayType delay;
 
@@ -250,7 +250,7 @@ public interface ToxiProxyClient {
         }
     }
 
-    public static class Timeout extends BaseToxic {
+    class Timeout extends BaseToxic {
 
         private NetworkChaos.TimeoutType timeout;
 
@@ -301,7 +301,7 @@ public interface ToxiProxyClient {
         }
     }
 
-    public static class Slice extends BaseToxic {
+    class Slice extends BaseToxic {
         private long averageSize;
         private long sizeVariation;
         private NetworkChaos.DelayType delay;
@@ -369,7 +369,7 @@ public interface ToxiProxyClient {
         }
     }
 
-    public static class Builder {
+    class Builder {
 
         public static ToxiProxyClient create(final String ip, final int port) {
             return new ToxiProxyClient() {

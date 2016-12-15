@@ -19,7 +19,7 @@ public class NetworkChaosConfigurator {
 
 
     //Add precedence -10 because we need that ContainerRegistry is available in the Arquillian scope.
-    public void configure(@Observes(precedence = 0) ArquillianDescriptor arquillianDescriptor) {
+    public void configure(@Observes ArquillianDescriptor arquillianDescriptor) {
         Map<String, String> config = arquillianDescriptor.extension(EXTENSION_NAME).getExtensionProperties();
         NetworkChaosConfiguration cubeConfiguration = NetworkChaosConfiguration.fromMap(config);
         networkChaosConfigurationInstanceProducer.set(cubeConfiguration);

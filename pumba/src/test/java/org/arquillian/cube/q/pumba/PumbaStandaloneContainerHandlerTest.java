@@ -2,12 +2,9 @@ package org.arquillian.cube.q.pumba;
 
 import org.arquillian.cube.docker.impl.client.CubeDockerConfiguration;
 import org.arquillian.cube.q.spi.StandaloneContainer;
-import org.assertj.core.api.Assertions;
-import org.jboss.arquillian.core.api.Instance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,12 +21,7 @@ public class PumbaStandaloneContainerHandlerTest {
 
         when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("unix:///var");
         PumbaStandaloneContainerHandler pumbaStandaloneContainerHandler = new PumbaStandaloneContainerHandler();
-        pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = new Instance<CubeDockerConfiguration>() {
-            @Override
-            public CubeDockerConfiguration get() {
-                return cubeDockerConfiguration;
-            }
-        };
+        pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = () -> cubeDockerConfiguration;
 
         final StandaloneContainer install = pumbaStandaloneContainerHandler.install();
         assertThat(install.getCube().getBinds()).contains("/var/run/docker.sock:/var/run/docker.sock");
@@ -42,12 +34,7 @@ public class PumbaStandaloneContainerHandlerTest {
         when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("https://192.168.0.1");
         when(cubeDockerConfiguration.getCertPath()).thenReturn("/home/user/.machine/ssl");
         PumbaStandaloneContainerHandler pumbaStandaloneContainerHandler = new PumbaStandaloneContainerHandler();
-        pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = new Instance<CubeDockerConfiguration>() {
-            @Override
-            public CubeDockerConfiguration get() {
-                return cubeDockerConfiguration;
-            }
-        };
+        pumbaStandaloneContainerHandler.cubeDockerConfigurationInstance = () -> cubeDockerConfiguration;
 
         final StandaloneContainer install = pumbaStandaloneContainerHandler.install();
         assertThat(install.getCube().getBinds()).contains("/home/user/.machine/ssl:/etc/ssl/docker");

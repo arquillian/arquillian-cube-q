@@ -1,7 +1,5 @@
 package org.arquillian.cube.q.api;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Interface for executing chaos at operative system level.
  */
@@ -17,7 +15,7 @@ public interface OperativeSystemChaos {
     /**
      * Interface that abstracts on how operative system chaos is implemented
      */
-    public interface Action extends Q {
+    interface Action extends Q {
 
         /**
          * Burn CPU setting CPU to 100%
@@ -67,22 +65,22 @@ public interface OperativeSystemChaos {
 
     }
 
-    public static final class NumberCpuType extends Q.IntegerType {
+    final class NumberCpuType extends Q.IntegerType {
 
         protected NumberCpuType(int value) {
             super(value);
         }
 
-        public static final NumberCpuType cpus(int cpu) {
+        public static NumberCpuType cpus(int cpu) {
             return new NumberCpuType(cpu);
         }
 
-        public static final NumberCpuType singleCpu() {
+        public static NumberCpuType singleCpu() {
             return new NumberCpuType(1);
         }
     }
 
-    public static final class SizeType extends Q.LongType {
+    final class SizeType extends Q.LongType {
 
         protected SizeType(long value) {
             super(value);
@@ -92,30 +90,30 @@ public interface OperativeSystemChaos {
          * Default size of 65GB
          * @return Size element.
          */
-        public static final SizeType defaultSize() {
+        public static SizeType defaultSize() {
             return new SizeType(65536);
         }
 
-        public static final SizeType sizeInMegas(long size) {
+        public static SizeType sizeInMegas(long size) {
             return new SizeType(size);
         }
     }
 
-    public static final class PortSizeType extends Q.ArrayType<Integer> {
+    final class PortSizeType extends Q.ArrayType<Integer> {
 
         protected PortSizeType(Integer[] value) {
             super(value);
         }
 
-        public static final PortSizeType port(Integer port) {
+        public static PortSizeType port(Integer port) {
             return new PortSizeType(new Integer[]{port});
         }
 
-        public static final PortSizeType ports(Integer...ports) {
+        public static PortSizeType ports(Integer...ports) {
             return new PortSizeType(ports);
         }
 
-        public static final PortSizeType portRange(int start, int stop) {
+        public static PortSizeType portRange(int start, int stop) {
             int totalNumber = (stop - start) + 1;
             Integer[] ports = new Integer[totalNumber];
 

@@ -1,20 +1,20 @@
 package org.arquillian.cube.q.spi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.arquillian.cube.docker.impl.client.config.Await;
 import org.arquillian.cube.docker.impl.client.config.CubeContainer;
 import org.arquillian.cube.docker.impl.client.config.ExposedPort;
 import org.arquillian.cube.docker.impl.client.config.Image;
 import org.arquillian.cube.docker.impl.client.config.Link;
 import org.arquillian.cube.docker.impl.client.config.PortBinding;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Proxy {
 
@@ -47,7 +47,7 @@ public class Proxy {
     }
     
     public Collection<Relation> getRelations(String to) {
-        List<Relation> relations = new ArrayList<Relation>();
+        List<Relation> relations = new ArrayList<>();
         for(Relation rel : getRelations()) {
             if(rel.getTo().equals(to)) {
                 relations.add(rel);
@@ -97,8 +97,8 @@ public class Proxy {
         private Set<String> expose = new HashSet<>();
         private Set<String> bind = new HashSet<>();
 
-        private Map<String, List<String>> containerExpose = new HashMap<String, List<String>>(); 
-        private Map<String, List<String>> containerLinks = new HashMap<String, List<String>>();
+        private Map<String, List<String>> containerExpose = new HashMap<>();
+        private Map<String, List<String>> containerLinks = new HashMap<>();
         
         public Builder() {
         }
@@ -140,18 +140,17 @@ public class Proxy {
             cube.setPortBindings(PortBinding.valuesOf(bind));
             Await await = new Await();
             await.setStrategy("polling");
-            await.setPorts(Arrays.asList(DEFAULT_PORT));
+            await.setType("ping");
+            await.setPorts(Collections.singletonList(DEFAULT_PORT));
             cube.setAwait(await);
             cube.setRemoveVolumes(true);
-            Collection<Relation> relations = buildRelations(); 
-            Collection<Link> uniqeLinks = buildUniqueLinks();
-            cube.setLinks(uniqeLinks);
+            cube.setLinks(buildUniqueLinks());
 
-            return new Proxy(getName(), ExposedPort.valueOf(DEFAULT_PORT + "/tcp"), cube, relations);
+            return new Proxy(getName(), ExposedPort.valueOf(DEFAULT_PORT + "/tcp"), cube, buildRelations());
         }
         
         private Collection<Link> buildUniqueLinks() {
-            List<Link> unique = new ArrayList<Link>();
+            List<Link> unique = new ArrayList<>();
             for (Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
                 final List<String> linksValue = links.getValue();
                 for (String linkValue : linksValue) {
@@ -162,7 +161,7 @@ public class Proxy {
         }
 
         private Collection<Relation> buildRelations() {
-            List<Relation> relations = new ArrayList<Relation>();
+            List<Relation> relations = new ArrayList<>();
             for(Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
                 for(String linkedTo : links.getValue()) {
                     List<String> exposed = containerExpose.get(links.getKey());
@@ -179,7 +178,7 @@ public class Proxy {
 
         private List<String> getValue(String key, Map<String, List<String>> map) {
             if(!map.containsKey(key)) {
-                map.put(key, new ArrayList<String>());
+                map.put(key, new ArrayList<>());
             }
             return map.get(key);
         }

@@ -20,7 +20,7 @@ public class PumbaCommandLineCreator {
         super();
     }
 
-    public static final Collection<String> run(String chaosCommand, boolean random, CubeDockerConfiguration cubeDockerConfiguration) {
+    public static Collection<String> run(String chaosCommand, boolean random, CubeDockerConfiguration cubeDockerConfiguration) {
 
         String[] runningCommand = new String[8];
         runningCommand[PUMBA_INDEX] = "pumba";

@@ -6,7 +6,7 @@ public interface NetworkChaos {
 
     Action on(String machine, int port);
 
-    public interface Action extends Q {
+    interface Action extends Q {
         Action down();
         Action timeout(TimeoutType timeType);
         Action timeout(TimeoutType timeType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
@@ -20,7 +20,7 @@ public interface NetworkChaos {
         Action slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType, SliceSizeVariationType sliceSizeVariationType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
     }
 
-    public static enum ToxicDirectionStream {
+    enum ToxicDirectionStream {
         DOWNSTREAM, UPSTREAM
     }
 
@@ -32,7 +32,7 @@ public interface NetworkChaos {
      * For example applying a toxicity of 0.5 to delay toxic, means that only half of the connections
      * done will be affected by delay toxic.
      */
-    public static final class ToxicityType extends Q.FloatType {
+    final class ToxicityType extends Q.FloatType {
 
         protected ToxicityType(float value) {
             super(value);
@@ -60,7 +60,7 @@ public interface NetworkChaos {
     /**
      * Slice Size Variation type for slicing toxic.
      */
-    public static final class SliceSizeVariationType extends Q.LongType {
+    final class SliceSizeVariationType extends Q.LongType {
 
         protected SliceSizeVariationType(long value) {
             super(value);
@@ -74,7 +74,7 @@ public interface NetworkChaos {
     /**
      * Slice Average Size type for slicing toxic.
      */
-    public static final class SliceAverageSizeType extends Q.LongType {
+    final class SliceAverageSizeType extends Q.LongType {
 
         protected SliceAverageSizeType(long value) {
             super(value);
@@ -88,7 +88,7 @@ public interface NetworkChaos {
     /**
      * Delay type to set any delay on toxics that requires a delay configuration.
      */
-    public static class DelayType extends Q.LongType {
+    class DelayType extends Q.LongType {
 
         protected DelayType(long value) {
             super(value);
@@ -106,7 +106,7 @@ public interface NetworkChaos {
     /**
      * Type for configuring random delays.
      */
-    public static class DistributedDelayType extends DelayType {
+    class DistributedDelayType extends DelayType {
 
         private Distribution delayDistribution;
 
@@ -146,7 +146,7 @@ public interface NetworkChaos {
     /**
      * Rate type to set in bandwidth toxic.
      */
-    public static class RateType extends Q.LongType {
+    class RateType extends Q.LongType {
 
         protected RateType(long value) {
             super(value);
@@ -160,7 +160,7 @@ public interface NetworkChaos {
     /**
      * Type for configuring random rates.
      */
-    public static class DistributedRateType extends RateType {
+    class DistributedRateType extends RateType {
         private Distribution delayDistribution;
 
         protected DistributedRateType(Distribution distribution, long rate) {
@@ -201,7 +201,7 @@ public interface NetworkChaos {
      * Jitter is the variation in latency as measured in the variability over time of the packet latency across a network.
      * For example a network with constant latency has no variation (or jitter).
      */
-    public static class JitterType extends Q.LongType {
+    class JitterType extends Q.LongType {
 
         protected JitterType(long value) {
             super(value);
@@ -219,7 +219,7 @@ public interface NetworkChaos {
     /**
      * Type for configuring random jitter values.
      */
-    public static class DistributedJitterType extends JitterType {
+    class DistributedJitterType extends JitterType {
         private Distribution delayDistribution;
 
         protected DistributedJitterType(Distribution distribution, int jitter) {
@@ -257,7 +257,7 @@ public interface NetworkChaos {
     /**
      * Latency type to set in latency toxic.
      */
-    public static class LatencyType extends Q.LongType {
+    class LatencyType extends Q.LongType {
         protected LatencyType(long value) {
             super(value);
         }
@@ -274,7 +274,7 @@ public interface NetworkChaos {
     /**
      * Type for configuring random latency times.
      */
-    public static class DistributedLatencyType extends LatencyType {
+    class DistributedLatencyType extends LatencyType {
 
         private Distribution distribution;
 
@@ -313,7 +313,7 @@ public interface NetworkChaos {
     /**
      * Timeout type to set in timeout toxic.
      */
-    public static class TimeoutType extends Q.LongType {
+    class TimeoutType extends Q.LongType {
         protected TimeoutType(long value) {
             super(value);
         }
@@ -330,7 +330,7 @@ public interface NetworkChaos {
     /**
      * Type for configuring random timeouts.
      */
-    public static class DistributedTimeoutType extends TimeoutType {
+    class DistributedTimeoutType extends TimeoutType {
         private Distribution distribution;
 
         protected DistributedTimeoutType(Distribution distribution, long value) {

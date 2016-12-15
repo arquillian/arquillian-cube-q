@@ -1,15 +1,10 @@
 package org.arquillian.cube.q.pumba;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Container;
 import org.arquillian.cube.q.api.ContainerChaos;
-import org.arquillian.cube.q.spi.StandaloneContainer;
-import org.assertj.core.api.Assertions;
-import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

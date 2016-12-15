@@ -8,7 +8,7 @@ public interface ToxiProxy {
     
     Scenario given(String name);
 
-    public interface Scenario {
+    interface Scenario {
 
         Scenario given(String name);
         Scenario using(List<ToxiProxyClient.BaseToxic> toxic);
@@ -17,7 +17,7 @@ public interface ToxiProxy {
         void update() throws Exception;
     }
     
-    public interface Callable {
+    interface Callable {
         void call() throws Exception;
     }
 }

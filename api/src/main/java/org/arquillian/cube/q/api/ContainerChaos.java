@@ -6,7 +6,7 @@ public interface ContainerChaos {
 
     Action onCubeDockerHost();
 
-    public interface Action extends Q {
+    interface Action extends Q {
         Action stop(ContainersType containersType, IntervalType intervalType);
         Action stopRandomly(ContainersType containersType, IntervalType intervalType);
 
@@ -17,11 +17,11 @@ public interface ContainerChaos {
         Action killRandomly(ContainersType containersType, IntervalType intervalType, KillSignal killSignal);
     }
 
-    public enum KillSignal {
-        SIGHUP, SIGINT, SIGKILL, SIGTERM, SIGSTOP;
+    enum KillSignal {
+        SIGHUP, SIGINT, SIGKILL, SIGTERM, SIGSTOP
     }
 
-    public static final class ContainersType extends Q.StringType {
+    final class ContainersType extends Q.StringType {
 
         protected ContainersType(String value) {
             super(value);
@@ -46,7 +46,7 @@ public interface ContainerChaos {
         }
     }
 
-    public static final class IntervalType extends Q.LongType {
+    final class IntervalType extends Q.LongType {
 
         protected IntervalType(long value) {
             super(value);

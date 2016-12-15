@@ -4,7 +4,6 @@ package org.arquillian.cube.q.simianarmy.client;
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.cube.spi.metadata.CanExecuteProcessInContainer;
-import org.arquillian.cube.spi.metadata.CubeMetadata;
 
 /**
  * Base class to execute scripts to given cube.
