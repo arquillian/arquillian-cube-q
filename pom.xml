@@ -59,6 +59,7 @@
         <version.mockito>1.10.19</version.mockito>
         <version.assertj>2.4.1</version.assertj>
         <version.arquillian.recorder>1.1.5.Final</version.arquillian.recorder>
+        <version.jsonassert>1.4.0</version.jsonassert>
     </properties>
 
     <dependencyManagement>
@@ -167,6 +168,12 @@
                 <version>${version.arquillian.recorder}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${version.jsonassert}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -182,8 +189,8 @@
         <module>ftest-pumba</module>
         <module>simianarmy</module>
         <module>ftest-simianarmy</module>
-        <module>recorder</module>
-        <module>ftest-toxic-frontend-reporter</module>
+        <module>reporter</module>
+        <module>ftest-toxic-reporter</module>
     </modules>
     <build>
         <plugins>
