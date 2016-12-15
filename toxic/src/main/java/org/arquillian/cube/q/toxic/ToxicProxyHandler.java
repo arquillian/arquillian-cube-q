@@ -14,6 +14,7 @@ import org.arquillian.cube.q.toxic.client.ToxiProxyScenario;
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.cube.spi.metadata.HasPortBindings;
 import org.arquillian.cube.spi.metadata.HasPortBindings.PortAddress;
+import org.jboss.arquillian.core.api.Injector;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
@@ -31,6 +32,9 @@ public class ToxicProxyHandler implements ProxyManager {
 
     @Inject
     Instance<NetworkChaosConfiguration> networkChaosConfigurationInstance;
+
+    @Inject
+    private Instance<Injector> injectorInstance;
 
     @Inject
     @ApplicationScoped
@@ -146,7 +150,7 @@ public class ToxicProxyHandler implements ProxyManager {
 
         PortAddress communicationPort = bindings.getMappedAddress(proxy.getCommunicationPort().getExposed());
 
-        scenarioInst.set(new ToxiProxyScenario(ToxiProxyClient.Builder.create(communicationPort.getIP(), communicationPort.getPort())));
+        scenarioInst.set(new ToxiProxyScenario(ToxiProxyClient.Builder.create(communicationPort.getIP(), communicationPort.getPort()), injectorInstance.get()));
     }
 
 

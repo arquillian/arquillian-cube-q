@@ -1,5 +1,7 @@
 package org.arquillian.cube.q.toxic.client;
 
+import org.arquillian.cube.q.api.Q;
+
 import java.util.List;
 
 public interface ToxiProxy {
@@ -13,7 +15,11 @@ public interface ToxiProxy {
         Scenario given(String name);
         Scenario using(List<ToxiProxyClient.BaseToxic> toxic);
         void then(Callable callable) throws Exception;
+        void then(Q.RunCondition runCondition, Callable callable) throws Exception;
+
         void execute() throws Exception;
+        void execute(Q.RunCondition runCondition) throws Exception;
+
         void update() throws Exception;
     }
     
