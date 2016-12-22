@@ -49,6 +49,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+      <dependency>
+        <groupId>org.arquillian.cube</groupId>
+        <artifactId>arquillian-cube-requirement</artifactId>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
 
 </project>
