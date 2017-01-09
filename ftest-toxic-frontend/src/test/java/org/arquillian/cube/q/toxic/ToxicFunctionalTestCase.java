@@ -1,9 +1,10 @@
 package org.arquillian.cube.q.toxic;
 
 import org.arquillian.cube.HostIp;
+import org.arquillian.cube.docker.impl.requirement.RequiresDockerMachine;
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.q.api.NetworkChaos;
-import org.jboss.arquillian.junit.Arquillian;
+import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +14,8 @@ import java.net.URL;
 
 import static org.arquillian.cube.q.api.NetworkChaos.LatencyType.latencyInMillis;
 
-@RunWith(Arquillian.class)
+@RequiresDockerMachine(name = "dev")
+@RunWith(ArquillianConditionalRunner.class)
 public class ToxicFunctionalTestCase {
 
     @ArquillianResource

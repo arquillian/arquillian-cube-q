@@ -2,8 +2,9 @@ package org.arquillian.cube.q.pumba;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
+import org.arquillian.cube.docker.impl.requirement.RequiresDockerMachine;
 import org.arquillian.cube.q.api.ContainerChaos;
-import org.jboss.arquillian.junit.Arquillian;
+import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,8 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@RunWith(Arquillian.class)
+@RequiresDockerMachine(name = "dev")
+@RunWith(ArquillianConditionalRunner.class)
 public class PumbaFunctionalTestCase {
 
     @ArquillianResource

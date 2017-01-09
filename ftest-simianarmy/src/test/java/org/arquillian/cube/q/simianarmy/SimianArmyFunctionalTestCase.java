@@ -3,8 +3,9 @@ package org.arquillian.cube.q.simianarmy;
 import com.github.dockerjava.api.DockerClient;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.HostPort;
+import org.arquillian.cube.docker.impl.requirement.RequiresDockerMachine;
 import org.arquillian.cube.q.api.OperativeSystemChaos;
-import org.jboss.arquillian.junit.Arquillian;
+import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +18,8 @@ import java.net.URL;
 
 import static org.arquillian.cube.q.api.OperativeSystemChaos.NumberCpuType.singleCpu;
 
-@RunWith(Arquillian.class)
+@RequiresDockerMachine(name = "dev")
+@RunWith(ArquillianConditionalRunner.class)
 public class SimianArmyFunctionalTestCase {
 
     @ArquillianResource
