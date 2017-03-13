@@ -53,18 +53,17 @@
 
     <properties>
         <version.arquillian_core>1.1.12.Final</version.arquillian_core>
-        <version.arquillian_cube>1.0.0.Alpha15</version.arquillian_cube>
-        <version.toxiproxyjava>2.1.1</version.toxiproxyjava>
+        <version.arquillian_cube>1.0.0.Final-SNAPSHOT</version.arquillian_cube>
+        <version.toxiproxyjava>2.1</version.toxiproxyjava>
         <version.junit>4.12</version.junit>
-        <version.mockito>1.10.19</version.mockito>
-        <version.assertj>2.6.0</version.assertj>
-        <version.arquillian.recorder>1.1.6.Final</version.arquillian.recorder>
+        <version.mockito>2.7.17</version.mockito>
+        <version.assertj>3.6.2</version.assertj>
+        <version.arquillian.reporter>0.0.2</version.arquillian.reporter>
         <version.json.path.assert>2.2.0</version.json.path.assert>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-        
             <dependency>
                 <groupId>org.arquillian.cube.q</groupId>
                 <artifactId>arquillian-cube-q-api</artifactId>
@@ -136,6 +135,16 @@
                 <version>${version.arquillian_core}</version>
             </dependency>
             <dependency>
+                <groupId>org.arquillian.reporter</groupId>
+                <artifactId>arquillian-core-reporter-api</artifactId>
+                <version>${version.arquillian.reporter}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.arquillian.reporter</groupId>
+                <artifactId>arquillian-reporter-impl</artifactId>
+                <version>${version.arquillian.reporter}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.arquillian.core</groupId>
                 <artifactId>arquillian-core-impl-base</artifactId>
                 <version>${version.arquillian_core}</version>
@@ -147,6 +156,19 @@
                 <artifactId>arquillian-cube-q-reporter</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.arquillian.reporter</groupId>
+                <artifactId>arquillian-reporter-impl</artifactId>
+                <version>${version.arquillian.reporter}</version>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.arquillian.reporter</groupId>
+                <artifactId>arquillian-reporter-depchain</artifactId>
+                <version>${version.arquillian.reporter}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -164,12 +186,6 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${version.assertj}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.arquillian.extension</groupId>
-                <artifactId>arquillian-recorder-reporter-impl</artifactId>
-                <version>${version.arquillian.recorder}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

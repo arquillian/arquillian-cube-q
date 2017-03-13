@@ -4,11 +4,12 @@ import org.arquillian.cube.q.toxic.QNetworkChaosToxic;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.event.ToxicCreated;
 import org.arquillian.cube.q.toxic.event.ToxicUpdated;
-import org.arquillian.recorder.reporter.PropertyEntry;
-import org.arquillian.recorder.reporter.ReporterConfiguration;
-import org.arquillian.recorder.reporter.event.PropertyReportEvent;
-import org.arquillian.recorder.reporter.model.entry.FileEntry;
-import org.arquillian.recorder.reporter.model.entry.GroupEntry;
+import org.arquillian.reporter.api.builder.BuilderLoader;
+import org.arquillian.reporter.api.event.SectionEvent;
+import org.arquillian.reporter.api.model.entry.FileEntry;
+import org.arquillian.reporter.api.model.report.Report;
+import org.arquillian.reporter.api.model.report.TestMethodReport;
+import org.arquillian.reporter.config.ReporterConfiguration;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.core.api.Event;
 import org.jboss.arquillian.test.spi.event.suite.After;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.jayway.jsonassert.impl.matcher.IsCollectionWithSize.hasSize;
@@ -34,6 +35,8 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.arquillian.cube.q.api.NetworkChaos.RateType.rate;
 import static org.arquillian.cube.q.api.NetworkChaos.TimeoutType.timeoutInMillis;
+import static org.arquillian.reporter.impl.asserts.ReportAssert.assertThatReport;
+import static org.arquillian.reporter.impl.asserts.SectionAssert.assertThatSection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -47,14 +50,15 @@ public class TakeNetworkChaosInformationTest {
     private QNetworkChaosToxic.ToxicAction toxicAction;
 
     @Mock
-    private Event<PropertyReportEvent> propertyReportEvent;
+    private Event<SectionEvent> sectionEvent;
 
     @Captor
-    ArgumentCaptor<PropertyReportEvent> propertyReportEventArgumentCaptor;
+    private ArgumentCaptor<SectionEvent> sectionEventArgumentCaptor;
 
     @Before
     public void configureToxicAction() {
         when(toxicAction.getName()).thenReturn("helloworld");
+        BuilderLoader.load();
     }
 
     @Test
@@ -106,13 +110,12 @@ public class TakeNetworkChaosInformationTest {
         //given
         ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicCreated toxicCreated = new ToxicCreated(timeout);
-        ReporterConfiguration reporterConfiguration = new ReporterConfiguration();
+        ReporterConfiguration reporterConfiguration = ReporterConfiguration.fromMap(new LinkedHashMap<>());
         Method method = getMethod("should_create_json_for_toxic_updation_and_write_to_file");
         String path = getFilePath(reporterConfiguration, method.getName());
 
         TakeNetworkChaosInformation takeNetworkChaosInformation = new TakeNetworkChaosInformation();
-        takeNetworkChaosInformation.propertyReportEvent = propertyReportEvent;
-        ArrayList<Map<String, Object>> toxics = getToxicList(takeNetworkChaosInformation);
+        takeNetworkChaosInformation.sectionEvent = sectionEvent;
 
         //when
         takeNetworkChaosInformation.captureToxicDetailsAfterCreate(toxicCreated, toxicAction);
@@ -138,13 +141,13 @@ public class TakeNetworkChaosInformationTest {
         //given
         ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicUpdated toxicUpdated = new ToxicUpdated(timeout);
-        ReporterConfiguration reporterConfiguration = new ReporterConfiguration();
+        ReporterConfiguration reporterConfiguration = ReporterConfiguration.fromMap(new LinkedHashMap<>());
+
         Method method = getMethod("should_create_json_for_toxic_updation_and_write_to_file");
         String path = getFilePath(reporterConfiguration, method.getName());
 
         TakeNetworkChaosInformation takeNetworkChaosInformation = new TakeNetworkChaosInformation();
-        takeNetworkChaosInformation.propertyReportEvent = propertyReportEvent;
-        ArrayList<Map<String, Object>> toxics = getToxicList(takeNetworkChaosInformation);
+        takeNetworkChaosInformation.sectionEvent = sectionEvent;
 
         //when
         takeNetworkChaosInformation.captureToxicDetailsAfterUpdate(toxicUpdated, toxicAction);
@@ -171,22 +174,28 @@ public class TakeNetworkChaosInformationTest {
     public void should_report_json_file_with_toxicity_params_after_test() throws NoSuchMethodException, IOException {
 
         TakeNetworkChaosInformation takeNetworkChaosInformation = new TakeNetworkChaosInformation();
-        takeNetworkChaosInformation.propertyReportEvent = propertyReportEvent;
+        takeNetworkChaosInformation.sectionEvent = sectionEvent;
 
+        ReporterConfiguration reporterConfiguration = ReporterConfiguration.fromMap(new LinkedHashMap<>());
+        final Method method = getMethod("should_report_json_file_with_toxicity_params_after_test");
         takeNetworkChaosInformation.reportToxicConfiguration(new After(TakeNetworkChaosInformationTest.class,
-                getMethod("should_report_json_file_with_toxicity_params_after_test")), new ReporterConfiguration());
+                method), reporterConfiguration);
 
-        verify(propertyReportEvent).fire(propertyReportEventArgumentCaptor.capture());
+        verify(sectionEvent).fire(sectionEventArgumentCaptor.capture());
 
-        final PropertyReportEvent propertyReportEvent = propertyReportEventArgumentCaptor.getValue();
-        final PropertyEntry propertyEntry = propertyReportEvent.getPropertyEntry();
-        assertThat(propertyEntry).isInstanceOf(GroupEntry.class);
+        final SectionEvent sectionEvent = sectionEventArgumentCaptor.getValue();
+        final String methodName = method.getName();
 
-        List<PropertyEntry> childEntry = propertyEntry.getPropertyEntries();
-        assertThat(childEntry).hasSize(1).extracting("class.simpleName").containsExactly("FileEntry");
+        assertThatSection(sectionEvent)
+                .hasSectionId(methodName)
+                .hasReportOfTypeThatIsAssignableFrom(TestMethodReport.class);
 
-        FileEntry fileEntry = (FileEntry) childEntry.get(0);
-        assertThat(fileEntry.getPath()).isEqualTo("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json");
+        final Report report = sectionEvent.getReport();
+
+        assertThatReport(report)
+                .hasName(methodName)
+                .hasNumberOfEntries(1)
+                .hasEntriesContaining(new FileEntry("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json"));
     }
 
 
@@ -202,7 +211,7 @@ public class TakeNetworkChaosInformationTest {
     }
 
     private String getFilePath(ReporterConfiguration reporterConfiguration, String methodName) {
-        String path = reporterConfiguration.getRootDir() + "/reports/chaos/" + methodName +".json";
+        String path = reporterConfiguration.getRootDirectory() + "/reports/chaos/" + methodName +".json";
 
         return path.replace("/", File.separator);
     }
