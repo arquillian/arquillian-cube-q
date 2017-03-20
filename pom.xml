@@ -52,13 +52,13 @@
     </issueManagement>
 
     <properties>
-        <version.arquillian_core>1.1.11.Final</version.arquillian_core>
-        <version.arquillian_cube>1.0.0.Alpha14</version.arquillian_cube>
-        <version.toxiproxyjava>2.1</version.toxiproxyjava>
-        <version.junit>4.11</version.junit>
+        <version.arquillian_core>1.1.12.Final</version.arquillian_core>
+        <version.arquillian_cube>1.0.0.Alpha15</version.arquillian_cube>
+        <version.toxiproxyjava>2.1.1</version.toxiproxyjava>
+        <version.junit>4.12</version.junit>
         <version.mockito>1.10.19</version.mockito>
-        <version.assertj>2.4.1</version.assertj>
-        <version.arquillian.recorder>1.1.5.Final</version.arquillian.recorder>
+        <version.assertj>2.6.0</version.assertj>
+        <version.arquillian.recorder>1.1.6.Final</version.arquillian.recorder>
         <version.json.path.assert>2.2.0</version.json.path.assert>
     </properties>
 
