@@ -7,6 +7,7 @@ import org.arquillian.cube.q.toxic.event.ToxicUpdated;
 import org.arquillian.reporter.api.builder.BuilderLoader;
 import org.arquillian.reporter.api.event.SectionEvent;
 import org.arquillian.reporter.api.model.entry.FileEntry;
+import org.arquillian.reporter.api.model.entry.KeyValueEntry;
 import org.arquillian.reporter.api.model.report.Report;
 import org.arquillian.reporter.api.model.report.TestMethodReport;
 import org.arquillian.reporter.config.ReporterConfiguration;
@@ -195,7 +196,7 @@ public class TakeNetworkChaosInformationTest {
         assertThatReport(report)
                 .hasName(methodName)
                 .hasNumberOfEntries(1)
-                .hasEntriesContaining(new FileEntry("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json"));
+                .hasEntriesContaining(new KeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH,new FileEntry("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json")));
     }
 
 

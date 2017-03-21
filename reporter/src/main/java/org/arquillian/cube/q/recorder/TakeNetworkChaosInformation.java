@@ -86,7 +86,7 @@ public class TakeNetworkChaosInformation {
 
         final FileEntry fileEntry = createFileEntryWithJSON(reporterConfiguration, fileName);
         Reporter.createReport(new TestMethodReport(testMethodName))
-                .addEntry(fileEntry)
+                .addKeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH, fileEntry)
                 .inSection(new TestMethodSection(testMethod))
                 .fire(sectionEvent);
 
