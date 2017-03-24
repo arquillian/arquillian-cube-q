@@ -3,12 +3,11 @@ package org.arquillian.cube.q.recorder;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
 
-public class CubeQRecorderExtension implements LoadableExtension {
+public class CubeQReporterExtension implements LoadableExtension {
 
     @Override
     public void register(ExtensionBuilder builder) {
-        final boolean reportedInClasspath = Validate.classExists("org.arquillian.recorder.reporter.ReporterExtension");
-        if (reportedInClasspath) {
+        if (Validate.classExists("org.arquillian.core.reporter.ArquillianCoreReporterExtension")) {
             builder.observer(TakeNetworkChaosInformation.class);
         }
     }

@@ -8,18 +8,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.arquillian.cube.q.api.Q;
 import org.arquillian.cube.q.toxic.QNetworkChaosToxic;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.arquillian.cube.q.toxic.event.ToxicCreated;
-
 import org.arquillian.cube.q.toxic.event.ToxicUpdated;
-import org.arquillian.recorder.reporter.ReporterConfiguration;
-import org.arquillian.recorder.reporter.event.PropertyReportEvent;
-import org.arquillian.recorder.reporter.model.entry.FileEntry;
-import org.arquillian.recorder.reporter.model.entry.GroupEntry;
-
+import org.arquillian.reporter.api.builder.Reporter;
+import org.arquillian.reporter.api.event.SectionEvent;
+import org.arquillian.reporter.api.event.TestMethodSection;
+import org.arquillian.reporter.api.model.entry.FileEntry;
+import org.arquillian.reporter.api.model.report.TestMethodReport;
+import org.arquillian.reporter.config.ReporterConfiguration;
 import org.jboss.arquillian.core.api.Event;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
@@ -28,6 +27,7 @@ import org.jboss.arquillian.test.spi.event.suite.After;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,7 +45,7 @@ public class TakeNetworkChaosInformation {
     private static final String UPDATE = "update";
 
     @Inject
-    Event<PropertyReportEvent> propertyReportEvent;
+    Event<SectionEvent> sectionEvent;
 
     @TestScoped
     private List<Map<String, Object>> toxics = new ArrayList<>();
@@ -80,32 +80,32 @@ public class TakeNetworkChaosInformation {
 
     public void reportToxicConfiguration(@Observes After event, ReporterConfiguration reporterConfiguration) throws IOException {
 
-        final String fileName = event.getTestMethod().getName() + ".json";
+        final Method testMethod = event.getTestMethod();
+        final String testMethodName = testMethod.getName();
+        final String fileName = testMethodName + ".json";
 
         final FileEntry fileEntry = createFileEntryWithJSON(reporterConfiguration, fileName);
+        Reporter.createReport(new TestMethodReport(testMethodName))
+                .addKeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH, fileEntry)
+                .inSection(new TestMethodSection(testMethod))
+                .fire(sectionEvent);
 
-        GroupEntry groupEntry = new GroupEntry();
-        groupEntry.getPropertyEntries().add(fileEntry);
-
-        propertyReportEvent.fire(new PropertyReportEvent(groupEntry));
         toxics.clear();
     }
 
     private FileEntry createFileEntryWithJSON(ReporterConfiguration reporterConfiguration, String fileName) throws IOException {
-        File jsonFile = new File(createDirectory(reporterConfiguration.getRootDir(), "chaos"), fileName);
+        final File rootDirectory = new File(reporterConfiguration.getRootDirectory());
+        File jsonFile = new File(createDirectory(rootDirectory, "chaos"), fileName);
 
         if (!toxics.isEmpty()) {
             createJSONAndWriteToFile(jsonFile);
         }
 
-        final Path rootDir = Paths.get(reporterConfiguration.getRootDir().getName());
+        final Path rootDir = Paths.get(rootDirectory.getName());
         final Path relativize = rootDir.relativize(jsonFile.toPath());
 
-        FileEntry fileEntry = new FileEntry();
-        fileEntry.setPath(relativize.toString());
-        fileEntry.setType("application/json");
+        return new FileEntry(relativize.toString());
 
-        return fileEntry;
     }
 
     private void createJSONAndWriteToFile(File file) throws IOException {
@@ -114,7 +114,7 @@ public class TakeNetworkChaosInformation {
         JsonGenerator generator = jsonFactory.createGenerator(file, JsonEncoding.UTF8);
 
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode toxic= mapper.convertValue(toxics, ArrayNode.class);
+        ArrayNode toxic = mapper.convertValue(toxics, ArrayNode.class);
 
         ObjectNode root = jsonNodeFactory.objectNode();
         root.set("services", toxic);
