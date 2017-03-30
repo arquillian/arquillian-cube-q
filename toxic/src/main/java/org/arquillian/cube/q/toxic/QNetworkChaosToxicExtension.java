@@ -10,10 +10,9 @@ public class QNetworkChaosToxicExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder builder) {
         builder.observer(QNetworkChaosToxicCreator.class)
-               .observer(NetworkChaosConfigurator.class)
-               .observer(ToxiProxyAfterTestCleaner.class)
-               .service(ProxyManager.class, ToxicProxyHandler.class)
-               .service(ResourceProvider.class, QNetworkChaosResourceProvider.class);
+            .observer(NetworkChaosConfigurator.class)
+            .observer(ToxiProxyAfterTestCleaner.class)
+            .service(ProxyManager.class, ToxicProxyHandler.class)
+            .service(ResourceProvider.class, QNetworkChaosResourceProvider.class);
     }
-
 }

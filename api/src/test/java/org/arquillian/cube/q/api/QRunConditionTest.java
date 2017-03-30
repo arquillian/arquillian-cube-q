@@ -16,7 +16,6 @@ public class QRunConditionTest {
         assertThat(iterate.isExecutable(), is(true));
         assertThat(iterate.isExecutable(), is(true));
         assertThat(iterate.isExecutable(), is(false));
-
     }
 
     @Test
@@ -27,5 +26,4 @@ public class QRunConditionTest {
         TimeUnit.SECONDS.sleep(6);
         assertThat(during.isExecutable(), is(false));
     }
-
 }

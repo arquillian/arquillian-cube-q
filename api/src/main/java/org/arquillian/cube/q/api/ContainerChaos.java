@@ -8,16 +8,21 @@ public interface ContainerChaos {
 
     interface Action extends Q {
         Action stop(ContainersType containersType, IntervalType intervalType);
+
         Action stopRandomly(ContainersType containersType, IntervalType intervalType);
 
         Action remove(ContainersType containersType, IntervalType intervalType);
+
         Action removeRandomly(ContainersType containersType, IntervalType intervalType);
 
         Action kill(ContainersType containersType, IntervalType intervalType, KillSignal killSignal);
+
         Action killRandomly(ContainersType containersType, IntervalType intervalType, KillSignal killSignal);
     }
 
-    enum KillSignal {
+    enum KillSignal
+
+    {
         SIGHUP, SIGINT, SIGKILL, SIGTERM, SIGSTOP
     }
 
@@ -31,14 +36,13 @@ public interface ContainerChaos {
             return new ContainersType("re2:" + expression);
         }
 
-        public static ContainersType containers(String...containers) {
+        public static ContainersType containers(String... containers) {
             return new ContainersType(joiner(containers));
         }
 
-
-        private static String joiner(String...containers) {
+        private static String joiner(String... containers) {
             StringBuilder csv = new StringBuilder();
-            for(String container : containers) {
+            for (String container : containers) {
                 csv.append(container).append(",");
             }
 
@@ -60,5 +64,4 @@ public interface ContainerChaos {
             return new IntervalType(timeUnit.toSeconds(interval));
         }
     }
-
 }

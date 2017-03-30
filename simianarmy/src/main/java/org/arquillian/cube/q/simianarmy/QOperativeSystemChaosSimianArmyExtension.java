@@ -8,7 +8,7 @@ public class QOperativeSystemChaosSimianArmyExtension implements LoadableExtensi
     @Override
     public void register(ExtensionBuilder extensionBuilder) {
         extensionBuilder
-                .service(ResourceProvider.class, QOperativeSystemChaosSimianArmyResourceProvider.class)
-                .observer(QOperativeSystemChaosSimianArmyCreator.class);
+            .service(ResourceProvider.class, QOperativeSystemChaosSimianArmyResourceProvider.class)
+            .observer(QOperativeSystemChaosSimianArmyCreator.class);
     }
 }

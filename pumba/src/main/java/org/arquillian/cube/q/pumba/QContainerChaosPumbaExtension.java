@@ -9,9 +9,9 @@ public class QContainerChaosPumbaExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder extensionBuilder) {
         extensionBuilder
-                .service(StandaloneManager.class, PumbaStandaloneContainerHandler.class)
-                .service(ResourceProvider.class, QContainerChaosPumbaResourceProvider.class)
-                .observer(QContainerChaosPumbaCreator.class)
-                .observer(QContainerChaosPumbaStopper.class);
+            .service(StandaloneManager.class, PumbaStandaloneContainerHandler.class)
+            .service(ResourceProvider.class, QContainerChaosPumbaResourceProvider.class)
+            .observer(QContainerChaosPumbaCreator.class)
+            .observer(QContainerChaosPumbaStopper.class);
     }
 }

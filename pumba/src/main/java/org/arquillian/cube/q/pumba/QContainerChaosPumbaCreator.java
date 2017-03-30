@@ -28,8 +28,8 @@ public class QContainerChaosPumbaCreator {
 
     public void createPumba(@Observes BeforeSuite event) {
         containerChaosInst.set(
-                new QContainerChaosPumba(cubeRegistryInstance.get(), cubeControllerInstance.get(), cubeDockerConfigurationInstance.get())
+            new QContainerChaosPumba(cubeRegistryInstance.get(), cubeControllerInstance.get(),
+                cubeDockerConfigurationInstance.get())
         );
     }
-
 }

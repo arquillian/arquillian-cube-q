@@ -43,7 +43,6 @@ public class ToxicFunctionalTestCase {
             String response = IOUtil.asString(url.openStream());
             System.out.println(response);
             System.out.println("Time:" + (System.currentTimeMillis() - l));
-
         });
     }
 }

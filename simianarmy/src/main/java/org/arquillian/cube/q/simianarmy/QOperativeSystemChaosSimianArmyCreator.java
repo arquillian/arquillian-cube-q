@@ -21,5 +21,4 @@ public class QOperativeSystemChaosSimianArmyCreator {
     public void createSimianArmyScripts(@Observes BeforeSuite event) {
         operativeSystemChaosInstanceProducer.set(new QOperativeSystemChaosSimianArmy(cubeRegistryInstance.get()));
     }
-
 }

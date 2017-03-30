@@ -25,7 +25,6 @@ public class PumbaStandaloneContainerHandlerTest {
 
         final StandaloneContainer install = pumbaStandaloneContainerHandler.install();
         assertThat(install.getCube().getBinds()).contains("/var/run/docker.sock:/var/run/docker.sock");
-
     }
 
     @Test
@@ -38,6 +37,5 @@ public class PumbaStandaloneContainerHandlerTest {
 
         final StandaloneContainer install = pumbaStandaloneContainerHandler.install();
         assertThat(install.getCube().getBinds()).contains("/home/user/.machine/ssl:/etc/ssl/docker");
-
     }
 }

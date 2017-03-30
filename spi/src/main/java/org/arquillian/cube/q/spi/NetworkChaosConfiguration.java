@@ -21,6 +21,5 @@ public class NetworkChaosConfiguration {
         }
 
         return networkChaosConfiguration;
-
     }
 }

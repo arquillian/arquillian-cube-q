@@ -25,12 +25,11 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class InstallProxyTestCase extends AbstractManagerTestBase {
 
-    private static final String CONTENT = 
-            "a:\n" +
+    private static final String CONTENT =
+        "a:\n" +
             "  image: a/a\n" +
             "  portBindings: [8089/tcp]\n" +
             "  links:\n" +
@@ -39,7 +38,6 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
             "  image: b/b\n" +
             "  exposedPorts: [2112/tcp]\n";
 
-    
     @Mock
     private ServiceLoader loader;
 
@@ -63,12 +61,12 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
         Mockito.when(loader.onlyOne(ProxyManager.class)).thenReturn(t);
         bind(ApplicationScoped.class, ServiceLoader.class, loader);
     }
-    
+
     @Test
     public void shouldInstallProxy() throws Exception {
         CubeDockerConfiguration config = createConfig(CONTENT);
         fire(config);
-        
+
         DockerCompositions cubes = config.getDockerContainersContent();
         assertThat(cubes.getContainerIds()).hasSize(3);
     }
@@ -80,7 +78,8 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
 
         DockerCompositions cubes = config.getDockerContainersContent();
         CubeContainer a = cubes.get("a");
-        assertThat(a.getLinks()).containsExactlyInAnyOrder(new Link("toxiproxy", "b"), new Link("toxiproxy", "toxiproxy"));
+        assertThat(a.getLinks()).containsExactlyInAnyOrder(new Link("toxiproxy", "b"),
+            new Link("toxiproxy", "toxiproxy"));
 
         CubeContainer b = cubes.get("toxiproxy");
         assertThat(b.getLinks()).containsExactlyInAnyOrder(new Link("b", "b_toxiproxy"));
@@ -96,7 +95,6 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
         };
         Mockito.when(loader.onlyOne(ProxyManager.class)).thenReturn(t);
 
-
         CubeDockerConfiguration config = createConfig(CONTENT);
         fire(config);
 
@@ -108,8 +106,8 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
 
         CubeContainer b = cubes.get("toxiproxy");
         assertThat(b.getLinks()).containsExactlyInAnyOrder(new Link("a", "a_toxiproxy"));
-        assertThat(b.getPortBindings()).containsExactlyInAnyOrder(PortBinding.valueOf("8474/tcp"), PortBinding.valueOf("8089/tcp"));
-
+        assertThat(b.getPortBindings()).containsExactlyInAnyOrder(PortBinding.valueOf("8474/tcp"),
+            PortBinding.valueOf("8089/tcp"));
     }
 
     private CubeDockerConfiguration createConfig(String content) {

@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @RequiresDockerMachine(name = "dev")
 @RunWith(ArquillianConditionalRunner.class)
 public class PumbaFunctionalTestCase {
@@ -28,21 +27,18 @@ public class PumbaFunctionalTestCase {
     @Test
     public void shouldKillContainers() throws Exception {
         containerChaos
-                .onCubeDockerHost()
-                    .killRandomly(
-                            ContainerChaos.ContainersType.regularExpression("^pingpong"),
-                            ContainerChaos.IntervalType.intervalInSeconds(4),
-                            ContainerChaos.KillSignal.SIGTERM
-                    )
-                .exec();
-
+            .onCubeDockerHost()
+            .killRandomly(
+                ContainerChaos.ContainersType.regularExpression("^pingpong"),
+                ContainerChaos.IntervalType.intervalInSeconds(4),
+                ContainerChaos.KillSignal.SIGTERM
+            )
+            .exec();
 
         TimeUnit.SECONDS.sleep(12);
 
         final List<Container> containers = dockerClient.listContainersCmd().exec();
         //Pumba container is not killed by itself
         assertThat(containers).hasSize(1);
-
     }
-
 }

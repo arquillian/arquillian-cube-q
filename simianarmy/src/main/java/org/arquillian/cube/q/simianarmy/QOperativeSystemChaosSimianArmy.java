@@ -17,7 +17,8 @@ public class QOperativeSystemChaosSimianArmy implements OperativeSystemChaos {
         final Cube<?> cube = cubeRegistry.getCube(containerId);
 
         if (cube == null) {
-            throw new IllegalArgumentException(String.format("Container %s is not registered in Arquillian Cube.", containerId));
+            throw new IllegalArgumentException(
+                String.format("Container %s is not registered in Arquillian Cube.", containerId));
         }
         return new QSimianArmyAction(cube);
     }

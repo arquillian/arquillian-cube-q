@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <!-- Parent -->
-    <parent>
-        <groupId>org.arquillian.cube.q</groupId>
-        <artifactId>arquillian-cube-q</artifactId>
-        <version>1.0.0.Final-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+  <!-- Parent -->
+  <parent>
+    <groupId>org.arquillian.cube.q</groupId>
+    <artifactId>arquillian-cube-q</artifactId>
+    <version>1.0.0.Final-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
-    <!-- Model Version -->
-    <modelVersion>4.0.0</modelVersion>
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
 
-    <!-- Artifact Configuration -->
-    <artifactId>arquillian-cube-q-api</artifactId>
+  <!-- Artifact Configuration -->
+  <artifactId>arquillian-cube-q-api</artifactId>
 
-    <name>Arquillian Cube Q API</name>
+  <name>Arquillian Cube Q API</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 </project>
 

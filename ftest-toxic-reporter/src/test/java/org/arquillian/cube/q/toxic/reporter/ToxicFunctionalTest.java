@@ -1,6 +1,5 @@
 package org.arquillian.cube.q.toxic.reporter;
 
-
 import org.apache.commons.io.FileUtils;
 import org.arquillian.cube.HostIp;
 import org.arquillian.cube.impl.util.IOUtil;
@@ -63,7 +62,6 @@ public class ToxicFunctionalTest {
         networkChaos.on("hw", 8080).timeout(timeoutInMillis(1000)).exec(() -> {
             getResponse();
         });
-
     }
 
     @Test

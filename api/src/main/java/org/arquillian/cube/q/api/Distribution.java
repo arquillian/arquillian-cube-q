@@ -6,5 +6,4 @@ package org.arquillian.cube.q.api;
 public interface Distribution {
 
     long calculate();
-
 }

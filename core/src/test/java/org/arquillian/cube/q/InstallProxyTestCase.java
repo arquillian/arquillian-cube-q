@@ -24,8 +24,8 @@ import java.util.Map;
 @RunWith(MockitoJUnitRunner.class)
 public class InstallProxyTestCase extends AbstractManagerTestBase {
 
-    private static final String CONTENT = 
-            "a:\n" +
+    private static final String CONTENT =
+        "a:\n" +
             "  image: a/a\n" +
             "  portBindings: [8089/tcp]\n" +
             "  links:\n" +
@@ -34,7 +34,6 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
             "  image: b/b\n" +
             "  exposedPorts: [2112/tcp]\n";
 
-    
     @Mock
     private ArquillianDescriptor descriptor;
 
@@ -51,24 +50,24 @@ public class InstallProxyTestCase extends AbstractManagerTestBase {
 
     @Before
     public void setup() {
-        
+
         Proxy p = new Proxy.Builder().build();
-        
+
         bind(ApplicationScoped.class, ArquillianDescriptor.class, descriptor);
         bind(ApplicationScoped.class, ServiceLoader.class, serviceLoader);
-        
+
         Mockito.when(serviceLoader.onlyOne(ProxyManager.class)).thenReturn(proxyManager);
         Mockito.when(proxyManager.install(Mockito.any(DockerCompositions.class))).thenReturn(p);
     }
-    
+
     @Test
     public void shouldInstallProxy() throws Exception {
         CubeDockerConfiguration config = createConfig(CONTENT);
         fire(config);
-        
+
         DockerCompositions cubes = config.getDockerContainersContent();
         Assert.assertEquals(3, cubes.getContainerIds().size());
-        
+
         System.out.println(config.toString());
     }
 

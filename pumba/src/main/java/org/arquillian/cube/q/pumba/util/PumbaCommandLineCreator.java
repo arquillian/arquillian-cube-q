@@ -20,7 +20,8 @@ public class PumbaCommandLineCreator {
         super();
     }
 
-    public static Collection<String> run(String chaosCommand, boolean random, CubeDockerConfiguration cubeDockerConfiguration) {
+    public static Collection<String> run(String chaosCommand, boolean random,
+        CubeDockerConfiguration cubeDockerConfiguration) {
 
         String[] runningCommand = new String[8];
         runningCommand[PUMBA_INDEX] = "pumba";
@@ -39,9 +40,7 @@ public class PumbaCommandLineCreator {
 
         runningCommand[CHAOS_COMMAND_INDEX] = chaosCommand;
 
-
         return createCommandLine(runningCommand);
-
     }
 
     private static boolean isNativeDocker(CubeDockerConfiguration cubeDockerConfiguration) {
@@ -50,7 +49,7 @@ public class PumbaCommandLineCreator {
 
     private static Collection<String> createCommandLine(String[] cmd) {
         Collection<String> cli = new ArrayList<>();
-        for(String c : cmd) {
+        for (String c : cmd) {
             if (c != null && !"".equals(c.trim())) {
                 cli.add(c);
             }
@@ -58,5 +57,4 @@ public class PumbaCommandLineCreator {
 
         return cli;
     }
-
 }

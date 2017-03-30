@@ -25,7 +25,7 @@ public class FillDiskSimianArmyChaosScript extends SimianArmyScriptChaos {
         params.put("size", size);
         StrSubstitutor substitutor = new StrSubstitutor(params);
 
-        for(String chaosScriptContent : chaosScriptsContent) {
+        for (String chaosScriptContent : chaosScriptsContent) {
             commands.add(substitutor.replace(chaosScriptContent));
         }
 

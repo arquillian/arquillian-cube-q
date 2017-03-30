@@ -15,7 +15,7 @@ public class RegisterProxy {
 
     @Inject
     private Instance<Proxy> proxyInst;
-    
+
     @Inject
     private Instance<ServiceLoader> serviceLoaderInst;
 
@@ -31,28 +31,29 @@ public class RegisterProxy {
 
             proxyManager.populateProxies();
         }
-
     }
 
-    /**public void registerProxy(AfterStart event, CubeRegistry registry) {
-        
-        Proxy proxy = proxyInst.get();
-        Cube<?> cube = registry.getCube(event.getCubeId());
-        if(cube != null && isNotProxyCube(cube, proxy)) {
-            serviceLoaderInst.get().onlyOne(ProxyManager.class).cubeStarted(cube);
-        }
-    }
-
-    public void createProxyClient(AfterStart event, CubeRegistry registry) {
-        
-        Proxy proxy = proxyInst.get();
-        
-        Cube<?> cube = registry.getCube(event.getCubeId());
-        if(cube != null && isProxyCube(cube, proxy)) {
-            serviceLoaderInst.get().onlyOne(ProxyManager.class).proxyStarted(cube);
-        }
-        
-    }**/
+    /**
+     * public void registerProxy(AfterStart event, CubeRegistry registry) {
+     * <p>
+     * Proxy proxy = proxyInst.get();
+     * Cube<?> cube = registry.getCube(event.getCubeId());
+     * if(cube != null && isNotProxyCube(cube, proxy)) {
+     * serviceLoaderInst.get().onlyOne(ProxyManager.class).cubeStarted(cube);
+     * }
+     * }
+     * <p>
+     * public void createProxyClient(AfterStart event, CubeRegistry registry) {
+     * <p>
+     * Proxy proxy = proxyInst.get();
+     * <p>
+     * Cube<?> cube = registry.getCube(event.getCubeId());
+     * if(cube != null && isProxyCube(cube, proxy)) {
+     * serviceLoaderInst.get().onlyOne(ProxyManager.class).proxyStarted(cube);
+     * }
+     * <p>
+     * }
+     **/
 
     public void unregisterProxy(@Observes AfterStop event, CubeRegistry registry) {
         Proxy proxy = proxyInst.get();
@@ -63,7 +64,7 @@ public class RegisterProxy {
             }
         }
     }
-    
+
     private boolean isNotProxyCube(Cube<?> cube, Proxy proxy) {
         return !isProxyCube(cube, proxy);
     }

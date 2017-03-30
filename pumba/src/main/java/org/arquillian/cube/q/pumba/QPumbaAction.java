@@ -15,71 +15,78 @@ public class QPumbaAction implements ContainerChaos.Action {
     private final CubeRegistry cubeRegistry;
     private final CubeDockerConfiguration cubeDockerConfiguration;
 
-    public QPumbaAction(CubeController cubeController, CubeRegistry cubeRegistry, CubeDockerConfiguration cubeDockerConfiguration) {
+    public QPumbaAction(CubeController cubeController, CubeRegistry cubeRegistry,
+        CubeDockerConfiguration cubeDockerConfiguration) {
         this.cubeController = cubeController;
         this.cubeRegistry = cubeRegistry;
         this.cubeDockerConfiguration = cubeDockerConfiguration;
     }
 
     @Override
-    public ContainerChaos.Action stop(ContainerChaos.ContainersType containersType, ContainerChaos.IntervalType intervalType) {
+    public ContainerChaos.Action stop(ContainerChaos.ContainersType containersType,
+        ContainerChaos.IntervalType intervalType) {
         configurePumbaCube(PumbaChaosCommandBuilder.create()
                 .containers(containersType)
                 .interval(intervalType)
                 .chaosOperation(ChaosOperation.STOP)
-                , false);
+            , false);
         return this;
     }
 
     @Override
-    public ContainerChaos.Action stopRandomly(ContainerChaos.ContainersType containersType, ContainerChaos.IntervalType intervalType) {
+    public ContainerChaos.Action stopRandomly(ContainerChaos.ContainersType containersType,
+        ContainerChaos.IntervalType intervalType) {
         configurePumbaCube(PumbaChaosCommandBuilder.create()
-                        .containers(containersType)
-                        .interval(intervalType)
-                        .chaosOperation(ChaosOperation.STOP)
-                , true);
+                .containers(containersType)
+                .interval(intervalType)
+                .chaosOperation(ChaosOperation.STOP)
+            , true);
         return this;
     }
 
     @Override
-    public ContainerChaos.Action remove(ContainerChaos.ContainersType containersType, ContainerChaos.IntervalType intervalType) {
+    public ContainerChaos.Action remove(ContainerChaos.ContainersType containersType,
+        ContainerChaos.IntervalType intervalType) {
         configurePumbaCube(PumbaChaosCommandBuilder.create()
-                        .containers(containersType)
-                        .interval(intervalType)
-                        .chaosOperation(ChaosOperation.RM)
-                , false);
+                .containers(containersType)
+                .interval(intervalType)
+                .chaosOperation(ChaosOperation.RM)
+            , false);
         return this;
     }
 
     @Override
-    public ContainerChaos.Action removeRandomly(ContainerChaos.ContainersType containersType, ContainerChaos.IntervalType intervalType) {
+    public ContainerChaos.Action removeRandomly(ContainerChaos.ContainersType containersType,
+        ContainerChaos.IntervalType intervalType) {
         configurePumbaCube(PumbaChaosCommandBuilder.create()
-                        .containers(containersType)
-                        .interval(intervalType)
-                        .chaosOperation(ChaosOperation.RM)
-                , true);
+                .containers(containersType)
+                .interval(intervalType)
+                .chaosOperation(ChaosOperation.RM)
+            , true);
         return this;
     }
 
     @Override
-    public ContainerChaos.Action kill(ContainerChaos.ContainersType containersType, ContainerChaos.IntervalType intervalType, ContainerChaos.KillSignal killSignal) {
+    public ContainerChaos.Action kill(ContainerChaos.ContainersType containersType,
+        ContainerChaos.IntervalType intervalType, ContainerChaos.KillSignal killSignal) {
         configurePumbaCube(PumbaChaosCommandBuilder.create()
-                        .containers(containersType)
-                        .interval(intervalType)
-                        .chaosOperation(ChaosOperation.KILL)
-                        .killSignal(killSignal)
-                , false);
+                .containers(containersType)
+                .interval(intervalType)
+                .chaosOperation(ChaosOperation.KILL)
+                .killSignal(killSignal)
+            , false);
         return this;
     }
 
     @Override
-    public ContainerChaos.Action killRandomly(ContainerChaos.ContainersType containersType, ContainerChaos.IntervalType intervalType, ContainerChaos.KillSignal killSignal) {
+    public ContainerChaos.Action killRandomly(ContainerChaos.ContainersType containersType,
+        ContainerChaos.IntervalType intervalType, ContainerChaos.KillSignal killSignal) {
         configurePumbaCube(PumbaChaosCommandBuilder.create()
-                        .containers(containersType)
-                        .interval(intervalType)
-                        .chaosOperation(ChaosOperation.KILL)
-                        .killSignal(killSignal)
-                , true);
+                .containers(containersType)
+                .interval(intervalType)
+                .chaosOperation(ChaosOperation.KILL)
+                .killSignal(killSignal)
+            , true);
         return this;
     }
 
@@ -96,7 +103,6 @@ public class QPumbaAction implements ContainerChaos.Action {
         } finally {
             stopPumba();
         }
-
     }
 
     @Override
@@ -116,7 +122,6 @@ public class QPumbaAction implements ContainerChaos.Action {
         cubeController.start(StandaloneContainer.Builder.DEFAULT_NAME);
     }
 
-
     private void stopPumba() {
         cubeController.stop(StandaloneContainer.Builder.DEFAULT_NAME);
         cubeController.destroy(StandaloneContainer.Builder.DEFAULT_NAME);
@@ -126,10 +131,13 @@ public class QPumbaAction implements ContainerChaos.Action {
         final Cube<?> cube = cubeRegistry.getCube(StandaloneContainer.Builder.DEFAULT_NAME);
 
         DockerCube dockerCube = (DockerCube) cube;
-        dockerCube.configuration().setCmd(PumbaCommandLineCreator.run(chaosCommand.build(), random, cubeDockerConfiguration));
+        dockerCube.configuration()
+            .setCmd(PumbaCommandLineCreator.run(chaosCommand.build(), random, cubeDockerConfiguration));
     }
 
-    enum ChaosOperation {
+    enum ChaosOperation
+
+    {
         STOP, RM, KILL
     }
 
@@ -177,12 +185,10 @@ public class QPumbaAction implements ContainerChaos.Action {
             command.append(intervalType.getValue()).append(SECONDS).append(SEPARATOR);
             command.append(chaosOperation.name());
 
-            if(this.chaosOperation == ChaosOperation.KILL) {
+            if (this.chaosOperation == ChaosOperation.KILL) {
                 command.append(":").append(killSignal.name());
             }
             return command.toString();
         }
-
     }
-
 }

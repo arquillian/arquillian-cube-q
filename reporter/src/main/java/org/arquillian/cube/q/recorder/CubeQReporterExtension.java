@@ -2,7 +2,6 @@ package org.arquillian.cube.q.recorder;
 
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
-
 public class CubeQReporterExtension implements LoadableExtension {
 
     @Override

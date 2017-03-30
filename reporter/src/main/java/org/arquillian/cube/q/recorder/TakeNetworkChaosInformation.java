@@ -1,6 +1,5 @@
 package org.arquillian.cube.q.recorder;
 
-
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -50,18 +49,21 @@ public class TakeNetworkChaosInformation {
     @TestScoped
     private List<Map<String, Object>> toxics = new ArrayList<>();
 
-    public void captureToxicDetailsAfterCreate(@Observes ToxicCreated toxicCreatedEvent, QNetworkChaosToxic.ToxicAction toxicAction) {
+    public void captureToxicDetailsAfterCreate(@Observes ToxicCreated toxicCreatedEvent,
+        QNetworkChaosToxic.ToxicAction toxicAction) {
         final ToxiProxyClient.BaseToxic toxic = toxicCreatedEvent.getToxic();
         final Q.RunCondition runCondition = toxicCreatedEvent.getRunCondition();
         addToxicInfoToToxics(toxicAction, toxic, runCondition, CREATE);
     }
 
-    public void captureToxicDetailsAfterUpdate(@Observes ToxicUpdated toxicUpdatedEvent, QNetworkChaosToxic.ToxicAction toxicAction) {
+    public void captureToxicDetailsAfterUpdate(@Observes ToxicUpdated toxicUpdatedEvent,
+        QNetworkChaosToxic.ToxicAction toxicAction) {
         final ToxiProxyClient.BaseToxic toxic = toxicUpdatedEvent.getToxic();
         addToxicInfoToToxics(toxicAction, toxic, null, UPDATE);
     }
 
-    public void addToxicInfoToToxics(QNetworkChaosToxic.ToxicAction toxicAction, ToxiProxyClient.BaseToxic toxic, Q.RunCondition runCondition, String phase) {
+    public void addToxicInfoToToxics(QNetworkChaosToxic.ToxicAction toxicAction, ToxiProxyClient.BaseToxic toxic,
+        Q.RunCondition runCondition, String phase) {
         final String actionOn = toxicAction.getName();
         final String toxicType = toxic.getClass().getSimpleName();
 
@@ -77,8 +79,8 @@ public class TakeNetworkChaosInformation {
         toxics.add(toxicInfo);
     }
 
-
-    public void reportToxicConfiguration(@Observes After event, ReporterConfiguration reporterConfiguration) throws IOException {
+    public void reportToxicConfiguration(@Observes After event, ReporterConfiguration reporterConfiguration)
+        throws IOException {
 
         final Method testMethod = event.getTestMethod();
         final String testMethodName = testMethod.getName();
@@ -86,14 +88,15 @@ public class TakeNetworkChaosInformation {
 
         final FileEntry fileEntry = createFileEntryWithJSON(reporterConfiguration, fileName);
         Reporter.createReport(new TestMethodReport(testMethodName))
-                .addKeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH, fileEntry)
-                .inSection(new TestMethodSection(testMethod))
-                .fire(sectionEvent);
+            .addKeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH, fileEntry)
+            .inSection(new TestMethodSection(testMethod))
+            .fire(sectionEvent);
 
         toxics.clear();
     }
 
-    private FileEntry createFileEntryWithJSON(ReporterConfiguration reporterConfiguration, String fileName) throws IOException {
+    private FileEntry createFileEntryWithJSON(ReporterConfiguration reporterConfiguration, String fileName)
+        throws IOException {
         final File rootDirectory = new File(reporterConfiguration.getRootDirectory());
         File jsonFile = new File(createDirectory(rootDirectory, "chaos"), fileName);
 
@@ -105,7 +108,6 @@ public class TakeNetworkChaosInformation {
         final Path relativize = rootDir.relativize(jsonFile.toPath());
 
         return new FileEntry(relativize.toString());
-
     }
 
     private void createJSONAndWriteToFile(File file) throws IOException {
@@ -134,5 +136,4 @@ public class TakeNetworkChaosInformation {
 
         return chaosDir.toFile();
     }
-
 }

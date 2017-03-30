@@ -13,13 +13,12 @@ public class BurnCpuSimianArmyChaosScript extends SimianArmyScriptChaos {
         this.numberCpu = numberCpu;
     }
 
-
     @Override
     public String[] postProcessScript(String[] chaosScriptsContent) {
         List<String> commands = new ArrayList<>();
 
         for (int i = 0; i < numberCpu; i++) {
-           Collections.addAll(commands, chaosScriptsContent);
+            Collections.addAll(commands, chaosScriptsContent);
         }
 
         return commands.toArray(new String[commands.size()]);

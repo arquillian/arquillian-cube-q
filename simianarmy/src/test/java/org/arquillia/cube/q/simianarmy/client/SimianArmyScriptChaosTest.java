@@ -35,14 +35,18 @@ public class SimianArmyScriptChaosTest {
 
     @Test
     public void shouldBlockPort() {
-        final BlockPortSimianArmyChaosScript blockPortSimianArmyChaosScript = new BlockPortSimianArmyChaosScript(new Integer[]{80, 8080});
+        final BlockPortSimianArmyChaosScript blockPortSimianArmyChaosScript =
+            new BlockPortSimianArmyChaosScript(new Integer[] {80, 8080});
         blockPortSimianArmyChaosScript.apply(cube);
 
-        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "tcp", "-m", "tcp", "--dport", "80", "-j", "DROP");
-        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "udp", "-m", "udp", "--dport", "80", "-j", "DROP");
-        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "tcp", "-m", "tcp", "--dport", "8080", "-j", "DROP");
-        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "udp", "-m", "udp", "--dport", "8080", "-j", "DROP");
-
+        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "tcp", "-m", "tcp", "--dport", "80",
+            "-j", "DROP");
+        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "udp", "-m", "udp", "--dport", "80",
+            "-j", "DROP");
+        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "tcp", "-m", "tcp", "--dport", "8080",
+            "-j", "DROP");
+        verify(canExecuteProcessInContainer).exec("iptables", "-A", "INPUT", "-p", "udp", "-m", "udp", "--dport", "8080",
+            "-j", "DROP");
     }
 
     @Test
@@ -58,7 +62,8 @@ public class SimianArmyScriptChaosTest {
         BurnIoSimianArmyChaosScript burnIoSimianArmyChaosScript = new BurnIoSimianArmyChaosScript();
         burnIoSimianArmyChaosScript.apply(cube);
 
-        verify(canExecuteProcessInContainer).exec("dd", "if=/dev/urandom", "of=/burn", "bs=1M", "count=1024", "iflag=fullblock");
+        verify(canExecuteProcessInContainer).exec("dd", "if=/dev/urandom", "of=/burn", "bs=1M", "count=1024",
+            "iflag=fullblock");
     }
 
     @Test
@@ -66,7 +71,8 @@ public class SimianArmyScriptChaosTest {
         final FillDiskSimianArmyChaosScript fillDiskSimianArmyChaosScript = new FillDiskSimianArmyChaosScript(10000);
         fillDiskSimianArmyChaosScript.apply(cube);
 
-        verify(canExecuteProcessInContainer).exec("dd", "if=/dev/urandom", "of=/burn", "bs=1M", "count=10000", "iflag=fullblock");
+        verify(canExecuteProcessInContainer).exec("dd", "if=/dev/urandom", "of=/burn", "bs=1M", "count=10000",
+            "iflag=fullblock");
     }
 
     @Test
@@ -84,5 +90,4 @@ public class SimianArmyScriptChaosTest {
 
         verify(canExecuteProcessInContainer).exec("ip", "route", "add", "blackhole", "10.0.0.0/8");
     }
-
 }

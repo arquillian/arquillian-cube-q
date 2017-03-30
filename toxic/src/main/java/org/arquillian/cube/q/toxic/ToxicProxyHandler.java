@@ -40,7 +40,6 @@ public class ToxicProxyHandler implements ProxyManager {
     @ApplicationScoped
     private InstanceProducer<ToxiProxyScenario> scenarioInst;
 
-
     @Override
     public Proxy install(DockerCompositions cubes) {
         Proxy.Builder builder = Proxy.create();
@@ -66,7 +65,8 @@ public class ToxicProxyHandler implements ProxyManager {
                                 for (PortBinding portBinding : portBindings) {
                                     final ExposedPort exposedPort = portBinding.getExposedPort();
                                     if (exposedPort != null) {
-                                        builder.containerExpose(link.getName(), exposedPort.getExposed(), exposedPort.getType());
+                                        builder.containerExpose(link.getName(), exposedPort.getExposed(),
+                                            exposedPort.getType());
                                     }
                                 }
                             }
@@ -74,7 +74,8 @@ public class ToxicProxyHandler implements ProxyManager {
                             final Collection<ExposedPort> exposedPorts = linkedContainer.getExposedPorts();
                             if (exposedPorts != null) {
                                 for (ExposedPort exposedPort : exposedPorts) {
-                                    builder.containerExpose(link.getName(), exposedPort.getExposed(), exposedPort.getType());
+                                    builder.containerExpose(link.getName(), exposedPort.getExposed(),
+                                        exposedPort.getType());
                                 }
                             }
                         }
@@ -82,7 +83,6 @@ public class ToxicProxyHandler implements ProxyManager {
                 }
                 // redirect links to proxy and adds links to proxy to the old links
                 data.setLinks(updateLinks(builder, data.getLinks()));
-
             } else {
 
                 // finally we need to detect all cubes that binds a port to the host computer
@@ -94,7 +94,8 @@ public class ToxicProxyHandler implements ProxyManager {
                 if (data.getPortBindings() != null) {
                     Collection<PortBinding> ports = data.getPortBindings();
                     for (PortBinding binding : ports) {
-                        builder.containerBinds(cubeName, binding.getBound(), binding.getExposedPort().getExposed(), binding.getExposedPort().getType());
+                        builder.containerBinds(cubeName, binding.getBound(), binding.getExposedPort().getExposed(),
+                            binding.getExposedPort().getType());
                         removedBoundPorts.add(binding);
                     }
                     data.setPortBindings(null);
@@ -125,7 +126,6 @@ public class ToxicProxyHandler implements ProxyManager {
         return builder.build();
     }
 
-
     private Collection<Link> updateLinks(Proxy.Builder proxy, Collection<Link> links) {
         final Collection<Link> updatedLinks = new ArrayList<>();
         if (links != null) {
@@ -138,7 +138,6 @@ public class ToxicProxyHandler implements ProxyManager {
         return updatedLinks;
     }
 
-
     @Override
     public void proxyStarted(Cube<?> cube) {
         Proxy proxy = proxyInst.get();
@@ -150,9 +149,10 @@ public class ToxicProxyHandler implements ProxyManager {
 
         PortAddress communicationPort = bindings.getMappedAddress(proxy.getCommunicationPort().getExposed());
 
-        scenarioInst.set(new ToxiProxyScenario(ToxiProxyClient.Builder.create(communicationPort.getIP(), communicationPort.getPort()), injectorInstance.get()));
+        scenarioInst.set(
+            new ToxiProxyScenario(ToxiProxyClient.Builder.create(communicationPort.getIP(), communicationPort.getPort()),
+                injectorInstance.get()));
     }
-
 
     @Override
     public void populateProxies() {
@@ -169,9 +169,9 @@ public class ToxicProxyHandler implements ProxyManager {
 
             System.out.println("Registered proxy " + relName + " " + localExp + " -> " + remoteExp);
             scenario.register(
-                    relName,
-                    localExp,
-                    remoteExp);
+                relName,
+                localExp,
+                remoteExp);
         }
     }
 

@@ -13,17 +13,16 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.core.spi.ServiceLoader;
 
-
 public class InstallProxy {
-    
+
     @Inject
     private Instance<ServiceLoader> serviceLoaderInst;
-    
+
     @Inject @ApplicationScoped
     private InstanceProducer<Proxy> proxyInst;
-    
+
     public void install(@Observes(precedence = 100) CubeDockerConfiguration configuration) {
-        
+
         DockerCompositions cubes = configuration.getDockerContainersContent();
         ProxyManager installer = serviceLoaderInst.get().onlyOne(ProxyManager.class);
 
@@ -37,6 +36,5 @@ public class InstallProxy {
             System.out.println("PROXY INSTALLED");
             System.out.println(ConfigUtil.dump(cubes));
         }
-        
     }
 }

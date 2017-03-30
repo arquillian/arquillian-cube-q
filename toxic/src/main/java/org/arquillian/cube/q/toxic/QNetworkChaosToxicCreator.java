@@ -17,10 +17,10 @@ public class QNetworkChaosToxicCreator {
 
     @Inject
     private Instance<Injector> injectorInstance;
-    
+
     public void createProxy(@Observes ToxiProxyScenario proxy) {
         QNetworkChaosToxic qNetworkChaosToxic = new QNetworkChaosToxic(proxy);
         injectorInstance.get().inject(qNetworkChaosToxic);
         qInst.set(qNetworkChaosToxic);
-    } 
+    }
 }

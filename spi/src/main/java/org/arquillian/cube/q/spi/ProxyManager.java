@@ -6,8 +6,10 @@ import org.arquillian.cube.spi.Cube;
 public interface ProxyManager {
 
     Proxy install(DockerCompositions containers);
-    
+
     void proxyStarted(Cube<?> cube);
+
     void populateProxies();
+
     void cubeStopped(Cube<?> cube);
 }

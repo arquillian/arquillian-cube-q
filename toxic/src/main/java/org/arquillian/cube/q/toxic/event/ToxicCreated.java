@@ -4,7 +4,6 @@ import org.arquillian.cube.q.api.Q;
 import org.arquillian.cube.q.toxic.client.ToxiProxyClient;
 import org.jboss.arquillian.core.spi.event.Event;
 
-
 public class ToxicCreated implements Event {
 
     private ToxiProxyClient.BaseToxic toxic;

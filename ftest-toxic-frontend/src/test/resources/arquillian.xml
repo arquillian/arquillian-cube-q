@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <arquillian xmlns="http://jboss.org/schema/arquillian"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
         http://jboss.org/schema/arquillian
         http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
@@ -9,16 +9,16 @@
     <property name="machineName">dev</property>
     <property name="definitionFormat">CUBE</property>
     <property name="dockerContainers">
-        hw:
-          image: lordofthejars/helloworld
-          env: ["CATALINA_OPTS=-Djava.security.egd=file:/dev/./urandom"]
-          portBindings: [8081->8080/tcp]
-          links:
-            - pingpong:pingpong
+      hw:
+        image: lordofthejars/helloworld
+        env: ["CATALINA_OPTS=-Djava.security.egd=file:/dev/./urandom"]
+        portBindings: [8081->8080/tcp]
+        links:
+          - pingpong:pingpong
 
-        pingpong:
-          image: jonmorehouse/ping-pong
-          exposedPorts: [8080/tcp]
+      pingpong:
+        image: jonmorehouse/ping-pong
+        exposedPorts: [8080/tcp]
     </property>
   </extension>
   <extension qualifier="networkChaos">

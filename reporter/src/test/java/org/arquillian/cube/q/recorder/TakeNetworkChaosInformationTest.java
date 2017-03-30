@@ -66,7 +66,8 @@ public class TakeNetworkChaosInformationTest {
     public void should_capture_toxic_details_after_create() throws NoSuchFieldException, IllegalAccessException {
 
         //given
-        ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
+        ToxiProxyClient.Timeout timeout =
+            new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicCreated toxicCreated = new ToxicCreated(timeout);
 
         TakeNetworkChaosInformation takeNetworkChaosInformation = new TakeNetworkChaosInformation();
@@ -78,16 +79,17 @@ public class TakeNetworkChaosInformationTest {
         //then
         assertThat(toxics).hasSize(1);
         assertThat(toxics.get(0)).containsExactly(entry("actionon", "helloworld"),
-                entry("type", "Timeout"),
-                entry("phase", "create"),
-                entry("toxic", timeout)
+            entry("type", "Timeout"),
+            entry("phase", "create"),
+            entry("toxic", timeout)
         );
     }
 
     @Test
     public void should_capture_toxic_details_after_update() throws NoSuchFieldException, IllegalAccessException {
         //given
-        ToxiProxyClient.Bandwidth bandwidth = new ToxiProxyClient.Bandwidth("bandwidth_downstream", "DOWNSTREAM", 1.0f, rate(1000));
+        ToxiProxyClient.Bandwidth bandwidth =
+            new ToxiProxyClient.Bandwidth("bandwidth_downstream", "DOWNSTREAM", 1.0f, rate(1000));
         ToxicUpdated toxicUpdated = new ToxicUpdated(bandwidth);
 
         TakeNetworkChaosInformation takeNetworkChaosInformation = new TakeNetworkChaosInformation();
@@ -99,17 +101,19 @@ public class TakeNetworkChaosInformationTest {
         //then
         assertThat(toxics).hasSize(1);
         assertThat(toxics.get(0)).containsExactly(
-                entry("actionon", "helloworld"),
-                entry("type", "Bandwidth"),
-                entry("phase", "update"),
-                entry("toxic", bandwidth)
+            entry("actionon", "helloworld"),
+            entry("type", "Bandwidth"),
+            entry("phase", "update"),
+            entry("toxic", bandwidth)
         );
     }
 
     @Test
-    public void should_create_json_for_toxic_creation_and_write_it_to_file() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
+    public void should_create_json_for_toxic_creation_and_write_it_to_file()
+        throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
         //given
-        ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
+        ToxiProxyClient.Timeout timeout =
+            new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicCreated toxicCreated = new ToxicCreated(timeout);
         ReporterConfiguration reporterConfiguration = ReporterConfiguration.fromMap(new LinkedHashMap<>());
         Method method = getMethod("should_create_json_for_toxic_updation_and_write_to_file");
@@ -121,26 +125,28 @@ public class TakeNetworkChaosInformationTest {
         //when
         takeNetworkChaosInformation.captureToxicDetailsAfterCreate(toxicCreated, toxicAction);
         takeNetworkChaosInformation.reportToxicConfiguration(new After(TakeNetworkChaosInformationTest.class, method),
-                reporterConfiguration);
+            reporterConfiguration);
 
         //then
         File json = new File(path);
         Assert.assertThat(json, isJson());
         Assert.assertThat(json, isJson(CoreMatchers.allOf(
-                withJsonPath("$.services", hasSize(1)),
-                withJsonPath("$.services[0].actionon", equalTo("helloworld")),
-                withJsonPath("$.services[0].type", equalTo("Timeout")),
-                withJsonPath("$.services[0].phase", equalTo("create")),
-                withJsonPath("$.services[0].toxic.name", equalTo("timeout_downstream")),
-                withJsonPath("$.services[0].toxic.stream", equalTo("DOWNSTREAM")),
-                withJsonPath("$.services[0].toxic.toxcicity", equalTo(1.0)),
-                withJsonPath("$.services[0].toxic.timeout", equalTo(1000)))));
+            withJsonPath("$.services", hasSize(1)),
+            withJsonPath("$.services[0].actionon", equalTo("helloworld")),
+            withJsonPath("$.services[0].type", equalTo("Timeout")),
+            withJsonPath("$.services[0].phase", equalTo("create")),
+            withJsonPath("$.services[0].toxic.name", equalTo("timeout_downstream")),
+            withJsonPath("$.services[0].toxic.stream", equalTo("DOWNSTREAM")),
+            withJsonPath("$.services[0].toxic.toxcicity", equalTo(1.0)),
+            withJsonPath("$.services[0].toxic.timeout", equalTo(1000)))));
     }
 
     @Test
-    public void should_create_json_for_toxic_updation_and_write_to_file() throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
+    public void should_create_json_for_toxic_updation_and_write_to_file()
+        throws IOException, NoSuchMethodException, NoSuchFieldException, IllegalAccessException {
         //given
-        ToxiProxyClient.Timeout timeout = new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
+        ToxiProxyClient.Timeout timeout =
+            new ToxiProxyClient.Timeout("timeout_downstream", "DOWNSTREAM", 1.0f, timeoutInMillis(1000));
         ToxicUpdated toxicUpdated = new ToxicUpdated(timeout);
         ReporterConfiguration reporterConfiguration = ReporterConfiguration.fromMap(new LinkedHashMap<>());
 
@@ -153,23 +159,22 @@ public class TakeNetworkChaosInformationTest {
         //when
         takeNetworkChaosInformation.captureToxicDetailsAfterUpdate(toxicUpdated, toxicAction);
         takeNetworkChaosInformation.reportToxicConfiguration(new After(TakeNetworkChaosInformationTest.class,
-                        method),
-                reporterConfiguration);
+                method),
+            reporterConfiguration);
 
         //then
         File json = new File(path);
         Assert.assertThat(json, isJson());
         Assert.assertThat(json, isJson(CoreMatchers.allOf(
-                withJsonPath("$.services", hasSize(1)),
-                withJsonPath("$.services[0].actionon", equalTo("helloworld")),
-                withJsonPath("$.services[0].type", equalTo("Timeout")),
-                withJsonPath("$.services[0].phase", equalTo("update")),
-                withJsonPath("$.services[0].toxic.name", equalTo("timeout_downstream")),
-                withJsonPath("$.services[0].toxic.stream", equalTo("DOWNSTREAM")),
-                withJsonPath("$.services[0].toxic.toxcicity", equalTo(1.0)),
-                withJsonPath("$.services[0].toxic.timeout", equalTo(1000)))));
+            withJsonPath("$.services", hasSize(1)),
+            withJsonPath("$.services[0].actionon", equalTo("helloworld")),
+            withJsonPath("$.services[0].type", equalTo("Timeout")),
+            withJsonPath("$.services[0].phase", equalTo("update")),
+            withJsonPath("$.services[0].toxic.name", equalTo("timeout_downstream")),
+            withJsonPath("$.services[0].toxic.stream", equalTo("DOWNSTREAM")),
+            withJsonPath("$.services[0].toxic.toxcicity", equalTo(1.0)),
+            withJsonPath("$.services[0].toxic.timeout", equalTo(1000)))));
     }
-
 
     @Test
     public void should_report_json_file_with_toxicity_params_after_test() throws NoSuchMethodException, IOException {
@@ -180,7 +185,7 @@ public class TakeNetworkChaosInformationTest {
         ReporterConfiguration reporterConfiguration = ReporterConfiguration.fromMap(new LinkedHashMap<>());
         final Method method = getMethod("should_report_json_file_with_toxicity_params_after_test");
         takeNetworkChaosInformation.reportToxicConfiguration(new After(TakeNetworkChaosInformationTest.class,
-                method), reporterConfiguration);
+            method), reporterConfiguration);
 
         verify(sectionEvent).fire(sectionEventArgumentCaptor.capture());
 
@@ -188,23 +193,24 @@ public class TakeNetworkChaosInformationTest {
         final String methodName = method.getName();
 
         assertThatSection(sectionEvent)
-                .hasSectionId(methodName)
-                .hasReportOfTypeThatIsAssignableFrom(TestMethodReport.class);
+            .hasSectionId(methodName)
+            .hasReportOfTypeThatIsAssignableFrom(TestMethodReport.class);
 
         final Report report = sectionEvent.getReport();
 
         assertThatReport(report)
-                .hasName(methodName)
-                .hasNumberOfEntries(1)
-                .hasEntriesContaining(new KeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH,new FileEntry("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json")));
+            .hasName(methodName)
+            .hasNumberOfEntries(1)
+            .hasEntriesContaining(new KeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH,
+                new FileEntry("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json")));
     }
-
 
     private Method getMethod(String name) throws NoSuchMethodException {
         return TakeNetworkChaosInformationTest.class.getMethod(name);
     }
 
-    private ArrayList<Map<String, Object>> getToxicList(TakeNetworkChaosInformation takeNetworkChaosInformation) throws NoSuchFieldException, IllegalAccessException {
+    private ArrayList<Map<String, Object>> getToxicList(TakeNetworkChaosInformation takeNetworkChaosInformation)
+        throws NoSuchFieldException, IllegalAccessException {
 
         Field field = takeNetworkChaosInformation.getClass().getDeclaredField("toxics");
         field.setAccessible(true);
@@ -212,7 +218,7 @@ public class TakeNetworkChaosInformationTest {
     }
 
     private String getFilePath(ReporterConfiguration reporterConfiguration, String methodName) {
-        String path = reporterConfiguration.getRootDirectory() + "/reports/chaos/" + methodName +".json";
+        String path = reporterConfiguration.getRootDirectory() + "/reports/chaos/" + methodName + ".json";
 
         return path.replace("/", File.separator);
     }

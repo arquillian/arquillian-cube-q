@@ -61,8 +61,8 @@ public interface ToxiProxyClient {
         }
 
         public abstract void create(Proxy proxy) throws IOException;
-        public abstract void update() throws IOException;
 
+        public abstract void update() throws IOException;
     }
 
     class Latency extends BaseToxic {
@@ -72,7 +72,8 @@ public interface ToxiProxyClient {
         // To avoid calls in update, pointer to remote toxic is saved
         private eu.rekawek.toxiproxy.model.toxic.Latency toxicLatency;
 
-        public Latency(String name, String stream, float toxicity, NetworkChaos.LatencyType latency, NetworkChaos.JitterType jitter) {
+        public Latency(String name, String stream, float toxicity, NetworkChaos.LatencyType latency,
+            NetworkChaos.JitterType jitter) {
             super(name, stream, toxicity);
             this.latency = latency;
             this.jitter = jitter;
@@ -86,11 +87,11 @@ public interface ToxiProxyClient {
         @Override
         public void create(Proxy proxy) throws IOException {
             toxicLatency = proxy.toxics().latency(this.getName(),
-                    ToxicDirection.valueOf(this.getStream()),
-                    this.getLatency());
+                ToxicDirection.valueOf(this.getStream()),
+                this.getLatency());
             toxicLatency
-                    .setJitter(this.getJitter())
-                    .setToxicity(this.getToxcicity());
+                .setJitter(this.getJitter())
+                .setToxicity(this.getToxcicity());
         }
 
         @Override
@@ -100,7 +101,8 @@ public interface ToxiProxyClient {
                 toxicLatency.setJitter(this.getJitter());
                 toxicLatency.setToxicity(this.getToxcicity());
             } else {
-                throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
+                throw new IllegalStateException(
+                    "This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
 
@@ -149,10 +151,10 @@ public interface ToxiProxyClient {
         @Override
         public void create(Proxy proxy) throws IOException {
             toxicBandwidth = proxy.toxics().bandwidth(this.getName(),
-                    ToxicDirection.valueOf(this.getStream()),
-                    this.getRate());
+                ToxicDirection.valueOf(this.getStream()),
+                this.getRate());
             toxicBandwidth
-                    .setToxicity(this.getToxcicity());
+                .setToxicity(this.getToxcicity());
         }
 
         @Override
@@ -161,7 +163,8 @@ public interface ToxiProxyClient {
                 toxicBandwidth.setRate(this.getRate());
                 toxicBandwidth.setToxicity(this.getToxcicity());
             } else {
-                throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
+                throw new IllegalStateException(
+                    "This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
 
@@ -219,10 +222,10 @@ public interface ToxiProxyClient {
         @Override
         public void create(Proxy proxy) throws IOException {
             toxicSlowClose = proxy.toxics().slowClose(this.getName(),
-                    ToxicDirection.valueOf(this.getStream()),
-                    this.getDelay());
+                ToxicDirection.valueOf(this.getStream()),
+                this.getDelay());
             toxicSlowClose
-                    .setToxicity(this.getToxcicity());
+                .setToxicity(this.getToxcicity());
         }
 
         @Override
@@ -236,7 +239,8 @@ public interface ToxiProxyClient {
                 toxicSlowClose.setDelay(this.getDelay());
                 toxicSlowClose.setToxicity(this.getToxcicity());
             } else {
-                throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
+                throw new IllegalStateException(
+                    "This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
 
@@ -275,10 +279,10 @@ public interface ToxiProxyClient {
         @Override
         public void create(Proxy proxy) throws IOException {
             toxicTimeout = proxy.toxics().timeout(this.getName(),
-                    ToxicDirection.valueOf(this.getStream()),
-                    this.getTimeout());
+                ToxicDirection.valueOf(this.getStream()),
+                this.getTimeout());
             toxicTimeout
-                    .setToxicity(this.getToxcicity());
+                .setToxicity(this.getToxcicity());
         }
 
         @Override
@@ -287,7 +291,8 @@ public interface ToxiProxyClient {
                 toxicTimeout.setTimeout(this.getTimeout());
                 toxicTimeout.setToxicity(this.getToxcicity());
             } else {
-                throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
+                throw new IllegalStateException(
+                    "This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
 
@@ -309,7 +314,8 @@ public interface ToxiProxyClient {
         // To avoid calls in update, pointer to remote toxic is saved
         private Slicer toxicSlicer;
 
-        public Slice(String name, String stream, float toxicity, long averageSize, NetworkChaos.DelayType delay, long variableSize) {
+        public Slice(String name, String stream, float toxicity, long averageSize, NetworkChaos.DelayType delay,
+            long variableSize) {
             super(name, stream, toxicity);
             this.averageSize = averageSize;
             this.sizeVariation = variableSize;
@@ -337,12 +343,12 @@ public interface ToxiProxyClient {
         @Override
         public void create(Proxy proxy) throws IOException {
             toxicSlicer = proxy.toxics().slicer(this.getName(),
-                    ToxicDirection.valueOf(this.getStream()),
-                    this.getAverageSize(),
-                    this.getDelay());
+                ToxicDirection.valueOf(this.getStream()),
+                this.getAverageSize(),
+                this.getDelay());
             toxicSlicer
-                    .setSizeVariation(this.getSizeVariation())
-                    .setToxicity(this.getToxcicity());
+                .setSizeVariation(this.getSizeVariation())
+                .setToxicity(this.getToxcicity());
         }
 
         @Override
@@ -353,7 +359,8 @@ public interface ToxiProxyClient {
                 toxicSlicer.setSizeVariation(this.getSizeVariation());
                 toxicSlicer.setToxicity(this.getToxcicity());
             } else {
-                throw new IllegalStateException("This Toxic object has not been created in server side so it cannot be updated.");
+                throw new IllegalStateException(
+                    "This Toxic object has not been created in server side so it cannot be updated.");
             }
         }
 
@@ -433,5 +440,4 @@ public interface ToxiProxyClient {
             };
         }
     }
-
 }

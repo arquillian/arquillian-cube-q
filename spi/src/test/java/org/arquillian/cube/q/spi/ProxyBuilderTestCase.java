@@ -15,7 +15,7 @@ public class ProxyBuilderTestCase {
     @Test
     public void shouldAddDefaultPort() {
         Proxy proxy = Proxy.create()
-                .build();
+            .build();
 
         CubeContainer cube = proxy.getCube();
         assertThat(cube.getPortBindings(), hasItem(PortBinding.valueOf("8474/tcp")));
@@ -24,8 +24,8 @@ public class ProxyBuilderTestCase {
     @Test
     public void shouldExposeAdditionalPorts() {
         Proxy proxy = Proxy.create()
-                .containerExpose("A", 8080, "tcp")
-                .build();
+            .containerExpose("A", 8080, "tcp")
+            .build();
 
         CubeContainer cube = proxy.getCube();
         assertThat(cube.getExposedPorts(), hasItem(ExposedPort.valueOf("8080/tcp")));
@@ -34,12 +34,13 @@ public class ProxyBuilderTestCase {
     @Test
     public void shouldBindAdditionalPorts() {
         Proxy proxy = Proxy.create()
-                .containerBinds("A", 1000, 2000, "tcp")
-                .build();
+            .containerBinds("A", 1000, 2000, "tcp")
+            .build();
 
         CubeContainer cube = proxy.getCube();
-        Assert.assertThat(cube.getPortBindings(), hasItems(PortBinding.valueOf("1000->2000/tcp"), PortBinding.valueOf("8474/tcp")));
-        
+        Assert.assertThat(cube.getPortBindings(),
+            hasItems(PortBinding.valueOf("1000->2000/tcp"), PortBinding.valueOf("8474/tcp")));
+
         System.out.println(proxy.getRelations());
     }
 }

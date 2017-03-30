@@ -21,18 +21,19 @@ public class PumbaCommandLineCreatorTest {
     public void shouldCreatePumbaCli() {
         when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("https://192.168.0.1");
 
-        final Collection<String> cli = PumbaCommandLineCreator.run("re2:^hp|10s|KILL:SIGTERM", false, cubeDockerConfiguration);
-        assertThat(cli).containsExactly("pumba", "--host", "https://192.168.0.1", "--tlsverify",  "run", "--chaos", "re2:^hp|10s|KILL:SIGTERM");
-
+        final Collection<String> cli =
+            PumbaCommandLineCreator.run("re2:^hp|10s|KILL:SIGTERM", false, cubeDockerConfiguration);
+        assertThat(cli).containsExactly("pumba", "--host", "https://192.168.0.1", "--tlsverify", "run", "--chaos",
+            "re2:^hp|10s|KILL:SIGTERM");
     }
 
     @Test
     public void shouldCreatePumbaCliWithRandom() {
         when(cubeDockerConfiguration.getDockerServerUri()).thenReturn("https://192.168.0.1");
 
-        final Collection<String> cli = PumbaCommandLineCreator.run("re2:^hp|10s|KILL:SIGTERM", true, cubeDockerConfiguration);
-        assertThat(cli).containsExactly("pumba", "--host", "https://192.168.0.1", "--tlsverify",  "run", "--random", "--chaos", "re2:^hp|10s|KILL:SIGTERM");
-
+        final Collection<String> cli =
+            PumbaCommandLineCreator.run("re2:^hp|10s|KILL:SIGTERM", true, cubeDockerConfiguration);
+        assertThat(cli).containsExactly("pumba", "--host", "https://192.168.0.1", "--tlsverify", "run", "--random",
+            "--chaos", "re2:^hp|10s|KILL:SIGTERM");
     }
-
 }

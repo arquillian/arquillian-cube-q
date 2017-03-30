@@ -19,7 +19,7 @@ public class ToxiProxyScenario implements ToxiProxy {
     private static final Logger logger = Logger.getLogger(ToxiProxyScenario.class.getName());
 
     private ToxiProxyClient client;
-    
+
     private Map<String, Proxy> proxies;
 
     private Injector injector;
@@ -44,9 +44,8 @@ public class ToxiProxyScenario implements ToxiProxy {
         proxies = client.getProxies();
     }
 
-
     public Scenario given(String name) {
-        if(!proxies.containsKey(name)) {
+        if (!proxies.containsKey(name)) {
             throw new IllegalArgumentException("No known proxy with name " + name);
         }
 
@@ -56,7 +55,7 @@ public class ToxiProxyScenario implements ToxiProxy {
     }
 
     public class ToxicScenario implements Scenario {
-        
+
         private Proxy proxy;
         private List<ToxiProxyClient.BaseToxic> toxics;
 
@@ -87,7 +86,7 @@ public class ToxiProxyScenario implements ToxiProxy {
                 execute();
                 callable.call();
             } finally {
-               reset();
+                reset();
             }
         }
 

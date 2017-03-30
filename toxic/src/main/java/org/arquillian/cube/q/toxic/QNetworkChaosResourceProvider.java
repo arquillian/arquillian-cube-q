@@ -12,7 +12,7 @@ public class QNetworkChaosResourceProvider implements ResourceProvider {
 
     @Inject
     private Instance<NetworkChaos> networkChaosInst;
-    
+
     public boolean canProvide(Class<?> type) {
         return type.isAssignableFrom(NetworkChaos.class);
     }
@@ -20,5 +20,4 @@ public class QNetworkChaosResourceProvider implements ResourceProvider {
     public Object lookup(ArquillianResource resource, Annotation... qualifiers) {
         return networkChaosInst.get();
     }
-
 }

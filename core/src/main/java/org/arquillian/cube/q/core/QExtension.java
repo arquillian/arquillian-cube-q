@@ -7,8 +7,7 @@ public class QExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder builder) {
         builder.observer(InstallProxy.class)
-               .observer(RegisterProxy.class)
-               .observer(InstallStandaloneContainer.class);
+            .observer(RegisterProxy.class)
+            .observer(InstallStandaloneContainer.class);
     }
-
 }

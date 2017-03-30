@@ -13,7 +13,6 @@ public class QOperativeSystemChaosSimianArmyResourceProvider implements Resource
     @Inject
     private Instance<OperativeSystemChaos> operativeSystemChaosInstance;
 
-
     @Override
     public boolean canProvide(Class<?> type) {
         return type.isAssignableFrom(OperativeSystemChaos.class);

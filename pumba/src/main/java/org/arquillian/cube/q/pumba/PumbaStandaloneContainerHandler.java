@@ -17,7 +17,7 @@ public class PumbaStandaloneContainerHandler implements StandaloneManager {
     public StandaloneContainer install() {
         StandaloneContainer.Builder builder = StandaloneContainer.create();
 
-        if(isNativeDocker()) {
+        if (isNativeDocker()) {
             builder.volumes(Collections.singletonList("/var/run/docker.sock:/var/run/docker.sock"));
         } else {
             final CubeDockerConfiguration cubeDockerConfiguration = cubeDockerConfigurationInstance.get();
@@ -31,5 +31,4 @@ public class PumbaStandaloneContainerHandler implements StandaloneManager {
         final CubeDockerConfiguration cubeDockerConfiguration = cubeDockerConfigurationInstance.get();
         return cubeDockerConfiguration.getDockerServerUri().startsWith("unix");
     }
-
 }

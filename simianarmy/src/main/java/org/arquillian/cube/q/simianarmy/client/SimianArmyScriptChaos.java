@@ -1,6 +1,5 @@
 package org.arquillian.cube.q.simianarmy.client;
 
-
 import org.arquillian.cube.impl.util.IOUtil;
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.cube.spi.metadata.CanExecuteProcessInContainer;
@@ -17,13 +16,18 @@ public abstract class SimianArmyScriptChaos {
 
     public SimianArmyScriptChaos(String chaosScript) {
         this.chaosScript = chaosScript;
-        this.chaosScriptContent = IOUtil.asArrayString(SimianArmyScriptChaos.class.getResourceAsStream("/" + SCRIPTS_PACKAGE + "/" + this.chaosScript));
+        this.chaosScriptContent = IOUtil.asArrayString(
+            SimianArmyScriptChaos.class.getResourceAsStream("/" + SCRIPTS_PACKAGE + "/" + this.chaosScript));
     }
 
     /**
-     * Method that in case of scripts that requires to inject some values to the ones provided by the caller must implement to substitute the values on given script.
+     * Method that in case of scripts that requires to inject some values to the ones provided by the caller must
+     * implement to substitute the values on given script.
      * Also can be used to modify the script in any situation it might require external parameters
-     * @param chaosScriptContent of script as read.
+     *
+     * @param chaosScriptContent
+     *     of script as read.
+     *
      * @return Chaos script with the substitutions.
      */
     public String[] postProcessScript(String[] chaosScriptContent) {
@@ -36,11 +40,10 @@ public abstract class SimianArmyScriptChaos {
         for (String scriptToExecute : scriptsToExecute) {
             if (cube.hasMetadata(CanExecuteProcessInContainer.class)) {
                 final String[] command = scriptToExecute.split("\\s+");
-                final CanExecuteProcessInContainer executeProcess = (CanExecuteProcessInContainer) cube.getMetadata(CanExecuteProcessInContainer.class);
+                final CanExecuteProcessInContainer executeProcess =
+                    (CanExecuteProcessInContainer) cube.getMetadata(CanExecuteProcessInContainer.class);
                 executeProcess.exec(command);
             }
         }
-
     }
-
 }

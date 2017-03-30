@@ -33,7 +33,7 @@ public class Proxy {
     public String getName() {
         return name;
     }
-    
+
     public ExposedPort getCommunicationPort() {
         return communicationPort;
     }
@@ -45,11 +45,11 @@ public class Proxy {
     public Collection<Relation> getRelations() {
         return relations;
     }
-    
+
     public Collection<Relation> getRelations(String to) {
         List<Relation> relations = new ArrayList<>();
-        for(Relation rel : getRelations()) {
-            if(rel.getTo().equals(to)) {
+        for (Relation rel : getRelations()) {
+            if (rel.getTo().equals(to)) {
                 relations.add(rel);
             }
         }
@@ -99,38 +99,38 @@ public class Proxy {
 
         private Map<String, List<String>> containerExpose = new HashMap<>();
         private Map<String, List<String>> containerLinks = new HashMap<>();
-        
+
         public Builder() {
         }
-        
+
         public Builder containerExpose(String containerName, int exposed, String protocol) {
             exposePort(exposed, protocol);
             getValue(containerName, containerExpose).add(exposed + "/" + protocol);
             return this;
         }
-        
+
         public Builder containerBinds(String containerName, int bound, int exposed, String protocol) {
             bindPort(bound, exposed, protocol);
             getValue(containerName, containerExpose).add(exposed + "/" + protocol);
             containerLinks(containerName, containerName + "_toxiproxy");
             return this;
         }
-        
+
         public Builder containerLinks(String containerFrom, String containerTo) {
             getValue(containerFrom, containerLinks).add(containerTo);
             return this;
         }
-        
+
         private Builder exposePort(int expose, String protocol) {
             this.expose.add(expose + "/" + protocol);
             return this;
         }
-        
+
         private Builder bindPort(int bound, int exposed, String protocol) {
             bind.add(bound + "->" + exposed + "/" + protocol);
             return this;
         }
-        
+
         public Proxy build() {
             bindPort(DEFAULT_PORT, DEFAULT_PORT, "tcp");
 
@@ -148,7 +148,7 @@ public class Proxy {
 
             return new Proxy(getName(), ExposedPort.valueOf(DEFAULT_PORT + "/tcp"), cube, buildRelations());
         }
-        
+
         private Collection<Link> buildUniqueLinks() {
             List<Link> unique = new ArrayList<>();
             for (Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
@@ -162,13 +162,13 @@ public class Proxy {
 
         private Collection<Relation> buildRelations() {
             List<Relation> relations = new ArrayList<>();
-            for(Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
-                for(String linkedTo : links.getValue()) {
+            for (Map.Entry<String, List<String>> links : containerLinks.entrySet()) {
+                for (String linkedTo : links.getValue()) {
                     List<String> exposed = containerExpose.get(links.getKey());
-                    if(exposed == null) {
+                    if (exposed == null) {
                         continue;
                     }
-                    for(String port : exposed) {
+                    for (String port : exposed) {
                         relations.add(new Relation(links.getKey(), linkedTo, ExposedPort.valueOf(port)));
                     }
                 }
@@ -177,7 +177,7 @@ public class Proxy {
         }
 
         private List<String> getValue(String key, Map<String, List<String>> map) {
-            if(!map.containsKey(key)) {
+            if (!map.containsKey(key)) {
                 map.put(key, new ArrayList<>());
             }
             return map.get(key);

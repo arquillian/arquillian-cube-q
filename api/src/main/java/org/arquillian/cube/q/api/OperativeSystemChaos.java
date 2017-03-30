@@ -7,7 +7,10 @@ public interface OperativeSystemChaos {
 
     /**
      * Method to set in which container you want to run the process.
-     * @param containerId of container.
+     *
+     * @param containerId
+     *     of container.
+     *
      * @return Action element to set the chaos.
      */
     Action on(String containerId);
@@ -19,50 +22,64 @@ public interface OperativeSystemChaos {
 
         /**
          * Burn CPU setting CPU to 100%
-         * @param numberCpu to run this process.
+         *
+         * @param numberCpu
+         *     to run this process.
+         *
          * @return this element.
          */
         Action burnCpu(NumberCpuType numberCpu);
 
         /**
          * Burn IO channels
+         *
          * @return this element.
          */
         Action burnIo();
 
         /**
          * Provoke a fail in DNS server (blocking port 53)
+         *
          * @return this element.
          */
         Action failDns();
 
         /**
          * Fill the disk with trash
-         * @param size of the trash
+         *
+         * @param size
+         *     of the trash
+         *
          * @return this element.
          */
         Action fillDisk(SizeType size);
 
         /**
          * Kills process in specified interval
-         * @param processName to kill
+         *
+         * @param processName
+         *     to kill
+         *
          * @return this element.
          */
         Action killProcess(String processName);
 
         /**
          * Set null route
+         *
          * @return this element.
          */
         Action nullRoute();
 
         /**
          * Blocks a port
-         * @param port port(s) to block
+         *
+         * @param port
+         *     port(s) to block
+         *
          * @return this element.
          */
         Action blockPort(PortSizeType port);
-
     }
 
     final class NumberCpuType extends Q.IntegerType {
@@ -88,6 +105,7 @@ public interface OperativeSystemChaos {
 
         /**
          * Default size of 65GB
+         *
          * @return Size element.
          */
         public static SizeType defaultSize() {
@@ -106,10 +124,10 @@ public interface OperativeSystemChaos {
         }
 
         public static PortSizeType port(Integer port) {
-            return new PortSizeType(new Integer[]{port});
+            return new PortSizeType(new Integer[] {port});
         }
 
-        public static PortSizeType ports(Integer...ports) {
+        public static PortSizeType ports(Integer... ports) {
             return new PortSizeType(ports);
         }
 
@@ -118,7 +136,7 @@ public interface OperativeSystemChaos {
             Integer[] ports = new Integer[totalNumber];
 
             int currentPort = start;
-            for(int i=0; i < ports.length; i++) {
+            for (int i = 0; i < ports.length; i++) {
                 ports[i] = currentPort;
                 currentPort++;
             }

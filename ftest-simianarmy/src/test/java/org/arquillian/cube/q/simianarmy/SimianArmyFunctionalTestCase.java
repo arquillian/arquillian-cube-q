@@ -38,7 +38,7 @@ public class SimianArmyFunctionalTestCase {
     public void shouldExecuteBurnCpuChaos() throws Exception {
         operativeSystemChaos.on("pingpong").burnCpu(singleCpu()).exec();
 
-        URL obj = new URL("http://"+ dockerHost +":" + port);
+        URL obj = new URL("http://" + dockerHost + ":" + port);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         // optional default is GET
@@ -49,7 +49,7 @@ public class SimianArmyFunctionalTestCase {
 
         int responseCode = con.getResponseCode();
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+            new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuilder response = new StringBuilder();
 
@@ -57,7 +57,5 @@ public class SimianArmyFunctionalTestCase {
             response.append(inputLine);
         }
         in.close();
-
     }
-
 }

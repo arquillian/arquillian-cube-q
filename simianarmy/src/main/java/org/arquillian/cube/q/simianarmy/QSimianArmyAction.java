@@ -76,7 +76,6 @@ public class QSimianArmyAction implements OperativeSystemChaos.Action {
         } finally {
             killDDProcess();
         }
-
     }
 
     @Override
@@ -89,7 +88,6 @@ public class QSimianArmyAction implements OperativeSystemChaos.Action {
         } finally {
             killDDProcess();
         }
-
     }
 
     private void killDDProcess() {

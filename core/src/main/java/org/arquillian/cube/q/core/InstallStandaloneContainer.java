@@ -33,13 +33,10 @@ public class InstallStandaloneContainer {
             final CubeContainer cube = install.getCube();
             cubes.add(install.getName(), cube);
 
-
             standaloneContainerInst.set(install);
 
             System.out.println("STANDALONE CONTAINER INSTALLED");
             System.out.println(ConfigUtil.dump(cubes));
         }
     }
-
-
 }

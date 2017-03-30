@@ -8,19 +8,34 @@ public interface NetworkChaos {
 
     interface Action extends Q {
         Action down();
+
         Action timeout(TimeoutType timeType);
+
         Action timeout(TimeoutType timeType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+
         Action latency(LatencyType latencyType);
-        Action latency(LatencyType latencyType, JitterType jitterType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+
+        Action latency(LatencyType latencyType, JitterType jitterType, ToxicityType toxicityType,
+            ToxicDirectionStream toxicDirectionStream);
+
         Action bandwidth(RateType rateType);
+
         Action bandwidth(RateType rateType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+
         Action slowClose(DelayType delayType);
+
         Action slowClose(DelayType delayType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+
         Action slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType);
-        Action slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType, SliceSizeVariationType sliceSizeVariationType, ToxicityType toxicityType, ToxicDirectionStream toxicDirectionStream);
+
+        Action slice(SliceAverageSizeType sliceAverageSizeType, DelayType delayType,
+            SliceSizeVariationType sliceSizeVariationType, ToxicityType toxicityType,
+            ToxicDirectionStream toxicDirectionStream);
     }
 
-    enum ToxicDirectionStream {
+    enum ToxicDirectionStream
+
+    {
         DOWNSTREAM, UPSTREAM
     }
 
@@ -28,7 +43,7 @@ public interface NetworkChaos {
      * Toxicity type to set the level of toxicity to apply.
      * A toxicity represents a percentage of when apply a toxicity.
      * 1f is always applies the toxic, 0f is never.
-     *
+     * <p>
      * For example applying a toxicity of 0.5 to delay toxic, means that only half of the connections
      * done will be affected by delay toxic.
      */
@@ -48,13 +63,10 @@ public interface NetworkChaos {
 
         /**
          * Toxicity value. It is a percentage between 0 to 1.
-         * @param toxicity
-         * @return
          */
         public static ToxicityType toxicity(float toxicity) {
             return new ToxicityType(toxicity);
         }
-
     }
 
     /**
@@ -122,25 +134,25 @@ public interface NetworkChaos {
 
         public static DistributedDelayType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
             return new DistributedDelayType(
-                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
-                            sigma), medianTimeUnit.toMillis(median));
+                new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                    sigma), medianTimeUnit.toMillis(median));
         }
 
         public static DistributedDelayType uniformLatencyInMillis(long upper, long lower) {
             return new DistributedDelayType(new UniformDistribution(upper, lower), lower);
         }
 
-        public static DistributedDelayType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+        public static DistributedDelayType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower,
+            TimeUnit lowerTimeUnit) {
             return new DistributedDelayType(
-                    new UniformDistribution(upperTimeUnit.toMillis(upper),
-                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+                new UniformDistribution(upperTimeUnit.toMillis(upper),
+                    lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
         }
 
         @Override
         public void calculateValue() {
             value = this.delayDistribution.calculate();
         }
-
     }
 
     /**
@@ -175,18 +187,19 @@ public interface NetworkChaos {
 
         public static DistributedRateType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
             return new DistributedRateType(
-                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
-                            sigma), medianTimeUnit.toMillis(median));
+                new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                    sigma), medianTimeUnit.toMillis(median));
         }
 
         public static DistributedRateType uniformLatencyInMillis(long upper, long lower) {
             return new DistributedRateType(new UniformDistribution(upper, lower), lower);
         }
 
-        public static DistributedRateType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+        public static DistributedRateType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower,
+            TimeUnit lowerTimeUnit) {
             return new DistributedRateType(
-                    new UniformDistribution(upperTimeUnit.toMillis(upper),
-                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+                new UniformDistribution(upperTimeUnit.toMillis(upper),
+                    lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
         }
 
         @Override
@@ -197,7 +210,7 @@ public interface NetworkChaos {
 
     /**
      * Jitter type to set in latency toxic.
-     *
+     * <p>
      * Jitter is the variation in latency as measured in the variability over time of the packet latency across a network.
      * For example a network with constant latency has no variation (or jitter).
      */
@@ -234,18 +247,19 @@ public interface NetworkChaos {
 
         public static DistributedRateType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
             return new DistributedRateType(
-                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
-                            sigma), medianTimeUnit.toMillis(median));
+                new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                    sigma), medianTimeUnit.toMillis(median));
         }
 
         public static DistributedRateType uniformLatencyInMillis(long upper, long lower) {
             return new DistributedRateType(new UniformDistribution(upper, lower), lower);
         }
 
-        public static DistributedRateType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+        public static DistributedRateType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower,
+            TimeUnit lowerTimeUnit) {
             return new DistributedRateType(
-                    new UniformDistribution(upperTimeUnit.toMillis(upper),
-                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+                new UniformDistribution(upperTimeUnit.toMillis(upper),
+                    lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
         }
 
         @Override
@@ -290,18 +304,19 @@ public interface NetworkChaos {
 
         public static DistributedLatencyType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
             return new DistributedLatencyType(
-                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
-                            sigma), medianTimeUnit.toMillis(median));
+                new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                    sigma), medianTimeUnit.toMillis(median));
         }
 
         public static DistributedLatencyType uniformLatencyInMillis(long upper, long lower) {
             return new DistributedLatencyType(new UniformDistribution(upper, lower), lower);
         }
 
-        public static DistributedLatencyType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+        public static DistributedLatencyType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower,
+            TimeUnit lowerTimeUnit) {
             return new DistributedLatencyType(
-                    new UniformDistribution(upperTimeUnit.toMillis(upper),
-                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+                new UniformDistribution(upperTimeUnit.toMillis(upper),
+                    lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
         }
 
         @Override
@@ -345,18 +360,19 @@ public interface NetworkChaos {
 
         public static DistributedTimeoutType logNormalLatency(long median, TimeUnit medianTimeUnit, double sigma) {
             return new DistributedTimeoutType(
-                    new LogNormalDistribution(medianTimeUnit.toMillis(median),
-                            sigma), medianTimeUnit.toMillis(median));
+                new LogNormalDistribution(medianTimeUnit.toMillis(median),
+                    sigma), medianTimeUnit.toMillis(median));
         }
 
         public static DistributedTimeoutType uniformLatencyInMillis(long upper, long lower) {
             return new DistributedTimeoutType(new UniformDistribution(upper, lower), lower);
         }
 
-        public static DistributedTimeoutType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower, TimeUnit lowerTimeUnit) {
+        public static DistributedTimeoutType uniformLatency(int upper, TimeUnit upperTimeUnit, int lower,
+            TimeUnit lowerTimeUnit) {
             return new DistributedTimeoutType(
-                    new UniformDistribution(upperTimeUnit.toMillis(upper),
-                            lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
+                new UniformDistribution(upperTimeUnit.toMillis(upper),
+                    lowerTimeUnit.toMillis(lower)), lowerTimeUnit.toMillis(lower));
         }
 
         @Override
@@ -364,5 +380,4 @@ public interface NetworkChaos {
             value = distribution.calculate();
         }
     }
-
 }

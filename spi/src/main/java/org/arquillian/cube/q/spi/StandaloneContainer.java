@@ -59,9 +59,6 @@ public class StandaloneContainer {
             cube.setBinds(volumes);
 
             return new StandaloneContainer(DEFAULT_NAME, cube);
-
         }
-
     }
-
 }

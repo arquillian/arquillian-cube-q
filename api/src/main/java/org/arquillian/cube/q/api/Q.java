@@ -6,7 +6,9 @@ import java.util.concurrent.TimeUnit;
 public interface Q {
 
     void exec() throws Exception;
+
     void exec(Perform perform) throws Exception;
+
     void exec(RunCondition runCondition, Perform perform) throws Exception;
 
     interface Perform {

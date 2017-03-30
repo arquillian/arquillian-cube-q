@@ -4,19 +4,19 @@ public class ToxiProxyContainer implements ToxiProxy {
 
     private String hostIp;
     private int hostPort;
-    
+
     private ToxiProxyClient client;
     private ToxiProxy toxiProxy;
-    
+
     public ToxiProxyClient getClient() {
-        if(this.client == null) {
+        if (this.client == null) {
             this.client = ToxiProxyClient.Builder.create(hostIp, hostPort);
         }
         return this.client;
     }
-    
+
     private ToxiProxy getProxy() {
-        if(this.toxiProxy == null) {
+        if (this.toxiProxy == null) {
             this.toxiProxy = new ToxiProxyScenario(getClient());
         }
         return this.toxiProxy;
