@@ -35,6 +35,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.arquillian.cube.q.recorder.NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH;
+
 /**
  * Class that reports general information about network toxics.
  */
@@ -88,7 +90,7 @@ public class TakeNetworkChaosInformation {
 
         final FileEntry fileEntry = createFileEntryWithJSON(reporterConfiguration, fileName);
         Reporter.createReport(new TestMethodReport(testMethodName))
-            .addKeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH, fileEntry)
+            .addKeyValueEntry(TOXICITY_DETAILS_PATH, fileEntry)
             .inSection(new TestMethodSection(testMethod))
             .fire(sectionEvent);
 

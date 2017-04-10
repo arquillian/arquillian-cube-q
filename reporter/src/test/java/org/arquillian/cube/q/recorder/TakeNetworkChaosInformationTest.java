@@ -36,6 +36,7 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.arquillian.cube.q.api.NetworkChaos.RateType.rate;
 import static org.arquillian.cube.q.api.NetworkChaos.TimeoutType.timeoutInMillis;
+import static org.arquillian.cube.q.recorder.NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH;
 import static org.arquillian.reporter.impl.asserts.ReportAssert.assertThatReport;
 import static org.arquillian.reporter.impl.asserts.SectionAssert.assertThatSection;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -201,7 +202,7 @@ public class TakeNetworkChaosInformationTest {
         assertThatReport(report)
             .hasName(methodName)
             .hasNumberOfEntries(1)
-            .hasEntriesContaining(new KeyValueEntry(NetworkChaosInformationReportKey.TOXICITY_DETAILS_PATH,
+            .hasEntriesContaining(new KeyValueEntry(TOXICITY_DETAILS_PATH,
                 new FileEntry("reports/chaos/should_report_json_file_with_toxicity_params_after_test.json")));
     }
 
