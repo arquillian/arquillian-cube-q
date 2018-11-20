@@ -60,7 +60,7 @@
     <version.mockito>2.7.17</version.mockito>
     <version.assertj>3.6.2</version.assertj>
     <version.arquillian.reporter>0.0.3</version.arquillian.reporter>
-    <version.json.path.assert>2.2.0</version.json.path.assert>
+    <version.json.path.assert>2.4.0</version.json.path.assert>
   </properties>
 
   <dependencyManagement>
