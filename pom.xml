@@ -57,7 +57,7 @@
     <version.arquillian_cube>1.3.0</version.arquillian_cube>
     <version.toxiproxyjava>2.1.3</version.toxiproxyjava>
     <version.junit>4.12</version.junit>
-    <version.mockito>2.25.1</version.mockito>
+    <version.mockito>3.2.4</version.mockito>
     <version.assertj>3.12.1</version.assertj>
     <version.arquillian.reporter>0.0.3</version.arquillian.reporter>
     <version.json.path.assert>2.4.0</version.json.path.assert>
